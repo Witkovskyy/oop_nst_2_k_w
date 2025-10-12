@@ -1,0 +1,39 @@
+# CMake / Ninja
+/build/
+/build-*/
+/CMakeCache.txt
+/CMakeFiles/
+/cmake-install.cmake
+/install_manifest.txt
+/Testing/
+compile_commands.json
+
+# Binarki i biblioteki
+*.o
+*.obj
+*.lo
+*.la
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.pdb
+*.ilk
+*.log
+
+# Cache
+/.ccache/
+/.cache/
+
+# IDE
+.vscode/
+.vscode-test/
+.idea/
+.vs/
+
+# Systemowe
+.DS_Store
+Thumbs.db
