@@ -8,3 +8,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 endif()
 
 add_executable(app src/main.cpp)
+
+find_package(SQLite3 REQUIRED)
+target_link_libraries(app PRIVATE SQLite::SQLite3)
