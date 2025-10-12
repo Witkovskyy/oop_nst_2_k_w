@@ -1,0 +1,36 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": { "major": 3, "minor": 22 },
+  "configurePresets": [
+    {
+      "name": "debug-ninja",
+      "displayName": "Debug (Ninja, GCC)",
+      "generator": "Ninja",
+      "binaryDir": "build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "release-ninja",
+      "displayName": "Release (Ninja, GCC)",
+      "generator": "Ninja",
+      "binaryDir": "build-rel",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "build-debug",   "configurePreset": "debug-ninja" },
+    { "name": "build-release", "configurePreset": "release-ninja" }
+  ],
+  "testPresets": [
+    { "name": "test-debug",   "configurePreset": "debug-ninja" },
+    { "name": "test-release", "configurePreset": "release-ninja" }
+  ]
+}

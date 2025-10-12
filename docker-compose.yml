@@ -1,0 +1,16 @@
+services:
+  dev:
+    build:
+      context: .
+      args:
+        UID: ${UID-1000}
+        GID: ${GID-1000}
+    volumes:
+      - ./:/work
+    working_dir: /work
+    tty: true
+    stdin_open: true
+    environment:
+      - CC=gcc
+      - CXX=g++
+      - CCACHE_DIR=/tmp/.ccache
