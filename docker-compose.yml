@@ -7,6 +7,7 @@ services:
         GID: ${GID-1000}
     volumes:
       - ./:/work
+      - ./.ccache:/tmp/.ccache
     working_dir: /work
     tty: true
     stdin_open: true
@@ -14,3 +15,4 @@ services:
       - CC=gcc
       - CXX=g++
       - CCACHE_DIR=/tmp/.ccache
+    command: tail -f /dev/null   # container 'lives', you can enter via docker exec

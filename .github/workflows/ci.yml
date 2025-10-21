@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/Witkovskyy/oop_nst_2_k_w/dev:latest
+      env:
+        CCACHE_DIR: ${{ github.workspace }}/.ccache
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: .ccache
+          key: ccache-${{ runner.os }}-${{ hashFiles('**/CMakeLists.txt', '**/*.hpp', '**/*.h', '**/*.cpp') }}
+          restore-keys: |
+            ccache-${{ runner.os }}-
+
+      - name: Configure (CMake + Ninja)
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+      - name: Build project
+        run: cmake --build build --config Release -j$(nproc)
+
+      - name: Run tests
+        run: |
+          if [ -f build/CTestTestfile.cmake ]; then
+            ctest --test-dir build --output-on-failure
+          else
+            echo "No tests found. Skipping."
+          fi
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            build/**
+          if-no-files-found: warn
+      
+      - name: Run clang-tidy
+        run: |
+          if command -v clang-tidy >/dev/null 2>&1; then
+              clang-tidy $(git ls-files '*.cpp') -- -Iinclude || true
+          else
+            echo "clang-tidy not installed in image."
+          fi
+      - name: Generate coverage report
+        run: |
+          cmake -S . -B build-cov -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage"
+          cmake --build build-cov -j$(nproc)
+          ctest --test-dir build-cov --output-on-failure
+          gcovr -r . --xml -o coverage.xml --exclude build --exclude 'tests/*'
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage.xml
+          fail_ci_if_error: false
+
+

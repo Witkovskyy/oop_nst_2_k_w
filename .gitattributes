@@ -1,0 +1,14 @@
+# Normalize all text to LF in the repo, auto-convert at checkout
+* text=auto eol=lf
+
+*.png -text
+*.jpg -text
+*.pdf -text
+*.exe -text
+*.dll -text
+*.so -text
+*.dylib -text
+*.zip -text
+*.tar.gz -text
+*.7z -text
+*.bin -text
