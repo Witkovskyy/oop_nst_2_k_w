@@ -1,0 +1,96 @@
+name: Release - Build & Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+env:
+  TARGET_NAME: app
+  PACKAGE_NAME: oop_nst_2_k_w
+
+jobs:
+  linux-x86_64:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/Witkovskyy/oop_nst_2_k_w/dev:latest
+      env:
+        CCACHE_DIR: ${{ github.workspace }}/.ccache
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: .ccache
+          key: release-ccache-${{ runner.os }}-${{ hashFiles('**/CMakeLists.txt', '**/*.hpp', '**/*.h', '**/*.cpp') }}
+          restore-keys: |
+            release-ccache-${{ runner.os }}-
+
+      - name: Configure (CMake + Ninja)
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+      - name: Build
+        run: cmake --build build --config Release -j"$(nproc)"
+
+      - name: Locate binary
+        id: bin
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -f "build/${TARGET_NAME}" ]]; then
+            BIN="build/${TARGET_NAME}"
+          elif [[ -f "build/${TARGET_NAME}.exe" ]]; then
+            BIN="build/${TARGET_NAME}.exe"
+          else
+            mapfile -t BINS < <(find build -maxdepth 2 -type f -executable)
+            if [[ ${#BINS[@]} -eq 1 ]]; then
+              BIN="${BINS[0]}"
+            else
+              echo "Binary not found or multiple binaries found!"
+              echo "Found: ${BINS[*]}"
+              exit 1
+            fi
+          fi
+          echo "bin=${BIN}" >> "$GITHUB_OUTPUT"
+          echo "Found binary: ${BIN}"
+
+      - name: Strip binary
+        run: strip "${{ steps.bin.outputs.bin }}" || true
+
+      - name: Prepare dist/
+        id: dist
+        run: |
+          VER="${GITHUB_REF_NAME}"  # np. v1.0.0
+          PKG="${PACKAGE_NAME}-${VER}-linux-x86_64"
+          mkdir -p "dist/${PKG}"
+          cp "${{ steps.bin.outputs.bin }}" "dist/${PKG}/${TARGET_NAME}"
+          [[ -f README.md ]] && cp README.md "dist/${PKG}/"
+          [[ -f LICENSE ]] && cp LICENSE "dist/${PKG}/"
+          [[ -f book.json ]] && cp book.json "dist/${PKG}/"
+          tar -C dist -czf "dist/${PKG}.tar.gz" "${PKG}"
+          (cd dist && sha256sum "${PKG}.tar.gz" > "${PKG}.tar.gz.sha256")
+          echo "pkg=dist/${PKG}.tar.gz" >> "$GITHUB_OUTPUT"
+          echo "sha=dist/${PKG}.tar.gz.sha256" >> "$GITHUB_OUTPUT"
+          echo "archive_name=${PKG}.tar.gz" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          files: |
+            ${{ steps.dist.outputs.pkg }}
+            ${{ steps.dist.outputs.sha }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
