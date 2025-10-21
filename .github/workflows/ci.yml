@@ -1,9 +1,5 @@
 name: CI
 
-permissions:
-  contents: read
-  packages: read
-  
 on:
   push:
     branches: [ main, dev ]
@@ -15,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: ghcr.io/witkovskyy/oop_nst_2_k_w/dev:latest
+      image: ghcr.io/Witkovskyy/oop_nst_2_k_w/dev:latest
       env:
         CCACHE_DIR: ${{ github.workspace }}/.ccache
 
