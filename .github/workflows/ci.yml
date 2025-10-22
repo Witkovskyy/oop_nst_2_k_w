@@ -1,9 +1,8 @@
 name: CI
-
 permissions:
   contents: read
   packages: read
-  
+
 on:
   push:
     branches: [ main, dev ]
@@ -13,17 +12,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: read
     container:
       image: ghcr.io/witkovskyy/oop_nst_2_k_w/dev:latest
       options: --user 0:0
       env:
         CCACHE_DIR: ${{ github.workspace }}/.ccache
+
     steps:
       - name: Checkout repository
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
 
       - name: Cache ccache
         uses: actions/cache@v4
@@ -40,7 +37,7 @@ jobs:
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       - name: Build project
-        run: cmake --build build --config Release -j$(nproc)
+        run: cmake --build build --config Release -j"$(nproc)"
 
       - name: Run tests
         run: |
@@ -58,18 +55,19 @@ jobs:
           path: |
             build/**
           if-no-files-found: warn
-      
+
       - name: Run clang-tidy
         run: |
           if command -v clang-tidy >/dev/null 2>&1; then
-              clang-tidy $(git ls-files '*.cpp') -- -Iinclude || true
+            clang-tidy $(git ls-files '*.cpp') -- -Iinclude || true
           else
             echo "clang-tidy not installed in image."
           fi
+
       - name: Generate coverage report
         run: |
           cmake -S . -B build-cov -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage"
-          cmake --build build-cov -j$(nproc)
+          cmake --build build-cov -j"$(nproc)"
           ctest --test-dir build-cov --output-on-failure
           gcovr -r . --xml -o coverage.xml --exclude build --exclude 'tests/*'
 
@@ -78,5 +76,3 @@ jobs:
         with:
           files: coverage.xml
           fail_ci_if_error: false
-
-
