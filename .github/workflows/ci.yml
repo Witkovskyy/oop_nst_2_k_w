@@ -13,15 +13,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      packages: read
     container:
       image: ghcr.io/witkovskyy/oop_nst_2_k_w/dev:latest
+      options: --user 0:0   # <— najważniejsze
       env:
         CCACHE_DIR: ${{ github.workspace }}/.ccache
-
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Cache ccache
         uses: actions/cache@v4
