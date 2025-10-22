@@ -18,7 +18,7 @@ jobs:
       packages: read
     container:
       image: ghcr.io/witkovskyy/oop_nst_2_k_w/dev:latest
-      options: --user 0:0   # <— najważniejsze
+      options: --user 0:0
       env:
         CCACHE_DIR: ${{ github.workspace }}/.ccache
     steps:
