@@ -1,9 +1,8 @@
 name: CI
-
 permissions:
   contents: read
   packages: read
-  
+
 on:
   push:
     branches: [ main, dev ]
@@ -13,9 +12,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     container:
       image: ghcr.io/witkovskyy/oop_nst_2_k_w/dev:latest
+      options: --user 0:0
       env:
         CCACHE_DIR: ${{ github.workspace }}/.ccache
 
@@ -38,7 +37,7 @@ jobs:
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       - name: Build project
-        run: cmake --build build --config Release -j$(nproc)
+        run: cmake --build build --config Release -j"$(nproc)"
 
       - name: Run tests
         run: |
@@ -88,5 +87,3 @@ jobs:
         with:
           files: coverage.xml
           fail_ci_if_error: false
-
-
