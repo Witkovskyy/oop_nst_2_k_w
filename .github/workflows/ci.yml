@@ -56,6 +56,12 @@ jobs:
           path: |
             build/**
           if-no-files-found: warn
+      - name: TruffleHog scan
+        uses: trufflesecurity/trufflehog@v3
+        with:
+          path: .
+          base: HEAD~1
+          head: HEAD
       
       - name: Run clang-tidy
         run: |
@@ -64,6 +70,12 @@ jobs:
           else
             echo "clang-tidy not installed in image."
           fi
+          
+      - name: Install gnupg for Codecov signature verification
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends gnupg dirmngr
+          
       - name: Generate coverage report
         run: |
           cmake -S . -B build-cov -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage"
