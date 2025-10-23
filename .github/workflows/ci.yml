@@ -69,6 +69,11 @@ jobs:
           else
             echo "clang-tidy not installed in image."
           fi
+          
+      - name: Install gnupg for Codecov signature verification
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends gnupg dirmngr
 
       - name: Generate coverage report
         run: |

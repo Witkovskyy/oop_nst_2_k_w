@@ -1,0 +1,13 @@
+.git
+.gitignore
+.github/
+build/
+build-cov/
+.ccache/
+coverage.xml
+*.gcda
+*.gcno
+chess.db
+*.pem
+*.key
+*.env
