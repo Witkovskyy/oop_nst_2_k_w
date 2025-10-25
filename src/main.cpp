@@ -1,70 +1,69 @@
 #include <iostream>
-#include <math.h>
+#include "Piece.h"
 using namespace std;
 
-enum class Color { WHITE, BLACK };
-struct Position {
-    int row;
-    int col;
-};
+const int sizeboard=8;
+class Board
+{
+private:
+    Piece* squares[sizeboard][sizeboard];
 
-class Board; 
-
-class Piece {
-protected:
-    int color;       // 0 = WHITE, 1 = BLACK
-    Position pos;
-    char symbol;
+    Piece* wyswietl(){
+        return squares[1][1];
+    }
 
 public:
-    Piece(int c, Position p, char s) {
-        color = c;
-        pos = p;
-        symbol = s;
-    }
-    // destr
-    ~Piece() {}
-    // ----
-    int getColor() {
-        return color;
-    }
-    Position getPosition() {
-        return pos;
-    }
-    char getSymbol() {
-        return symbol;
-    }
-    void setColor(int c) {
-        color = c;
-    }
-    void setPosition(Position p) {
-        pos = p;
-    }
-    void setSymbol(char s) {
-        symbol = s;
-    }
-    virtual bool canMove(Position newPos, const Board& board) = 0;
-};
-
-class Pawn : public Piece {
-public:
-    Pawn(int c, Position p) : Piece(c, p, 'P') {}
-
-    bool canMove(Position newPos, const Board& board) override {
-        int direction = (color == 0) ? 1 : -1; 
-        if (newPos.col == pos.col && newPos.row == pos.row + direction) {
-            return true;
+    Board(){
+        for (int i=0; i<sizeboard;i++){
+            for (int j=0; j<sizeboard;j++){
+                squares[i][j]=nullptr;
+            }
         }
-        return false;
+    }
+    void placePiece(Piece* piece){
+        Position pos = piece->getPosition();
+        squares[pos.row][pos.col] = piece;
+    }
+    bool isEmpty(Position pos){
+        return squares[pos.row][pos.col] == nullptr;
+    }
+
+
+    void movePiece(Position oldpos, Position newpos, Piece* piece){
+        squares[oldpos.row][oldpos.col]=nullptr;
+        squares[newpos.row][newpos.col] = piece;
+    }
+
+    void DisplayBoard(){
+        cout << "  a b c d e f g h \n";
+        for (int row=sizeboard-1; row>=0;row--){
+            cout << row + 1 << " ";
+            for (int col=0; col < sizeboard; col++){
+                if (squares[row][col]!=nullptr){
+                    cout << squares[row][col]->getSymbol() << ' ';
+                }
+                else{
+                    cout << ". ";
+                }
+                
+            }
+            cout << endl;
+        }
     }
 };
-
 
 
 
 
 int main() {
-  
-  //just a comment
 
+    Board board;
+    Piece* p1 = new Piece(0,'K', {2,1});
+
+    board.placePiece(p1);
+    board.DisplayBoard();
+    board.movePiece({2,1},{2,3}, p1);
+    board.DisplayBoard();
+    
+    return 0;
 }
