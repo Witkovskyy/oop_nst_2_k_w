@@ -1,112 +1,141 @@
-#pragma once
-#include "../components/board.hpp"
-#include "../components/piece.hpp"
+// Static Exchange Evaluation (SEE)
+#include "../Piece.h"
+#include "../main.cpp"
 #include "val.h"
 #include <algorithm>
 #include <vector>
 #include <limits>
-#include <cstdlib>
 
+// Minimal Board API expected by this file from main.cpp
 
-static inline bool inBounds(int r, int c) { return (unsigned)r < 8 && (unsigned)c < 8; }
-static inline Color opp(Color c) { return c == Color::WHITE ? Color::BLACK : Color::WHITE; }
+static inline int colorOfPiece(Piece *piece)
+{
+    if (!piece)
+        return -1; // none
+    return piece->getColor();
+}
 
-static bool lineClear(const Board& b, Square a, Square d) {
-    int dr = (d.r > a.r) - (d.r < a.r);
-    int dc = (d.c > a.c) - (d.c < a.c);
-    int r = a.r + dr, c = a.c + dc;
-    while (r != d.r || c != d.c) {
-        if (b.cells[r][c].piece != PieceType::EMPTY) return false;
-        r += dr; c += dc;
+static bool lineClear(Board &board, Position from, Position to)
+{
+    int stepRow = (to.row > from.row) - (to.row < from.row);
+    int stepCol = (to.col > from.col) - (to.col < from.col);
+
+    int currentRow = from.row + stepRow;
+    int currentCol = from.col + stepCol;
+
+    // "walking" towards "to" and ensure all squares are empty
+    while (currentRow != to.row || currentCol != to.col)
+    {
+        Position pos{currentRow, currentCol};
+        if (board.getPieceAt(pos) != nullptr)
+            return false;
+        currentRow += stepRow;
+        currentCol += stepCol;
     }
     return true;
 }
 
-// Can the piece from 'from' attack square 'to' (does NOT check move legality, only geometry/lines)
-static bool canAttack(const Board& b, Square from, Square to) {
-    if (from.r == to.r && from.c == to.c) return false;
-    const Cell &src = b.cells[from.r][from.c];
-    switch (src.piece) {
-        case PieceType::PAWN: {
-            int dir = (src.color == Color::WHITE) ? -1 : +1;
-            int rr = from.r + dir;
-            return (to.r == rr && (to.c == from.c - 1 || to.c == from.c + 1));
-        }
-        case PieceType::KNIGHT: {
-            int dr = std::abs(from.r - to.r), dc = std::abs(from.c - to.c);
-            return (dr == 1 && dc == 2) || (dr == 2 && dc == 1);
-        }
-        case PieceType::BISHOP:
-            return std::abs(from.r - to.r) == std::abs(from.c - to.c) && lineClear(b, from, to);
-        case PieceType::ROOK:
-            return (from.r == to.r || from.c == to.c) && lineClear(b, from, to);
-        case PieceType::QUEEN:
-            return ((from.r == to.r || from.c == to.c) || (std::abs(from.r - to.r) == std::abs(from.c - to.c)))
-                   && lineClear(b, from, to);
-        case PieceType::KING:
-            return std::max(std::abs(from.r - to.r), std::abs(from.c - to.c)) == 1;
-        default:
-            return false;
+static bool canAttack(Board &board, Position from, Position to)
+{
+    if (from.row == to.row && from.col == to.col)
+        return false;
+    Piece *src = board.getPieceAt({from.row, from.col});
+    if (!src)
+        return false;
+    char symbol = src->getSymbol();
+    int srcColor = src->getColor();
+    if (symbol == 'P')
+    {
+        int dir = (srcColor == 0) ? -1 : +1;
+        int rr = from.row + dir;
+        return (to.row == rr && (to.col == from.col - 1 || to.col == from.col + 1));
     }
+    if (symbol == 'N')
+    {
+        int dr = std::abs(from.row - to.row), dc = std::abs(from.col - to.col);
+        return (dr == 1 && dc == 2) || (dr == 2 && dc == 1);
+    }
+    if (symbol == 'B')
+    {
+        return std::abs(from.row - to.row) == std::abs(from.col - to.col) && lineClear(board, from, to);
+    }
+    if (symbol == 'R')
+    {
+        return (from.row == to.row || from.col == to.col) && lineClear(board, from, to);
+    }
+    if (symbol == 'Q')
+    {
+        return ((from.row == to.row || from.col == to.col) || (std::abs(from.row - to.row) == std::abs(from.col - to.col))) && lineClear(board, from, to);
+    }
+    if (symbol == 'K')
+    {
+        return std::max(std::abs(from.row - to.row), std::abs(from.col - to.col)) == 1;
+    }
+    return false;
 }
 
-static int pieceVal(PieceType p) { return pieceValues[static_cast<int>(p)]; }
-
-// Returns the cheapest attacker of the given color on 'sq' in position 'b'. If none, r=-1.
-static Square cheapestAttacker(const Board& b, Square sq, Color side) {
-    Square best{-1,-1};
+// Returns the cheapest attacker Position of the given color on 'square'. If none, r=-1.
+static Position cheapestAttacker(Board &board, Position square, int sideColor)
+{
+    Position best{-1, -1};
     int bestVal = 1e9;
-    for (int r=0; r<8; ++r) for (int c=0; c<8; ++c) {
-        const auto& cell = b.cells[r][c];
-        if (cell.piece == PieceType::EMPTY || cell.color != side) continue;
-        if (!canAttack(b, {r,c}, sq)) continue;
-        int v = pieceVal(cell.piece);
-        if (v < bestVal) { bestVal = v; best = {r,c}; }
-    }
+    for (int row = 0; row < 8; ++row)
+        for (int col = 0; col < 8; ++col)
+        {
+            Piece *piece = board.getPieceAt({row, col});
+            if (!piece)
+                continue;
+            if (piece->getColor() != sideColor)
+                continue;
+            if (!canAttack(board, {row, col}, square))
+                continue;
+            int val = pieceValFromSymbol(piece->getSymbol());
+            if (val < bestVal)
+            {
+                bestVal = val;
+                best = {row, col};
+            }
+        }
     return best;
 }
 
 // SEE: positive result = gain for 'sideToMove' initiating the exchange on 'target'.
-int see(const Board& start, Square target, Color sideToMove) {
-    const Cell &victimCell = start.cells[target.r][target.c];
-    if (victimCell.piece == PieceType::EMPTY) return 0;
+int see(Board &start, Position target, int sideToMove)
+{
+    Piece *victim = start.getPieceAt({target.row, target.col});
+    if (!victim)
+        return 0;
 
-    // Copy of the board for a 'static' simulation of captures on a single square
-    Board b = start;
+    Board boardCopy = start; // uses Board copy-constructor if available
 
-    // Gains at successive depths (basic version of Tord Romstad's SEE algorithm)
-    int gain[32]; int d = 0;
-    gain[0] = pieceVal(victimCell.piece);
+    int gain[32];
+    int depth = 0;
+    gain[0] = pieceValFromSymbol(victim->getSymbol());
 
-    Color stm = sideToMove;
-    PieceType captured = victimCell.piece;
-    Square to = target;
+    int stm = sideToMove;
 
-    // Repeat: the cheapest attacker of side 'stm' captures on 'to'
-    while (true) {
-        Square a = cheapestAttacker(b, to, stm);
-        if (a.r == -1) break; // no further captures
+    while (true)
+    {
+        Position getAttacker = cheapestAttacker(boardCopy, target, stm);
+        if (getAttacker.row == -1)
+            break;
 
-        const Cell attacker = b.cells[a.r][a.c];
-        const int attackerVal = pieceVal(attacker.piece);
+        Piece *attacker = boardCopy.getPieceAt({getAttacker.row, getAttacker.col});
+        int attackerVal = pieceValFromSymbol(attacker->getSymbol());
 
-        // prepare gain for the next depth: the attacker becomes the new victim
-        int next = attackerVal - gain[d];
-        gain[++d] = next;
+        int next = attackerVal - gain[depth];
+        gain[++depth] = next;
 
-        // perform a static 'capture' on the board copy:
-        b.cells[a.r][a.c] = Cell{};                  // empty square left by the attacker
-        b.cells[to.r][to.c] = { attacker.piece, attacker.color }; // attacker moves onto the square
+        // perform static capture on board copy
+        // remove attacker from its Position
+        boardCopy.movePiece({getAttacker.row, getAttacker.col}, {target.row, target.col}, attacker);
 
-        // new situation: the other side will capture the piece that just captured
-        stm = opp(stm);
-        captured = attacker.piece;
-        // 'to' (the exchange square) does not change — captures continue on the same square
+        // switch side
+        sideToMove = (sideToMove == 0) ? 1 : 0;
     }
 
-    // Minimax from the end (if the opponent can worsen the result, it will)
-    for (int i = d - 1; i >= 0; --i)
-        gain[i] = std::max(-gain[i+1], gain[i]);
+    for (int i = depth - 1; i >= 0; --i)
+        gain[i] = std::max(-gain[i + 1], gain[i]);
 
     return gain[0];
 }

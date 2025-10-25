@@ -1,26 +1,89 @@
 #include <iostream>
-#include "components/board.hpp"
-#include "engine/val.h"
-#include "engine/evalpos.cpp"
-#include "engine/see.cpp"
+#include "Piece.h"
+#include "Piece.cpp"
+using namespace std;
 
+const int sizeboard = 8;
+class Board
+{
+public:
+    Piece *squares[sizeboard][sizeboard];
 
-int main() {
-    using std::cout;
-    using std::endl;
+    Piece *getPieceAt(Position pos)
+    {
+        return squares[pos.row][pos.col];
+    }
 
-    cout << "Chess Engine — minimal runner" << endl;
+public:
+    Board()
+    {
+        for (int i = 0; i < sizeboard; i++)
+        {
+            for (int j = 0; j < sizeboard; j++)
+            {
+                squares[i][j] = nullptr;
+            }
+        }
+    }
+    void placePiece(Piece *piece)
+    {
+        Position pos = piece->getPosition();
+        squares[pos.row][pos.col] = piece;
+    }
+    bool isEmpty(Position pos)
+    {
+        return squares[pos.row][pos.col] == nullptr;
+    }
+    bool validateMove(Position oldpos, Position newpos, Piece *piece)
+    {
+        // Old position validation
+        if (oldpos.row < 0 || oldpos.row >= sizeboard || oldpos.col < 0 || oldpos.col >= sizeboard)
+            return false;
+        // New position validation
+        if (newpos.row < 0 || newpos.row >= sizeboard || newpos.col < 0 || newpos.col >= sizeboard)
+            return false;
 
-    // Construct an empty board (all cells default to EMPTY)
-    Board b;
+        // Additional rules can be added here
+        return true;
+    }
 
-    // Print static evaluation of the starting (empty) board
-    int material = eval(b);
-    cout << "eval(board) = " << material << " (centipawns)" << endl;
+    void movePiece(Position oldpos, Position newpos, Piece *piece)
+    {
+        squares[oldpos.row][oldpos.col] = nullptr;
+        squares[newpos.row][newpos.col] = piece;
+    }
 
-    // Run a tiny search using the engine's negamax with fixed depth from val.h
-    int score = negamax(b, depth, -INF, INF);
-    cout << "negamax(...) = " << score << " (centipawns)" << endl;
+    void DisplayBoard()
+    {
+        cout << "  a b c d e f g h \n";
+        for (int row = sizeboard - 1; row >= 0; row--)
+        {
+            cout << row + 1 << " ";
+            for (int col = 0; col < sizeboard; col++)
+            {
+                if (squares[row][col] != nullptr)
+                {
+                    cout << squares[row][col]->getSymbol() << ' ';
+                }
+                else
+                {
+                    cout << ". ";
+                }
+            }
+            cout << endl;
+        }
+    }
+};
+int main()
+{
+
+    Board board;
+    Piece *p1 = new Piece(0, 'K', {2, 1});
+
+    board.placePiece(p1);
+    board.DisplayBoard();
+    board.movePiece({2, 1}, {2, 3}, p1);
+    board.DisplayBoard();
 
     return 0;
 }
