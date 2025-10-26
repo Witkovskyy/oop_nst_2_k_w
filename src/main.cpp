@@ -1,69 +1,32 @@
 #include <iostream>
 #include "Piece.h"
+#include "Board.h"
+#include "engine/engine.h"
 using namespace std;
-
-const int sizeboard=8;
-class Board
+int main()
 {
-private:
-    Piece* squares[sizeboard][sizeboard];
-
-    Piece* wyswietl(){
-        return squares[1][1];
-    }
-
-public:
-    Board(){
-        for (int i=0; i<sizeboard;i++){
-            for (int j=0; j<sizeboard;j++){
-                squares[i][j]=nullptr;
-            }
-        }
-    }
-    void placePiece(Piece* piece){
-        Position pos = piece->getPosition();
-        squares[pos.row][pos.col] = piece;
-    }
-    bool isEmpty(Position pos){
-        return squares[pos.row][pos.col] == nullptr;
-    }
-
-
-    void movePiece(Position oldpos, Position newpos, Piece* piece){
-        squares[oldpos.row][oldpos.col]=nullptr;
-        squares[newpos.row][newpos.col] = piece;
-    }
-
-    void DisplayBoard(){
-        cout << "  a b c d e f g h \n";
-        for (int row=sizeboard-1; row>=0;row--){
-            cout << row + 1 << " ";
-            for (int col=0; col < sizeboard; col++){
-                if (squares[row][col]!=nullptr){
-                    cout << squares[row][col]->getSymbol() << ' ';
-                }
-                else{
-                    cout << ". ";
-                }
-                
-            }
-            cout << endl;
-        }
-    }
-};
-
-
-
-
-int main() {
-
     Board board;
-    Piece* p1 = new Piece(0,'K', {2,1});
-
+    Piece *p1 = new Piece(0, 'K', {2, 1});
     board.placePiece(p1);
+    Piece *p2 = new Piece(1, 'K', {7, 3});
+    board.placePiece(p2);
+    Piece *p3 = new Piece(0, 'Q', {3, 4});
+    board.placePiece(p3);
+    Piece *p5 = new Piece(0, 'R', {5, 5});
+    board.placePiece(p5);
+
+
+    cout << "Initial board:\n";
     board.DisplayBoard();
-    board.movePiece({2,1},{2,3}, p1);
-    board.DisplayBoard();
-    
+
+    cout << "eval = " << eval(board) << "\n";
+    Position target{3 ,4};
+    cout << "see - white = " << see(board, target, 0) << "\n";
+    cout << "negamax = " << negamax(board, 5, -100000, 100000, 0) << "\n";
+
+    delete p1;
+    delete p2;
+    delete p3;
+    delete p5;
     return 0;
 }

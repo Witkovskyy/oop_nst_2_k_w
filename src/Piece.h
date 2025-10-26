@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 using namespace std;
 struct Position{
@@ -7,10 +8,11 @@ struct Position{
 
 class Piece
 {
-    private:
+    public:
         int color;
         char symbol;
         Position current_position;
+        int value;
     public:
         Piece(int,char,Position);
         int getColor();

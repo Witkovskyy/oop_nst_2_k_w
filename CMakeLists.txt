@@ -7,7 +7,25 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-add_executable(app src/main.cpp)
+add_library(engine STATIC
+  src/engine/evalpos.cpp
+  src/engine/see.cpp
+)
+
+add_executable(app
+  src/main.cpp
+  src/Piece.cpp
+)
+
+add_executable(tests
+  src/tests/test_engine.cpp
+  src/Piece.cpp
+)
+
+target_link_libraries(tests PRIVATE engine)
+
+enable_testing()
+add_test(NAME engine_tests COMMAND tests)
 
 find_package(SQLite3 REQUIRED)
-target_link_libraries(app PRIVATE SQLite::SQLite3)
+target_link_libraries(app PRIVATE engine SQLite::SQLite3)
