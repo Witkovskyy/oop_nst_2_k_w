@@ -1,14 +1,15 @@
 #pragma once
-#include "../main.cpp"
+#include "../Board.h"
+#include "val.h"
+#include "deepcopy.h"
+#include "moves.h"
 #include <algorithm>
 #include <vector>
 #include <limits>
 
-// Simple instrumentation: count nodes visited by negamax
+// count nodes visited by negamax
 static long nodesVisited = 0;
 long get_nodes_visited() { return nodesVisited; }
-
-static const int INF = std::numeric_limits<int>::max();
 
 int eval(const Board &board)
 {
@@ -23,7 +24,7 @@ int eval(const Board &board)
                 continue;
             if (cell->symbol == 'E')
                 continue;
-            int value = static_cast<int>(cell->value);
+            int value = pieceValFromSymbol(cell->symbol);
             if (cell->color == 0) // Assuming 0 represents WHITE
                 score += value;
             else
@@ -33,40 +34,48 @@ int eval(const Board &board)
     return score;
 }
 
-// Declaration of helper functions
-//To fill in later
 
-
-static std::vector<Position> legalMoves(const Board &board)
+static std::vector<Move> legalMoves(const Board &board, int color)
 {
-    return {};
-}
-// Helper returns all legal moves as a fallback implementation
-static std::vector<Position> generateCaptures(Board &board)
-{
-    // To replace
-    return legalMoves(board);
+    // reuse existing generator in moves.h
+    return generateAllMoves(const_cast<Board &>(board), color);
 }
 
-static void undoMove(Board &board, Position oldpos, Undo &undo)
+static std::vector<Move> generateCaptures(Board &board, int color)
 {
-    board.squares[oldpos.row][oldpos.col] = undo.pieceMoved;
-    board.squares[undo.to.row][undo.to.col] = undo.pieceCaptured;
+    return generateAllCaptures(board);
 }
 
-static void applyMove(Board &board, Position oldpos, Undo &undo)
+struct Undo
 {
-    board.squares[undo.to.row][undo.to.col] = undo.pieceMoved;
-    board.squares[oldpos.row][oldpos.col] = nullptr;
+    Position from;
+    Position to;
+    Piece *pieceMoved;
+    Piece *pieceCaptured;
+};
+
+static void undoMove(Board &board, const Move &move, const Undo &undo)
+{
+    board.squares[move.from.row][move.from.col] = undo.pieceMoved;
+    board.squares[move.to.row][move.to.col] = undo.pieceCaptured;
 }
 
-static void orderMoves(std::vector<Position> &moves)
+static void applyMove(Board &board, const Move &move, Undo &undo)
+{
+    undo.from = move.from;
+    undo.to = move.to;
+    undo.pieceMoved = board.getPieceAt(move.from);
+    undo.pieceCaptured = board.getPieceAt(move.to);
+    board.movePiece(move.from, move.to, undo.pieceMoved);
+}
+
+static void orderMoves(std::vector<Move> &moves)
 {
     // no-op for now
     (void)moves;
 }
 
-// Simple check: game over if one king is missing
+// game over if one king is missing
 static bool gameOver(const Board &board)
 {
     bool whiteKing = false, blackKing = false;
@@ -89,17 +98,8 @@ static bool gameOver(const Board &board)
     return !(whiteKing && blackKing);
 }
 
-struct Undo
-{
-    Position from;
-    Position to;
-    Piece *pieceMoved;
-    Piece *pieceCaptured;
-};
-
-
 // Quiescence search to avoid horizon effect
-int quiescence(Board &board, int alpha, int beta)
+int quiescence(Board &board, int alpha, int beta, int color)
 {
     int stand = eval(board);
     if (stand >= beta)
@@ -107,12 +107,12 @@ int quiescence(Board &board, int alpha, int beta)
     if (stand > alpha)
         alpha = stand;
 
-    auto caps = generateCaptures(board); // Only consider capture moves
+    auto caps = generateCaptures(board, color); // Only consider capture moves
     for (auto &move : caps)
     {
         Undo undo;
         applyMove(board, move, undo);
-        int score = -quiescence(board, -beta, -alpha);
+        int score = -quiescence(board, -beta, -alpha, color==0 ? 1 : 0);
         undoMove(board, move, undo);
         if (score >= beta)
             return beta;
@@ -124,23 +124,23 @@ int quiescence(Board &board, int alpha, int beta)
 
 // Negamax algorithm with alpha-beta pruning
 // Cutting off branches that won't influence the final decision
-int negamax(Board &board, int depth, int alpha, int beta)
+int negamax(Board &board, int depth, int alpha, int beta, int color)
 {
     ++nodesVisited;
     if (depth == 0 || gameOver(board))
-        return quiescence(board, alpha, beta);
+        return quiescence(board, alpha, beta, color);
 
     int best = -INF;
-    auto moves = legalMoves(board);
+    auto moves = legalMoves(board, color);
     if (moves.empty()) // No legal moves
-        return quiescence(board, alpha, beta);
+        return quiescence(board, alpha, beta, color);
 
     orderMoves(moves);
     for (auto &move : moves)
     {
         Undo undo;
         applyMove(board, move, undo);
-        int score = -negamax(board, depth - 1, -beta, -alpha);
+        int score = -negamax(board, depth - 1, -beta, -alpha, color==0 ? 1 : 0);
         undoMove(board, move, undo);
         if (score > best)
             best = score;
@@ -150,4 +150,10 @@ int negamax(Board &board, int depth, int alpha, int beta)
             break; // beta cutoff
     }
     return best;
+}
+
+// API freaking out, set default to 0 - white
+int negamax(Board &board, int depth, int alpha, int beta)
+{
+    return negamax(board, depth, alpha, beta, 0);
 }

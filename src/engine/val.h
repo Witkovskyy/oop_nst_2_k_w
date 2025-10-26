@@ -1,5 +1,4 @@
 #pragma once
-#include "../main.cpp"
 #include <limits>
 
 static inline int pieceValFromSymbol(char symbol)

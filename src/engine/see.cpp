@@ -1,6 +1,7 @@
 // Static Exchange Evaluation (SEE)
 #include "../Piece.h"
-#include "../main.cpp"
+#include "../Board.h"
+#include "../engine/deepcopy.h"
 #include "val.h"
 #include <algorithm>
 #include <vector>
@@ -106,7 +107,9 @@ int see(Board &start, Position target, int sideToMove)
     if (!victim)
         return 0;
 
-    Board boardCopy = start; // uses Board copy-constructor if available
+    // important, not to mix up
+    OwnedBoard ob(start);
+    Board &copy = ob.board;
 
     int gain[32];
     int depth = 0;
@@ -116,11 +119,11 @@ int see(Board &start, Position target, int sideToMove)
 
     while (true)
     {
-        Position getAttacker = cheapestAttacker(boardCopy, target, stm);
+        Position getAttacker = cheapestAttacker(copy, target, stm);
         if (getAttacker.row == -1)
             break;
 
-        Piece *attacker = boardCopy.getPieceAt({getAttacker.row, getAttacker.col});
+        Piece *attacker = copy.getPieceAt({getAttacker.row, getAttacker.col});
         int attackerVal = pieceValFromSymbol(attacker->getSymbol());
 
         int next = attackerVal - gain[depth];
@@ -128,10 +131,10 @@ int see(Board &start, Position target, int sideToMove)
 
         // perform static capture on board copy
         // remove attacker from its Position
-        boardCopy.movePiece({getAttacker.row, getAttacker.col}, {target.row, target.col}, attacker);
+        copy.movePiece({getAttacker.row, getAttacker.col}, {target.row, target.col}, attacker);
 
-        // switch side
-        sideToMove = (sideToMove == 0) ? 1 : 0;
+    // switch side
+    stm = (stm == 0) ? 1 : 0;
     }
 
     for (int i = depth - 1; i >= 0; --i)
