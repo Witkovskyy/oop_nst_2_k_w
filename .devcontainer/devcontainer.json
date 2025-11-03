@@ -1,0 +1,20 @@
+{
+  "name": "oop_nst_2_k_w - Dev",
+  "dockerComposeFile": [ "../docker-compose.yml" ],
+  "service": "dev",
+  "workspaceFolder": "/work",
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools"
+      ],
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+      }
+    }
+  },
+  "postCreateCommand": "cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug || true",
+  "remoteUser": "dev"
+}

@@ -1,32 +1,147 @@
+﻿#include <SFML/Graphics.hpp>
 #include <iostream>
-#include "Piece.h"
 #include "Board.h"
-#include "engine/engine.h"
+#include "Piece.h"
+#include "Pawn.h"
+#include "Rook.h"
+#include "kNight.h"
+#include "Bishop.h"
+#include "Queen.h"
+#include "King.h"
+
 using namespace std;
-int main()
-{
+
+const int TILE_SIZE = 80;
+const int BOARD_SIZE = 8;
+
+int main() {
+    sf::RenderWindow window(sf::VideoMode(BOARD_SIZE * TILE_SIZE, BOARD_SIZE * TILE_SIZE), "CHESS");
+
+    //tekstury figur
+    sf::Texture textures[12];
+    textures[0].loadFromFile("pieces/White_Pawn.png");
+    textures[1].loadFromFile("pieces/White_Rook.png");
+    textures[2].loadFromFile("pieces/White_Knight.png");
+    textures[3].loadFromFile("pieces/White_Bishop.png");
+    textures[4].loadFromFile("pieces/White_Queen.png");
+    textures[5].loadFromFile("pieces/White_King.png");
+    textures[6].loadFromFile("pieces/Black_Pawn.png");
+    textures[7].loadFromFile("pieces/Black_Rook.png");
+    textures[8].loadFromFile("pieces/Black_Knight.png");
+    textures[9].loadFromFile("pieces/Black_Bishop.png");
+    textures[10].loadFromFile("pieces/Black_Queen.png");
+    textures[11].loadFromFile("pieces/Black_King.png");
     Board board;
-    Piece *p1 = new Piece(0, 'K', {2, 1});
-    board.placePiece(p1);
-    Piece *p2 = new Piece(1, 'K', {7, 3});
-    board.placePiece(p2);
-    Piece *p3 = new Piece(0, 'Q', {3, 4});
-    board.placePiece(p3);
-    Piece *p5 = new Piece(0, 'R', {5, 5});
-    board.placePiece(p5);
 
+    // Białe
+    board.placePiece(new Rook(0, 'R', { 0, 0 }));
+    board.placePiece(new Knight(0, 'N', { 0, 1 }));
+    board.placePiece(new Bishop(0, 'B', { 0, 2 }));
+    board.placePiece(new Queen(0, 'Q', { 0, 3 }));
+    board.placePiece(new King(0, 'K', { 0, 4 }));
+    board.placePiece(new Bishop(0, 'B', { 0, 5 }));
+    board.placePiece(new Knight(0, 'N', { 0, 6 }));
+    board.placePiece(new Rook(0, 'R', { 0, 7 }));
+    for (int i = 0; i < BOARD_SIZE; i++) board.placePiece(new Pawn(0, 'P', { 1, i }));
 
-    cout << "Initial board:\n";
-    board.DisplayBoard();
+    // Czarne
+    board.placePiece(new Rook(1, 'R', { 7, 0 }));
+    board.placePiece(new Knight(1, 'N', { 7, 1 }));
+    board.placePiece(new Bishop(1, 'B', { 7, 2 }));
+    board.placePiece(new Queen(1, 'Q', { 7, 3 }));
+    board.placePiece(new King(1, 'K', { 7, 4 }));
+    board.placePiece(new Bishop(1, 'B', { 7, 5 }));
+    board.placePiece(new Knight(1, 'N', { 7, 6 }));
+    board.placePiece(new Rook(1, 'R', { 7, 7 }));
+    for (int i = 0; i < BOARD_SIZE; i++) board.placePiece(new Pawn(1, 'P', { 6, i }));
 
-    cout << "eval = " << eval(board) << "\n";
-    Position target{3 ,4};
-    cout << "see - white = " << see(board, target, 0) << "\n";
-    cout << "negamax = " << negamax(board, 5, -100000, 100000, 0) << "\n";
+    int currentPlayer = 0; // 0 = białe, 1 = czarne
+    Position selected = { -1, -1 };
+    Piece* selectedPiece = nullptr;
 
-    delete p1;
-    delete p2;
-    delete p3;
-    delete p5;
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) window.close();
+
+            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+                int col = event.mouseButton.x / TILE_SIZE;
+                int row = 7 - (event.mouseButton.y / TILE_SIZE);
+
+                if (!selectedPiece) {
+                    // wybierz figurę
+                    selectedPiece = board.getPieceAt({ row, col });
+                    if (selectedPiece && selectedPiece->getColor() == currentPlayer)
+                        selected = { row, col };
+                    else
+                        selectedPiece = nullptr;
+                }
+                else {
+                    Position target = { row, col };
+                    Piece* captured = board.getPieceAt(target);
+
+                    if (board.movePiece(selected, target, selectedPiece)) {
+                        if (captured) delete captured;
+                        currentPlayer = 1 - currentPlayer;
+                    }
+
+                    selectedPiece = nullptr;
+                    selected = { -1, -1 };
+                }
+            }
+        }
+
+        // plansza
+        window.clear();
+        for (int r = 0; r < BOARD_SIZE; r++) {
+            for (int c = 0; c < BOARD_SIZE; c++) {
+                sf::RectangleShape square(sf::Vector2f(TILE_SIZE, TILE_SIZE));
+                square.setPosition(c * TILE_SIZE, (7 - r) * TILE_SIZE);
+                if ((r + c) % 2 == 0) square.setFillColor(sf::Color(240, 217, 181));
+                else square.setFillColor(sf::Color(181, 136, 99));
+                window.draw(square);
+            }
+        }
+
+        // figury
+        for (int r = 0; r < BOARD_SIZE; r++) {
+            for (int c = 0; c < BOARD_SIZE; c++) {
+                Piece* piece = board.getPieceAt({ r, c });
+                if (!piece) continue;
+
+                sf::Sprite sprite;
+                int color = piece->getColor();
+                char symbol = piece->getSymbol();
+
+                if (color == 0) { // białe
+                    switch (symbol) {
+                    case 'P': sprite.setTexture(textures[0]); break;
+                    case 'R': sprite.setTexture(textures[1]); break;
+                    case 'N': sprite.setTexture(textures[2]); break;
+                    case 'B': sprite.setTexture(textures[3]); break;
+                    case 'Q': sprite.setTexture(textures[4]); break;
+                    case 'K': sprite.setTexture(textures[5]); break;
+                    }
+                }
+                else { // czarne
+                    switch (symbol) {
+                    case 'P': sprite.setTexture(textures[6]); break;
+                    case 'R': sprite.setTexture(textures[7]); break;
+                    case 'N': sprite.setTexture(textures[8]); break;
+                    case 'B': sprite.setTexture(textures[9]); break;
+                    case 'Q': sprite.setTexture(textures[10]); break;
+                    case 'K': sprite.setTexture(textures[11]); break;
+                    }
+                }
+
+                sprite.setPosition(c * TILE_SIZE, (7 - r) * TILE_SIZE);
+                sprite.setScale(TILE_SIZE / sprite.getLocalBounds().width, TILE_SIZE / sprite.getLocalBounds().height);
+                window.draw(sprite);
+            }
+        }
+
+        window.display();
+    }
+
     return 0;
 }
