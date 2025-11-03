@@ -28,4 +28,12 @@ enable_testing()
 add_test(NAME engine_tests COMMAND tests)
 
 find_package(SQLite3 REQUIRED)
-target_link_libraries(app PRIVATE engine SQLite::SQLite3)
+find_package(SFML 2.6.2 COMPONENTS graphics window system audio REQUIRED)
+target_link_libraries(app 
+  PRIVATE 
+    engine 
+    SQLite::SQLite3 
+    sfml-graphics
+    sfml-window 
+    sfml-system 
+    sfml-audio)
