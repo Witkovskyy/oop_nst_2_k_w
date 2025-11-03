@@ -1,4 +1,3 @@
-#pragma once
 #include <iostream>
 #include "Piece.h"
 using namespace std;
@@ -27,4 +26,4 @@ void Piece::setSymbol(char s){
 void Piece::setPosition(Position setPos){
     current_position = setPos;
 }
-
+bool Piece::canMove(Position newPos) {return false;}
