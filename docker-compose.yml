@@ -3,11 +3,12 @@ services:
     build:
       context: .
       args:
-        UID: ${UID-1000}
-        GID: ${GID-1000}
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
     volumes:
       - ./:/work
       - ./.ccache:/tmp/.ccache
+      - /mnt/wslg:/mnt/wslg
     working_dir: /work
     tty: true
     stdin_open: true
@@ -15,4 +16,12 @@ services:
       - CC=gcc
       - CXX=g++
       - CCACHE_DIR=/tmp/.ccache
-    command: tail -f /dev/null   # container 'lives', you can enter via docker exec
+      - DISPLAY=${DISPLAY}
+      - WAYLAND_DISPLAY=${WAYLAND_DISPLAY}
+      - XDG_RUNTIME_DIR=/mnt/wslg/runtime-dir
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - "video"
+      - "audio"
+    command: tail -f /dev/null   # container 'lives'

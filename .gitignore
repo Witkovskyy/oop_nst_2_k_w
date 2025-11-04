@@ -8,6 +8,7 @@
 /Testing/
 compile_commands.json
 
+
 # Binarki i biblioteki
 *.o
 *.obj
@@ -33,6 +34,7 @@ compile_commands.json
 .vscode-test/
 .idea/
 .vs/
+.vs/*
 
 # Systemowe
 .DS_Store

@@ -1,36 +1,41 @@
 {
-  "version": 3,
-  "cmakeMinimumRequired": { "major": 3, "minor": 22 },
-  "configurePresets": [
-    {
-      "name": "debug-ninja",
-      "displayName": "Debug (Ninja, GCC)",
-      "generator": "Ninja",
-      "binaryDir": "build",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_CXX_STANDARD": "20",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
-      }
+    "version": 4,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 22
     },
-    {
-      "name": "release-ninja",
-      "displayName": "Release (Ninja, GCC)",
-      "generator": "Ninja",
-      "binaryDir": "build-rel",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_CXX_STANDARD": "20",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
-      }
-    }
-  ],
-  "buildPresets": [
-    { "name": "build-debug",   "configurePreset": "debug-ninja" },
-    { "name": "build-release", "configurePreset": "release-ninja" }
-  ],
-  "testPresets": [
-    { "name": "test-debug",   "configurePreset": "debug-ninja" },
-    { "name": "test-release", "configurePreset": "release-ninja" }
-  ]
+    "configurePresets": [
+        {
+            "name": "vs2022-debug",
+            "generator": "Visual Studio 17 2022",
+            "architecture": { "value": "x64" },
+            "binaryDir": "build/win-vs-debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
+                "VCPKG_TARGET_TRIPLET": "x64-windows"
+            }
+        },
+        {
+            "name": "vs2022-release",
+            "generator": "Visual Studio 17 2022",
+            "architecture": { "value": "x64" },
+            "binaryDir": "build/win-vs-release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
+                "VCPKG_TARGET_TRIPLET": "x64-windows"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "build-debug",
+            "configurePreset": "vs2022-debug"
+        },
+        {
+            "name": "build-release",
+            "configurePreset": "vs2022-release"
+        }
+    ]
 }
