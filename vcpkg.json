@@ -1,0 +1,20 @@
+{
+    "name": "oop-cpp-demo",
+    "version-string": "0.1.0",
+    "builtin-baseline": "b27f6bfad367d64f8f0f3296351c5d246e182bb4",
+    "dependencies": [
+        {
+            "name": "sfml",
+            "version>=": "2.6.2"
+        },
+        "sqlite3",
+        "nlohmann-json",
+        "catch2"
+    ],
+    "overrides": [
+        {
+            "name": "sfml",
+            "version": "2.6.2"
+        }
+    ]
+}
