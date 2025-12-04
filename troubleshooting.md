@@ -1,10 +1,16 @@
 # If cmake fails to compile
 
 Install vcpkg
-
+In powershell
+```powershell
+git clone https://github.com/microsoft/vcpkg C:\vcpkg
+C:\vcpkg\bootstrap-vcpkg.bat
+C:\vcpkg\vcpkg integrate install
+```
 
 In x64 Native Tools for Visual Studio
-Try powershell```
+Try 
+```powershell
 rd /s /q build\win-vs 2>nul
 
 cmake -S . -B build\win-vs ^
