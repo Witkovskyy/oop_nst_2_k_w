@@ -11,6 +11,9 @@
 static long nodesVisited = 0;
 long get_nodes_visited() { return nodesVisited; }
 
+inline int to01(int sign) { return sign > 0 ? 0 : 1; }
+inline int toSign(int color01) { return color01 == 0 ? +1 : -1; }
+
 int eval(const Board &board)
 {
     // Simple material evaluation
@@ -117,7 +120,7 @@ int quiescence(Board &board, int alpha, int beta, int color)
     if (stand > alpha)
         alpha = stand;
 
-    auto caps = generateCaptures(board, color); // Only consider capture moves
+    auto caps = generateCaptures(board, to01(color)); // Only consider capture moves
     for (auto &move : caps)
     {
         Undo undo;
@@ -141,7 +144,7 @@ int negamax(Board &board, int depth, int alpha, int beta, int color)
         return quiescence(board, alpha, beta, color);
 
     int best = -INF;
-    auto moves = legalMoves(board, (color > 0 ? 0 : 1));
+    auto moves = legalMoves(board,to01(color));
     if (moves.empty()) {
         return 0;
     }
@@ -164,7 +167,7 @@ int negamax(Board &board, int depth, int alpha, int beta, int color)
 }
 
 // API freaking out, set default to 0 - white
-int negamax(Board &board, int depth, int alpha, int beta)
-{
-    return negamax(board, depth, alpha, beta, +1);
-}
+//int negamax(Board &board, int depth, int alpha, int beta)
+//{
+//    return negamax(board, depth, alpha, beta);
+//}

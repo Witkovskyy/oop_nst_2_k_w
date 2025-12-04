@@ -225,16 +225,16 @@ static std::vector<Position> generateCapturesForPiece(Board &board, Position pos
     return captures;
 }
 
-std::vector<Move> generateAllMoves(Board &board, int color){
+std::vector<Move> generateAllMoves(Board& board, int color) {
     std::vector<Move> allMoves;
-    for(int row = 0; row < 8; ++row){
-        for(int col = 0; col < 8; ++col){
-            auto *piece = board.getPieceAt({row, col});
-            if(piece != nullptr && piece->getColor() == color){
-                auto pieceMoves = generateMovesForPiece(board, {row, col}, piece, color);
-                for(auto &pos : pieceMoves){
+    for (int row = 0; row < 8; ++row) {
+        for (int col = 0; col < 8; ++col) {
+            auto* piece = board.getPieceAt({ row, col });
+            if (piece != nullptr && piece->getColor() == color) {
+                auto pieceMoves = generateMovesForPiece(board, { row, col }, piece, color);
+                for (auto& pos : pieceMoves) {
                     Move mv;
-                    mv.from = {row, col};
+                    mv.from = { row, col };
                     mv.to = pos;
                     mv.pieceMoved = piece;
                     mv.pieceCaptured = board.getPieceAt(pos);
@@ -243,6 +243,10 @@ std::vector<Move> generateAllMoves(Board &board, int color){
             }
         }
     }
+    std::cout << "Generated " << allMoves.size() << " moves for color " << color << std::endl;
+    for (int i = 0;i < allMoves.size(); i++) {
+        std::cout << "Move " << i << ": from (" << allMoves[i].from.row << "," << allMoves[i].from.col << ") to (" << allMoves[i].to.row << "," << allMoves[i].to.col << ")\n";
+}
     return allMoves;
 }
     
@@ -264,5 +268,9 @@ std::vector<Move> generateAllCaptures(Board& board, int color) {
             }
         }
     }
+	std::cout << "Generated " << allCaptures.size() << " captures for color " << color << std::endl;
+	for (int i = 0;i < allCaptures.size(); i++) {
+		std::cout << "Capture " << i << ": from (" << allCaptures[i].from.row << "," << allCaptures[i].from.col << ") to (" << allCaptures[i].to.row << "," << allCaptures[i].to.col << ")\n";
+	}
     return allCaptures;
 }

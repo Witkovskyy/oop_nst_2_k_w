@@ -6,7 +6,7 @@ const int sizeboard = 8;
 class Board {
 public:
     Piece* squares[sizeboard][sizeboard];
-    Piece* wyswietl();
+    Piece* Display();
 public:
     Board();
     void placePiece(Piece* piece);

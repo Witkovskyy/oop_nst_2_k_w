@@ -150,8 +150,8 @@ int main() {
             Board& copy = ob.board;
 
             int side = -1;
-            int sideforlegal01 = 1; // to jest do poprawy pozniej
-            auto moves = legalMoves(copy, sideforlegal01);
+            //int sideforlegal01 = 1; // to jest do poprawy pozniej
+            auto moves = legalMoves(copy, to01(side));
 
             if (moves.empty()) {
 				std::cout << "Brak ruchu" << std::endl;
@@ -159,6 +159,10 @@ int main() {
                 window.display();
                 continue;
             }
+
+			/*for (auto& move : moves) {
+				std::cout << "Move from (" << move.from.row << "," << move.from.col << ") to (" << move.to.row << "," << move.to.col << ")\n";
+			}*/
 
             int alpha = -INF, beta = INF;
             Move best = moves[0];

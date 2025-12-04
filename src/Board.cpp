@@ -9,7 +9,7 @@
 #include <iostream>
 using namespace std;
 
-Piece* Board::wyswietl() {
+Piece* Board::Display() {
     return squares[1][1];
 }
 
