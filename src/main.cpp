@@ -8,6 +8,10 @@
 #include "Bishop.h"
 #include "Queen.h"
 #include "King.h"
+#include "engine/engine.h"
+#include "engine/val.h"
+#include "engine/deepcopy.h"
+#include "engine/evalpos.cpp"
 
 using namespace std;
 
@@ -16,6 +20,7 @@ const int BOARD_SIZE = 8;
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(BOARD_SIZE * TILE_SIZE, BOARD_SIZE * TILE_SIZE), "CHESS");
+
 
     //tekstury figur
     sf::Texture textures[12];
@@ -138,6 +143,45 @@ int main() {
                 sprite.setScale(TILE_SIZE / sprite.getLocalBounds().width, TILE_SIZE / sprite.getLocalBounds().height);
                 window.draw(sprite);
             }
+        }
+
+        if (currentPlayer == 1) {
+            OwnedBoard ob(board);
+            Board& copy = ob.board;
+
+            int side = -1;
+            //int sideforlegal01 = 1; // to jest do poprawy pozniej
+            auto moves = legalMoves(copy, to01(side));
+
+            if (moves.empty()) {
+				std::cout << "Brak ruchu" << std::endl;
+                currentPlayer = 0;         
+                window.display();
+                continue;
+            }
+
+			/*for (auto& move : moves) {
+				std::cout << "Move from (" << move.from.row << "," << move.from.col << ") to (" << move.to.row << "," << move.to.col << ")\n";
+			}*/
+
+            int alpha = -INF, beta = INF;
+            Move best = moves[0];
+
+            for (auto& move : moves) {
+                Undo undo;
+                applyMove(copy, move, undo);
+                int score = -negamax(copy, depth-1, -beta, -alpha, -side);
+                undoMove(copy, move, undo);
+
+                if (score > alpha) 
+                { 
+                    alpha = score; 
+                    best = move; 
+                }
+            }
+            Undo dummy;
+            applyMove(board, best, dummy);
+			currentPlayer = 0;
         }
 
         window.display();

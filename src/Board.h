@@ -4,9 +4,9 @@
 
 const int sizeboard = 8;
 class Board {
-private:
+public:
     Piece* squares[sizeboard][sizeboard];
-    Piece* wyswietl();
+    Piece* Display();
 public:
     Board();
     void placePiece(Piece* piece);
@@ -14,4 +14,5 @@ public:
     bool movePiece(Position oldpos, Position newpos, Piece* piece);
     void DisplayBoard();
     Piece* getPieceAt(Position pos);
+	bool validateMove(Position from, Position to, Piece* piece);
 };

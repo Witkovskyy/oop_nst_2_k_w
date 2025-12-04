@@ -9,7 +9,7 @@
 #include <iostream>
 using namespace std;
 
-Piece* Board::wyswietl() {
+Piece* Board::Display() {
     return squares[1][1];
 }
 
@@ -28,6 +28,12 @@ void Board::placePiece(Piece* piece) {
 
 bool Board::isEmpty(Position pos) {
     return squares[pos.row][pos.col] == nullptr;
+}
+
+bool Board::validateMove(Position old_pos, Position new_pos, Piece* piece) {
+    if (new_pos.row < 0 || new_pos.row >= 8 || new_pos.col < 0 || new_pos.col >= 8)
+        return false;
+	return true;
 }
 
 bool Board::movePiece(Position oldpos, Position newpos, Piece* piece) {

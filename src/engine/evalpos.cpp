@@ -11,6 +11,9 @@
 static long nodesVisited = 0;
 long get_nodes_visited() { return nodesVisited; }
 
+inline int to01(int sign) { return sign > 0 ? 0 : 1; }
+inline int toSign(int color01) { return color01 == 0 ? +1 : -1; }
+
 int eval(const Board &board)
 {
     // Simple material evaluation
@@ -35,15 +38,16 @@ int eval(const Board &board)
 }
 
 
-static std::vector<Move> legalMoves(const Board &board, int color)
-{
-    // reuse existing generator in moves.h
-    return generateAllMoves(const_cast<Board &>(board), color);
+static std::vector<Move> legalMoves(Board& board, int color) {
+    auto quiet = generateAllMoves(board, color);
+    auto caps = generateAllCaptures(board, color);
+    quiet.insert(quiet.end(), caps.begin(), caps.end());
+    return quiet;
 }
 
 static std::vector<Move> generateCaptures(Board &board, int color)
 {
-    return generateAllCaptures(board);
+    return generateAllCaptures(board, color);
 }
 
 struct Undo
@@ -71,8 +75,17 @@ static void applyMove(Board &board, const Move &move, Undo &undo)
 
 static void orderMoves(std::vector<Move> &moves)
 {
-    // no-op for now
-    (void)moves;
+    std::sort(moves.begin(), moves.end(), [&](const Move& A, const Move& B) {
+        const bool capA = (A.pieceCaptured != nullptr);
+        const bool capB = (B.pieceCaptured != nullptr);
+        if (capA != capB) return capA > capB;
+        if (capA) {
+            int sA = 16 * pieceValFromSymbol(A.pieceCaptured->getSymbol()) - pieceValFromSymbol(A.pieceMoved->getSymbol());
+            int sB = 16 * pieceValFromSymbol(B.pieceCaptured->getSymbol()) - pieceValFromSymbol(B.pieceMoved->getSymbol());
+            if (sA != sB) return sA > sB;
+        }
+        return false;
+        });
 }
 
 // game over if one king is missing
@@ -107,12 +120,12 @@ int quiescence(Board &board, int alpha, int beta, int color)
     if (stand > alpha)
         alpha = stand;
 
-    auto caps = generateCaptures(board, color); // Only consider capture moves
+    auto caps = generateCaptures(board, to01(color)); // Only consider capture moves
     for (auto &move : caps)
     {
         Undo undo;
         applyMove(board, move, undo);
-        int score = -quiescence(board, -beta, -alpha, color==0 ? 1 : 0);
+        int score = -quiescence(board, -beta, -alpha, -color);
         undoMove(board, move, undo);
         if (score >= beta)
             return beta;
@@ -131,16 +144,17 @@ int negamax(Board &board, int depth, int alpha, int beta, int color)
         return quiescence(board, alpha, beta, color);
 
     int best = -INF;
-    auto moves = legalMoves(board, color);
-    if (moves.empty()) // No legal moves
-        return quiescence(board, alpha, beta, color);
+    auto moves = legalMoves(board,to01(color));
+    if (moves.empty()) {
+        return 0;
+    }
 
     orderMoves(moves);
     for (auto &move : moves)
     {
         Undo undo;
         applyMove(board, move, undo);
-        int score = -negamax(board, depth - 1, -beta, -alpha, color==0 ? 1 : 0);
+        int score = -negamax(board, depth - 1, -beta, -alpha, -color);
         undoMove(board, move, undo);
         if (score > best)
             best = score;
@@ -153,7 +167,7 @@ int negamax(Board &board, int depth, int alpha, int beta, int color)
 }
 
 // API freaking out, set default to 0 - white
-int negamax(Board &board, int depth, int alpha, int beta)
-{
-    return negamax(board, depth, alpha, beta, 0);
-}
+//int negamax(Board &board, int depth, int alpha, int beta)
+//{
+//    return negamax(board, depth, alpha, beta);
+//}

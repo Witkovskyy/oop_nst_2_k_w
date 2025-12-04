@@ -23,7 +23,7 @@ add_executable(app
   src/Queen.cpp
   src/Piece.cpp
   src/kNight.cpp
-)
+ src/engine/moves.cpp)
 
 #add_executable(tests
  # src/tests/test_engine.cpp
