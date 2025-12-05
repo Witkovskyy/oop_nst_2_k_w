@@ -87,6 +87,10 @@ int main() {
 
                     if (board.movePiece(selected, target, selectedPiece)) {
                         if (captured) delete captured;
+						if (selectedPiece->getSymbol() == 'P' && (target.row == 0 || target.row == 7)) {
+							char newSymbol = 'Q'; // Default to Queen
+							board.promotePawn(board, target, newSymbol, currentPlayer);
+						}
                         currentPlayer = 1 - currentPlayer;
                     }
 
@@ -144,44 +148,107 @@ int main() {
                 window.draw(sprite);
             }
         }
-
-        if (currentPlayer == 1) {
+		if (currentPlayer == 0) // PLAYER MOVE
+		{
             OwnedBoard ob(board);
             Board& copy = ob.board;
 
-            int side = -1;
-            //int sideforlegal01 = 1; // to jest do poprawy pozniej
-            auto moves = legalMoves(copy, to01(side));
-
+            auto moves = legalMoves(copy, to01(currentPlayer));
             if (moves.empty()) {
-				std::cout << "Brak ruchu" << std::endl;
-                currentPlayer = 0;         
+                // Two options if no moves
+                if (isInCheck(copy, to01(currentPlayer))) {
+                    std::cout << "SZACH MAT! Koniec gry." << std::endl;
+                }
+                else {
+                    std::cout << "PAT! Remis." << std::endl;
+                }
+
+				// Game over handling here
                 window.display();
-                continue;
+                continue; // or break
+            }
+		}
+
+
+        if (currentPlayer == 1) // AI MOVE
+        {
+            OwnedBoard ob(board);
+            Board& copy = ob.board;
+
+            int aiSide = -1; // AI is playing black always, to change later
+
+            //Generate moves
+            auto moves = legalMoves(copy, to01(aiSide));
+
+            std::cout << "--- RUCHY AI ---" << std::endl;
+            for (auto& m : moves) {
+                if (toupper(m.pieceMoved->getSymbol()) == 'P') {
+                    std::cout << "Pion: " << m.from.row << "," << m.from.col
+                        << " -> " << m.to.row << "," << m.to.col << std::endl;
+                }
             }
 
-			/*for (auto& move : moves) {
-				std::cout << "Move from (" << move.from.row << "," << move.from.col << ") to (" << move.to.row << "," << move.to.col << ")\n";
-			}*/
+			// Checkmate / Stalemate
+            if (moves.empty()) {
+                // Two options if no moves
+                if (isInCheck(copy, to01(aiSide))) {
+                    std::cout << "SZACH MAT! Koniec gry." << std::endl;
+                }
+                else {
+                    std::cout << "PAT! Remis." << std::endl;
+                }
 
-            int alpha = -INF, beta = INF;
-            Move best = moves[0];
+                // Game over handling here
+                window.display();
+                continue; // or break
+            }
 
+			// Sort here to improve alpha-beta efficiency
+            orderMoves(moves);
+
+			int alpha = -INF; // from val.h
+            int beta = INF;   
+            Move bestMove = moves[0]; // Default if all moves are terrible
+
+            // ROOT SEARCH
             for (auto& move : moves) {
                 Undo undo;
                 applyMove(copy, move, undo);
-                int score = -negamax(copy, depth-1, -beta, -alpha, -side);
+
+                // Remember negation
+                int score = -negamax(copy, depth - 1, -beta, -alpha, -aiSide);
+
                 undoMove(copy, move, undo);
 
-                if (score > alpha) 
-                { 
-                    alpha = score; 
-                    best = move; 
+                if (score > alpha) {
+                    alpha = score;
+                    bestMove = move;
+                    // Optional
+                     std::cout << "AI found better move" << score << std::endl;
                 }
             }
-            Undo dummy;
-            applyMove(board, best, dummy);
-			currentPlayer = 0;
+            Position from = bestMove.from;
+            Position to = bestMove.to;
+
+            Piece* realPiece = board.getPieceAt(from);
+            Piece* captured = board.getPieceAt(to);
+
+            // REAL MOVE
+            if (realPiece) {
+                // Update board state
+                board.movePiece(from, to, realPiece);
+
+				// Cleanup captured piece
+                if (captured) {
+                    delete captured;
+                }
+            }
+            else {
+                std::cout << "BŁĄD KRYTYCZNY: AI chce ruszyć figurą, której nie ma na planszy!" << std::endl;
+            }
+
+            // Give move back
+            currentPlayer = 0;
         }
 
         window.display();

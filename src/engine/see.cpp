@@ -1,144 +1,181 @@
-// Static Exchange Evaluation (SEE)
 #include "../Piece.h"
 #include "../Board.h"
-#include "../engine/deepcopy.h"
-#include "val.h"
+#include "val.h" 
 #include <algorithm>
 #include <vector>
-#include <limits>
+#include <cmath>
 
-// Minimal Board API expected by this file from main.cpp
+// Helper border check, inline makes it faster
 
-static inline int colorOfPiece(Piece *piece)
-{
-    if (!piece)
-        return -1; // none
-    return piece->getColor();
+inline bool isValid(int r, int c) {
+    return r >= 0 && r < 8 && c >= 0 && c < 8;
 }
 
-static bool lineClear(Board &board, Position from, Position to)
+// Stable directions for pieces
+static int knightDeltas[8][2] = { {2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}, {2, -1} };
+static int rookDeltas[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+static int bishopDeltas[4][2] = { {1, 1}, {1, -1}, {-1, 1}, {-1, -1} };
+
+/// Find cheapest attacker of given color on target square.
+/// Returns position of attacker and sets outValue to its value.
+/// If no attacker found, returns {-1,-1} and outValue is undefined.
+static Position getCheapestAttacker(Board& board, Position target, int color, int& outValue)
 {
-    int stepRow = (to.row > from.row) - (to.row < from.row);
-    int stepCol = (to.col > from.col) - (to.col < from.col);
+    Position bestPos = { -1, -1 };
+    int bestVal = 100000; // INF
 
-    int currentRow = from.row + stepRow;
-    int currentCol = from.col + stepCol;
+    int r = target.row;
+    int c = target.col;
 
-    // "walking" towards "to" and ensure all squares are empty
-    while (currentRow != to.row || currentCol != to.col)
-    {
-        Position pos{currentRow, currentCol};
-        if (board.getPieceAt(pos) != nullptr)
-            return false;
-        currentRow += stepRow;
-        currentCol += stepCol;
-    }
-    return true;
-}
+    /// PAWN
+	/// We check where a pawn of given color could attack from.
+	/// so pawn has to be on r-1 (white) or r+1 (black)
+    /// moves.cpp: White=+1, Black=-1.
+	/// Attacker is r-1 for White, r+1 for Black
 
-static bool canAttack(Board &board, Position from, Position to)
-{
-    if (from.row == to.row && from.col == to.col)
-        return false;
-    Piece *src = board.getPieceAt({from.row, from.col});
-    if (!src)
-        return false;
-    char symbol = src->getSymbol();
-    int srcColor = src->getColor();
-    if (symbol == 'P')
-    {
-        int dir = (srcColor == 0) ? -1 : +1;
-        int rr = from.row + dir;
-        return (to.row == rr && (to.col == from.col - 1 || to.col == from.col + 1));
-    }
-    if (symbol == 'N')
-    {
-        int dr = std::abs(from.row - to.row), dc = std::abs(from.col - to.col);
-        return (dr == 1 && dc == 2) || (dr == 2 && dc == 1);
-    }
-    if (symbol == 'B')
-    {
-        return std::abs(from.row - to.row) == std::abs(from.col - to.col) && lineClear(board, from, to);
-    }
-    if (symbol == 'R')
-    {
-        return (from.row == to.row || from.col == to.col) && lineClear(board, from, to);
-    }
-    if (symbol == 'Q')
-    {
-        return ((from.row == to.row || from.col == to.col) || (std::abs(from.row - to.row) == std::abs(from.col - to.col))) && lineClear(board, from, to);
-    }
-    if (symbol == 'K')
-    {
-        return std::max(std::abs(from.row - to.row), std::abs(from.col - to.col)) == 1;
-    }
-    return false;
-}
+	int pawnDir = (color == 0) ? -1 : 1; // Where did the pawn come from
 
-// Returns the cheapest attacker Position of the given color on 'square'. If none, r=-1.
-static Position cheapestAttacker(Board &board, Position square, int sideColor)
-{
-    Position best{-1, -1};
-    int bestVal = 1e9;
-    for (int row = 0; row < 8; ++row)
-        for (int col = 0; col < 8; ++col)
-        {
-            Piece *piece = board.getPieceAt({row, col});
-            if (!piece)
-                continue;
-            if (piece->getColor() != sideColor)
-                continue;
-            if (!canAttack(board, {row, col}, square))
-                continue;
-            int val = pieceValFromSymbol(piece->getSymbol());
-            if (val < bestVal)
-            {
-                bestVal = val;
-                best = {row, col};
+    // Check for both diagonals
+    for (int dc : {-1, 1}) {
+        int pr = r + pawnDir;
+        int pc = c + dc;
+        if (isValid(pr, pc)) {
+            Piece* p = board.getPieceAt({ pr, pc });
+            if (p && p->getColor() == color && toupper(p->getSymbol()) == 'P') {
+				// Pawn is always the cheapest attacker
+                outValue = pieceValFromSymbol(p->symbol);
+				return { pr, pc }; // Pawn found, return immediately cause can't be cheaper
             }
         }
-    return best;
+    }
+
+	/// KNIGHT
+    for (auto& d : knightDeltas) {
+        int nr = r + d[0];
+        int nc = c + d[1];
+        if (isValid(nr, nc)) {
+            Piece* p = board.getPieceAt({ nr, nc });
+            if (p && p->getColor() == color && toupper(p->getSymbol()) == 'N') {
+				int val = pieceValFromSymbol(p->symbol); // Knight value
+                if (val < bestVal) {
+                    bestVal = val;
+                    bestPos = { nr, nc };
+                }
+            }
+        }
+    }
+
+	// Theoretically we could have multiple attackers of same type,
+	// so we continue searching for cheaper ones.
+	// Even if we found a knight, we still look for bishops, rooks, queens, kings.
+
+	// SLIDERS: BISHOP, ROOK, QUEEN
+	// Helper for scanning in directions
+    auto scan = [&](int dirs[][2], int numDirs, char type1, char type2) {
+        for (int i = 0; i < numDirs; ++i) {
+            for (int k = 1; k < 8; ++k) {
+                int nr = r + dirs[i][0] * k;
+                int nc = c + dirs[i][1] * k;
+
+                if (!isValid(nr, nc)) break;
+
+                Piece* p = board.getPieceAt({ nr, nc });
+                if (p) { // Found
+                    if (p->getColor() == color) {
+                        char s = toupper(p->getSymbol());
+                        if (s == type1 || s == type2 || s == 'Q') {
+                            int val = pieceValFromSymbol(s);
+                            if (val < bestVal) {
+                                bestVal = val;
+                                bestPos = { nr, nc };
+                            }
+                        }
+                    }
+                    break; // Blocked, stop
+                }
+            }
+        }
+        };
+
+    // Diagonals
+	scan(bishopDeltas, 4, 'B', 'B'); // Double Bishop
+    // Straights
+    scan(rookDeltas, 4, 'R', 'R');
+
+    //KING
+    for (auto& d : bishopDeltas) { // Moves like a Queen but only one square
+		// Simplified checking for area around king
+		// This is not very efficient but king is rare so it's ok
+        int nr = r + d[0]; int nc = c + d[1];
+        if (isValid(nr, nc)) {
+            Piece* p = board.getPieceAt({ nr, nc });
+            if (p && p->getColor() == color && toupper(p->getSymbol()) == 'K') {
+				// We take king only if there is no other choice
+                if (20000 < bestVal) { bestVal = 20000; bestPos = { nr, nc }; }
+            }
+        }
+    }
+
+    outValue = bestVal;
+    return bestPos;
 }
 
-// SEE: positive result = gain for 'sideToMove' initiating the exchange on 'target'.
-int see(Board &start, Position target, int sideToMove)
+
+int see(Board& board, Position target, int sideToMove)
 {
-    Piece *victim = start.getPieceAt({target.row, target.col});
-    if (!victim)
-        return 0;
+	// Starting value of the victim
+    Piece* victim = board.getPieceAt(target);
+    int value = victim ? pieceValFromSymbol(victim->getSymbol()) : 0;
 
-    // important, not to mix up
-    OwnedBoard ob(start);
-    Board &copy = ob.board;
+    // Swap list
+    std::vector<int> gain;
+    gain.reserve(16);
+    gain.push_back(value);
 
-    int gain[32];
-    int depth = 0;
-    gain[0] = pieceValFromSymbol(victim->getSymbol());
+	// For optimal performance, we could try to delete one figure 
+	// in cache but its tricky and error-prone.
+	// We stay with simple copy for safety. (Maybe we can optimize later?)
+
+    Board copy = board; // Only one copy
 
     int stm = sideToMove;
 
     while (true)
     {
-        Position getAttacker = cheapestAttacker(copy, target, stm);
-        if (getAttacker.row == -1)
-            break;
+        int attackerValue = 0;
+        Position from = getCheapestAttacker(copy, target, stm, attackerValue);
 
-        Piece *attacker = copy.getPieceAt({getAttacker.row, getAttacker.col});
-        int attackerVal = pieceValFromSymbol(attacker->getSymbol());
+		// If no attacker found, stop
+        if (from.row == -1) break;
 
-        int next = attackerVal - gain[depth];
-        gain[++depth] = next;
+		// New value after capture, new victim is the attacker
+        gain.push_back(attackerValue);
 
-        // perform static capture on board copy
-        // remove attacker from its Position
-        copy.movePiece({getAttacker.row, getAttacker.col}, {target.row, target.col}, attacker);
+		// Pseudo move the attacker to the target square
+		// We then open up the x-ray attacks for the next iteration
+        Piece* attackerPiece = copy.getPieceAt(from);
+        copy.movePiece(from, target, attackerPiece); // target now has the attacker
 
-    // switch side
-    stm = (stm == 0) ? 1 : 0;
+        // Switch sides
+        stm = (stm == 0) ? 1 : 0;
+
+		// Optional - if king is the attacker, stop immediately, since we don't want to consider further captures
+        if (toupper(attackerPiece->getSymbol()) == 'K') break;
     }
 
-    for (int i = depth - 1; i >= 0; --i)
-        gain[i] = std::max(-gain[i + 1], gain[i]);
+    // Back-propagation
+    // gain[0] is the value of first capture
+	// gain[1] is value of the attacker, that captures first victim
+    // EQ: score = val_captured - see(next)
 
-    return gain[0];
+    int sz = gain.size();
+	int score = 0; // If we stop at the last move ergo no more attackers, score is 0
+
+    // Iterate to the end of the list
+    for (int i = sz - 1; i >= 1; --i) {
+        score = std::max(0, gain[i] - score);
+    }
+
+    // Return sidetomove score
+    return gain[0] - score;
 }

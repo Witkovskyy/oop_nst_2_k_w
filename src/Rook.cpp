@@ -41,21 +41,19 @@ bool Rook::canMove(Position new_pos, Board* board) {
 	//porusza sie prawo lub lewo - zmiana kolumn
 
 	if (col_diff != 0 && row_diff == 0) {
-		int step = (row_diff > 0) ? 1 : -1;
-
-		
-		for (int r = cur_pos.row + step; r != new_pos.row; r += step) {
-			if (board->getPieceAt({ r, cur_pos.col }) != nullptr) {
-				return false; 
+		int step = (col_diff > 0) ? 1 : -1;
+		for (int c = cur_pos.col + step; c != new_pos.col; c += step) {
+			if (board->getPieceAt({ cur_pos.row, c }) != nullptr) {
+				return false;
 			}
 		}
 		Piece* target = board->getPieceAt(new_pos);
 		if (target == nullptr || target->getColor() != getColor()) {
 			return true;
 		}
-
 		return false;
 	}
+
 
 
 
