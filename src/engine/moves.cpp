@@ -11,124 +11,97 @@
 #include "../Queen.h"
 #include "../King.h"
 
-// pawns
-static int whitePawnMoves[][2] = {{1, 0}, {2, 0}};
-static int whitePawnCaptures[][2] = {{1, -1}, {1, 1}};
-static int blackPawnMoves[][2] = {{-1, 0}, {-2, 0}};
-static int blackPawnCaptures[][2] = {{-1, -1}, {-1, 1}};
-// pawn enpassant
-static int whitePawnEnpassant[][2] = {{1, -1}, {1, 1}};
-static int blackPawnEnpassant[][2] = {{-1, -1}, {-1, 1}};
-// knights
-static int knightMoves[][2] = {{2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}, {2, -1}};
-// bishops
-static int bishopDirections[][2] = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
-// rooks
-static int rookDirections[][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-// queens
-static int queenDirections[][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
-// kings
-static int kingMoves[][2] = {{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}};
+// Only directions for moves
+static int knightMoves[][2] = { {2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}, {2, -1} };
+static int bishopDirections[][2] = { {1, 1}, {1, -1}, {-1, 1}, {-1, -1} };
+static int rookDirections[][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+static int queenDirections[][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1} };
+static int kingMoves[][2] = { {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1} };
 
+
+// Helper border check, inline makes it faster
+inline bool isValidPos(int r, int c) {
+    return r >= 0 && r < 8 && c >= 0 && c < 8;
+}
 
 
 static std::vector<Position> generateMovesForPiece(Board &board, Position pos, Piece* piece, int color){
     std::vector<Position> moves;
     if (!piece)
         return moves;
+
     char symbol = toupper((unsigned char)piece->getSymbol());
+	int r = pos.row;
+	int c = pos.col;
+
     switch(symbol){
-        case 'P':
+        case 'P': // PAWN
             if(color == 0){
                 // Generate white pawn moves
-                for(auto &move : whitePawnMoves){
-                    Position newPos = {pos.row + move[0], pos.col + move[1]};
+                if (isValidPos(r + 1, c) && board.isEmpty({ r + 1, c })){
+                    moves.push_back({ r + 1, c });
                     //if(board.validateMove(pos, newPos, board.getPieceAt(pos)) && board.isEmpty(newPos))
-                    if (piece->canMove(newPos, board) && board.isEmpty(newPos))
-                    {
-                        moves.push_back(newPos);
+                    if (r == 1 && isValidPos(r + 2, c) && board.isEmpty({ r + 2, c })) {
+                        moves.push_back({ r + 2, c });
                     }
                 }
-            } else {
-                // Generate black pawn moves
-                for(auto &move : blackPawnMoves){
-                    Position newPos = {pos.row + move[0], pos.col + move[1]};
-                    //if(board.validateMove(pos, newPos, board.getPieceAt(pos)) && board.isEmpty(newPos))
-                    if (piece->canMove(newPos, board) && board.isEmpty(newPos))
-                    {
-                        moves.push_back(newPos);
+            }
+            else { // Black
+                // Ruch o 1
+                if (isValidPos(r - 1, c) && board.isEmpty({ r - 1, c })) {
+                    moves.push_back({ r - 1, c });
+					// Ruch o 2 z pozycji startowej
+                    if (r == 6 && isValidPos(r - 2, c) && board.isEmpty({ r - 2, c })) {
+                        moves.push_back({ r - 2, c });
                     }
                 }
             }
             break;
-        case 'N':
-            for(auto &move : knightMoves){
-                Position newPos = {pos.row + move[0], pos.col + move[1]};
-                //if(board.validateMove(pos, newPos, board.getPieceAt(pos)) && board.isEmpty(newPos))
-                if (piece->canMove(newPos, board) && board.isEmpty(newPos))
-                {
-                    moves.push_back(newPos);
+        case 'N': // KNIGHT
+            for (auto& move : knightMoves) {
+                int nr = r + move[0];
+                int nc = c + move[1];
+                if (isValidPos(nr, nc) && board.isEmpty({ nr, nc })) {
+                    moves.push_back({ nr, nc });
                 }
             }
             break;
-        case 'B':
-            for(auto &dir : bishopDirections){
+        case 'B': // BISHOP
+        case 'R': // ROOK
+        case 'Q': // QUEEN
+        {
+			// Choose directions based on piece type
+            int (*dirs)[2] = (symbol == 'B') ? bishopDirections :
+                         (symbol == 'R') ? rookDirections : queenDirections;
+            int numDirs = (symbol == 'Q') ? 8 : 4;
+
+            for(int d = 0; d < numDirs; ++d){
                 for(int i = 1; i < 8; ++i){
-                    Position newPos = {pos.row + dir[0] * i, pos.col + dir[1] * i};
-                    /*if(!board.validateMove(pos, newPos, board.getPieceAt(pos)))
-                        break;*/
-                    if (!piece->canMove(newPos, board))
-                        break;
-                    if(board.isEmpty(newPos)){
-                        moves.push_back(newPos);
-                        continue;
+                    int nr = r + dirs[d][0] * i;
+                    int nc = c + dirs[d][1] * i;
+                    
+					if (!isValidPos(nr, nc)) break; // Move out from board
+
+                    if(board.isEmpty({nr, nc})){
+                        moves.push_back({nr, nc});
+                    } else {
+						// Piece in a way, stop searching this direction
+                        break; 
                     }
-                    // blocked by any piece -> stop sliding further
-                    break;
                 }
             }
             break;
-        case 'R':
-            for(auto &dir : rookDirections){
-                for(int i = 1; i < 8; ++i){
-                    Position newPos = {pos.row + dir[0] * i, pos.col + dir[1] * i};
-                    //if(!board.validateMove(pos, newPos, board.getPieceAt(pos)))
-					if (!piece->canMove(newPos, board))
-                        break;
-                    if(board.isEmpty(newPos)){
-                        moves.push_back(newPos);
-                        continue;
-                    }
-                    // blocked by any piece -> stop sliding further
-                    break;
-                }
-            }
-            break;
-        case 'Q':
-            for(auto &dir : queenDirections){
-                for(int i = 1; i < 8; ++i){
-                    Position newPos = {pos.row + dir[0] * i, pos.col + dir[1] * i};
-                    //if(!board.validateMove(pos, newPos, board.getPieceAt(pos)))
-					if (piece->canMove(newPos, board))
-                        break;
-                    if(board.isEmpty(newPos)){
-                        moves.push_back(newPos);
-                        continue;
-                    }
-                    // blocked by any piece -> stop sliding further
-                    break;
-                }
-            }
-            break;
-        case 'K':
+        }
+        case 'K': // KING
             for(auto &move : kingMoves){
-                Position newPos = {pos.row + move[0], pos.col + move[1]};
-                //if(board.validateMove(pos, newPos, board.getPieceAt(pos)) && board.isEmpty(newPos))
-				if (piece->canMove(newPos, board) && board.isEmpty(newPos))
-                {
-                    moves.push_back(newPos);
+                int nr = r + move[0];
+                int nc = c + move[1];
+                if (isValidPos(nr, nc) && board.isEmpty({nr, nc})) {
+					// We have to check for checks here in a complete implementation
+                    moves.push_back({nr, nc});
                 }
             }
+            // TODO: Castling here to implement
             break;
     }
     return moves;
@@ -137,121 +110,124 @@ static std::vector<Position> generateMovesForPiece(Board &board, Position pos, P
 static std::vector<Position> generateCapturesForPiece(Board &board, Position pos, char symbol, int color){
     symbol = toupper(symbol);
     std::vector<Position> captures;
+    int r = pos.row;
+    int c = pos.col;
+
     switch(symbol){
-        case 'P':
-            if(color == 0){
-                // Generate white pawn captures
-                for(auto &cap : whitePawnCaptures){
-                    Position newPos = {pos.row + cap[0], pos.col + cap[1]};
-                    if(board.validateMove(pos, newPos, board.getPieceAt(pos)) && !board.isEmpty(newPos)){
-                        captures.push_back(newPos);
+        case 'P': // PAWN CAPTURES
+            if (color == 0) { // White
+                int capDir[2][2] = { {1, -1}, {1, 1} };
+                for (auto& d : capDir) {
+                    int nr = r + d[0];
+                    int nc = c + d[1];
+                    if (isValidPos(nr, nc) && !board.isEmpty({ nr, nc })) {
+                        if (board.getPieceAt({ nr, nc })->getColor() != color)
+                            captures.push_back({ nr, nc });
                     }
-                }
-            } else {
-                // Generate black pawn captures
-                for(auto &cap : blackPawnCaptures){
-                    Position newPos = {pos.row + cap[0], pos.col + cap[1]};
-                    if(board.validateMove(pos, newPos, board.getPieceAt(pos)) && !board.isEmpty(newPos)){
-                        captures.push_back(newPos);
-                    }
+					// TODO: En Passant need to be handled here, but requires more game state info
                 }
             }
+        else { // Black
+            int capDir[2][2] = { {-1, -1}, {-1, 1} };
+            for (auto& d : capDir) {
+                int nr = r + d[0];
+                int nc = c + d[1];
+                if (isValidPos(nr, nc) && !board.isEmpty({ nr, nc })) {
+                    if (board.getPieceAt({ nr, nc })->getColor() != color)
+                        captures.push_back({ nr, nc });
+                }
+            }
+        }
+        break;
             break;
-        case 'N':
-            for(auto &move : knightMoves){
-                Position newPos = {pos.row + move[0], pos.col + move[1]};
-                if(board.validateMove(pos, newPos, board.getPieceAt(pos)) && !board.isEmpty(newPos)){
-                    captures.push_back(newPos);
+        case 'N': // KNIGHT
+            for (auto& move : knightMoves) {
+                int nr = r + move[0];
+                int nc = c + move[1];
+                if (isValidPos(nr, nc) && !board.isEmpty({ nr, nc })) {
+                    if (board.getPieceAt({ nr, nc })->getColor() != color)
+                        captures.push_back({ nr, nc });
                 }
             }
             break;
         case 'B':
-            for(auto &dir : bishopDirections){
-                for(int i = 1; i < 8; ++i){
-                    Position newPos = {pos.row + dir[0] * i, pos.col + dir[1] * i};
-                    if(!board.validateMove(pos, newPos, board.getPieceAt(pos)))
-                        break;
-                    if(board.isEmpty(newPos)){
-                        continue;
-                    }
-                    // occupied square: if enemy -> capture, then stop sliding
-                    if(board.getPieceAt(newPos)->getColor() != color)
-                        captures.push_back(newPos);
-                    break;
-                }
-            }
-            break;
         case 'R':
-            for(auto &dir : rookDirections){
-                for(int i = 1; i < 8; ++i){
-                    Position newPos = {pos.row + dir[0] * i, pos.col + dir[1] * i};
-                    if(!board.validateMove(pos, newPos, board.getPieceAt(pos)))
-                        break;
-                    if(board.isEmpty(newPos)){
-                        continue;
-                    }
-                    if(board.getPieceAt(newPos)->getColor() != color)
-                        captures.push_back(newPos);
-                    break;
-                }
-            }
-            break;
         case 'Q':
-            for(auto &dir : queenDirections){
-                for(int i = 1; i < 8; ++i){
-                    Position newPos = {pos.row + dir[0] * i, pos.col + dir[1] * i};
-                    if(!board.validateMove(pos, newPos, board.getPieceAt(pos)))
-                        break;
-                    if(board.isEmpty(newPos)){
-                        continue;
+        {
+            int (*dirs)[2] = (symbol == 'B') ? bishopDirections :
+                (symbol == 'R') ? rookDirections : queenDirections;
+            int numDirs = (symbol == 'Q') ? 8 : 4;
+
+            for (int d = 0; d < numDirs; ++d) {
+                for (int i = 1; i < 8; ++i) {
+                    int nr = r + dirs[d][0] * i;
+                    int nc = c + dirs[d][1] * i;
+
+                    if (!isValidPos(nr, nc)) break;
+
+                    if (board.isEmpty({ nr, nc })) {
+						continue; // Empty square, go further
                     }
-                    if(board.getPieceAt(newPos)->getColor() != color)
-                        captures.push_back(newPos);
-                    break;
+                    else {
+                        // Piece here
+                        if (board.getPieceAt({ nr, nc })->getColor() != color) {
+                            captures.push_back({ nr, nc }); //Enemy - capture
+                        }
+                        break; // Blocked, stop
+                    }
                 }
             }
             break;
+        }
         case 'K':
-            for(auto &move : kingMoves){
-                Position newPos = {pos.row + move[0], pos.col + move[1]};
-                if(board.validateMove(pos, newPos, board.getPieceAt(pos)) && !board.isEmpty(newPos)){
-                    captures.push_back(newPos);
+            for (auto& move : kingMoves) {
+                int nr = r + move[0];
+                int nc = c + move[1];
+                if (isValidPos(nr, nc) && !board.isEmpty({ nr, nc })) {
+                    if (board.getPieceAt({ nr, nc })->getColor() != color)
+                        captures.push_back({ nr, nc });
                 }
             }
-            break;
-        default:
             break;
     }
     return captures;
 }
 
-std::vector<Move> generateAllMoves(Board& board, int color) {
+
+std::vector<Move> generateQuietMoves(Board& board, int color) {
     std::vector<Move> allMoves;
+	// Preallocate memory to save time
+    allMoves.reserve(50);
+
     for (int row = 0; row < 8; ++row) {
         for (int col = 0; col < 8; ++col) {
             auto* piece = board.getPieceAt({ row, col });
             if (piece != nullptr && piece->getColor() == color) {
+				// Only quiet moves
                 auto pieceMoves = generateMovesForPiece(board, { row, col }, piece, color);
+
                 for (auto& pos : pieceMoves) {
                     Move mv;
                     mv.from = { row, col };
                     mv.to = pos;
                     mv.pieceMoved = piece;
-                    mv.pieceCaptured = board.getPieceAt(pos);
+                    mv.pieceCaptured = nullptr; // No capture
                     allMoves.push_back(mv);
                 }
             }
         }
     }
-    std::cout << "Generated " << allMoves.size() << " moves for color " << color << std::endl;
-    for (int i = 0;i < allMoves.size(); i++) {
-        std::cout << "Move " << i << ": from (" << allMoves[i].from.row << "," << allMoves[i].from.col << ") to (" << allMoves[i].to.row << "," << allMoves[i].to.col << ")\n";
-}
+    //std::cout << "Generated " << allMoves.size() << " moves for color " << color << std::endl;
+    //for (int i = 0; i < allMoves.size(); i++) {
+    //    std::cout << "Move " << i << ": from (" << allMoves[i].from.row << "," << allMoves[i].from.col << ") to (" << allMoves[i].to.row << "," << allMoves[i].to.col << ")\n";
+    //}
     return allMoves;
 }
-    
+
 std::vector<Move> generateAllCaptures(Board& board, int color) {
     std::vector<Move> allCaptures;
+    allCaptures.reserve(20);
+
     for (int row = 0; row < 8; ++row) {
         for (int col = 0; col < 8; ++col) {
             Piece* piece = board.getPieceAt({ row, col });
@@ -268,9 +244,9 @@ std::vector<Move> generateAllCaptures(Board& board, int color) {
             }
         }
     }
-	std::cout << "Generated " << allCaptures.size() << " captures for color " << color << std::endl;
-	for (int i = 0;i < allCaptures.size(); i++) {
-		std::cout << "Capture " << i << ": from (" << allCaptures[i].from.row << "," << allCaptures[i].from.col << ") to (" << allCaptures[i].to.row << "," << allCaptures[i].to.col << ")\n";
-	}
+  /*  std::cout << "Generated " << allCaptures.size() << " captures for color " << color << std::endl;
+    for (int i = 0; i < allCaptures.size(); i++) {
+        std::cout << "Capture " << i << ": from (" << allCaptures[i].from.row << "," << allCaptures[i].from.col << ") to (" << allCaptures[i].to.row << "," << allCaptures[i].to.col << ")\n";
+    }*/
     return allCaptures;
 }

@@ -147,3 +147,13 @@ Piece* Board::getPieceAt(Position pos) {
     return squares[pos.row][pos.col];
 }
 
+void Board::promotePawn(Board &board, Position pos, char newSymbol, int color) {
+    Piece* promoted = board.getPieceAt(pos);
+	if (promoted->getSymbol() != 'P') return; // Only pawns can be promoted
+	delete promoted;
+
+	Piece* newPiece = new Queen(color, newSymbol, pos); // Default to Queen
+
+	board.squares[pos.row][pos.col] = newPiece;
+
+}

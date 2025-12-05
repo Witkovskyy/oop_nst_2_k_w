@@ -7,10 +7,10 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-#add_library(engine STATIC
- # src/engine/evalpos.cpp
-  #src/engine/see.cpp
-#)
+add_library(engine STATIC
+  src/engine/evalpos.cpp
+  src/engine/see.cpp
+)
 
 add_executable(app
   src/main.cpp
@@ -30,7 +30,7 @@ add_executable(app
   #src/Piece.cpp
 #)
 
-# target_link_libraries(tests PRIVATE engine)
+#target_link_libraries(tests PRIVATE engine)
 
 # Don't change these two lines
 find_package(SQLite3 REQUIRED)
@@ -41,7 +41,7 @@ find_package(SFML 2.6.2 EXACT COMPONENTS graphics window system audio REQUIRED)
 
 target_link_libraries(app 
   PRIVATE 
-   # engine 
+    engine 
     SQLite::SQLite3 
     sfml-graphics
     sfml-window 

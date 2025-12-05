@@ -9,5 +9,5 @@ struct Move {
     Piece* pieceCaptured;
 };
 
-std::vector<Move> generateAllMoves(Board& board, int color);
+std::vector<Move> generateQuietMoves(Board& board, int color);
 std::vector<Move> generateAllCaptures(Board& board, int color);

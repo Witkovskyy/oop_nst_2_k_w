@@ -15,4 +15,5 @@ public:
     void DisplayBoard();
     Piece* getPieceAt(Position pos);
 	bool validateMove(Position from, Position to, Piece* piece);
+	void promotePawn(Board &board, Position pos, char newSymbol, int color);
 };
