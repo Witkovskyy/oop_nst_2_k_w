@@ -1,4 +1,4 @@
-﻿#include <SFML/Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Board.h"
 #include "Piece.h"
@@ -188,7 +188,7 @@ int main() {
                 }
             }
 
-			// Checkmate / Stalemate
+            // Checkmate / Stalemate
             if (moves.empty()) {
                 // Two options if no moves
                 if (isInCheck(copy, to01(aiSide))) {
@@ -203,48 +203,120 @@ int main() {
                 continue; // or break
             }
 
-			// Sort here to improve alpha-beta efficiency
+			// AI Difficulty Settings
+			// 1 - Easy (2 depth, instant, 25% random blunder)
+			// 2 - Medium (4 depth, 0.5s per move)
+			// 3 - Hard (64 depth, 4s per move)
+
+			int difficultyLevel = 3; // 1-Easy, 2-Medium, 3-Hard
+            int maxDepthAllowed = 64; // Default is not limited ergo 64 max
+			int timeLimitMs = 2000; // Default time for each move is 2 seconds
+
+            switch (difficultyLevel) {
+            case 1: // Easy
+				maxDepthAllowed = 2; // Only thinks 2 moves ahead
+				timeLimitMs = 10;    // Plays instantly
+                break;
+            case 2: // Medium
+				maxDepthAllowed = 4; // 4 moves ahead
+				timeLimitMs = 500;   // Half a second max per move
+                break;
+            case 3: // Hard
+				maxDepthAllowed = 64; // Hikaru Nakamura level
+				timeLimitMs = 4000;   // 4 seconds max per move
+                break;
+            }
+
+            // Sort here to improve alpha-beta efficiency
             orderMoves(moves);
 
-			int alpha = -INF; // from val.h
-            int beta = INF;   
-            Move bestMove = moves[0]; // Default if all moves are terrible
+            Move bestMoveOfAll = moves[0]; // Best move
+            sf::Clock clock;
 
-            // ROOT SEARCH
-            for (auto& move : moves) {
-                Undo undo;
-                applyMove(copy, move, undo);
+            bool timeUp = false;
 
-                // Remember negation
-                int score = -negamax(copy, depth - 1, -beta, -alpha, -aiSide);
+            for (int currentDepth = 1; currentDepth <= maxDepthAllowed; ++currentDepth) {
 
-                undoMove(copy, move, undo);
+                int alpha = -INF;
+                int beta = INF;
+                Move bestMoveThisDepth = moves[0];
+                int bestScoreThisDepth = -1000000;
 
-                if (score > alpha) {
-                    alpha = score;
-                    bestMove = move;
-                    // Optional
-                     std::cout << "AI found better move" << score << std::endl;
+                for (int i = 0; i < moves.size(); ++i) {
+                    // Primitive comparison
+                    if (moves[i].from.row == bestMoveOfAll.from.row &&
+                        moves[i].from.col == bestMoveOfAll.from.col &&
+                        moves[i].to.row == bestMoveOfAll.to.row &&
+                        moves[i].to.col == bestMoveOfAll.to.col) {
+
+						std::swap(moves[0], moves[i]); // Put it first
+                        break;
+                    }
                 }
-            }
-            Position from = bestMove.from;
-            Position to = bestMove.to;
 
+                // ROOT SEARCH
+                for (auto& move : moves) {
+                    if (clock.getElapsedTime().asMilliseconds() > timeLimitMs) {
+                        timeUp = true;
+						break; // Times up
+                    }
+                    Undo undo;
+                    applyMove(copy, move, undo);
+
+                    // Remember negation
+                    int score = -negamax(copy, currentDepth - 1, -beta, -alpha, -aiSide);
+
+                    undoMove(copy, move, undo);
+
+                    if (score > bestScoreThisDepth) {
+                        bestScoreThisDepth = score;
+                        bestMoveThisDepth = move;
+                    }
+
+                    if (score > alpha) {
+                        alpha = score;
+                        // Optional
+                        std::cout << "AI found better move" << score << std::endl;
+                    }
+                }
+                if (timeUp) {
+                    std::cout << "Time's up! Stop searching. " << currentDepth << std::endl;
+					break; // Exit depth loop
+                }
+                bestMoveOfAll = bestMoveThisDepth;
+
+                if (difficultyLevel == 1 && moves.size() > 1) {
+					// Easy level blunder simulation, 25% chance to make a random move so it's easier for the player
+                    if (rand() % 4 == 0) {
+                        int randomIdx = rand() % moves.size();
+                        bestMoveOfAll = moves[randomIdx];
+                        std::cout << "Random move has been picked." << std::endl;
+                    }
+                }
+                std::cout << "AI completed depth " << currentDepth << " Best score: " << bestScoreThisDepth << std::endl;
+            
+
+            if (bestScoreThisDepth > 90000) break; // Mate found, no need to search deeper
+            if (currentDepth >= maxDepthAllowed) {
+                break;
+            }
+        }
+
+            Position from = bestMoveOfAll.from;
+            Position to = bestMoveOfAll.to;
             Piece* realPiece = board.getPieceAt(from);
             Piece* captured = board.getPieceAt(to);
 
-            // REAL MOVE
             if (realPiece) {
-                // Update board state
                 board.movePiece(from, to, realPiece);
-
-				// Cleanup captured piece
-                if (captured) {
-                    delete captured;
+                if (captured) delete captured;
+                if (realPiece->getSymbol() == 'P' && (to.row == 0 || to.row == 7)) {
+                    char newSymbol = 'Q'; // Default to Queen
+                    board.promotePawn(board, to, newSymbol, currentPlayer);
                 }
             }
             else {
-                std::cout << "BŁĄD KRYTYCZNY: AI chce ruszyć figurą, której nie ma na planszy!" << std::endl;
+                std::cout << "CRITICAL ERROR: AI Move execution failed." << std::endl;
             }
 
             // Give move back
