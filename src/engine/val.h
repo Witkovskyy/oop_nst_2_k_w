@@ -25,7 +25,7 @@ static inline int pieceValFromSymbol(char symbol)
 
 static const int INF = std::numeric_limits<int>::max();
 
-static const int depth = 6; // Fixed search depth, might change later
+//static const int depth = 6; // Fixed search depth, might change later
 
 static const int pawnPST[8][8] = {
 	{ 0,  0,  0,  0,  0,  0,  0,  0}, // Promotion Line 8

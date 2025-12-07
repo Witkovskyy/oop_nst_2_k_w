@@ -15,6 +15,7 @@
 #include "engine/logger/logger.h"
 #include <string>
 #include <future>
+#include "engine/tables/zobrist.h"
 
 using namespace std;
 
@@ -155,6 +156,7 @@ int main() {
 	std::future<Move> engineFuture; // Future for engine move
 	bool isEngineThinking = false;  // AI thinking flag
     int difficultyLevel = 3; // 1-Easy, 2-Medium, 3-Hard
+	initZobrist(); // Initialize Zobrist hashing
 
 
     sf::RenderWindow window(sf::VideoMode(BOARD_SIZE * TILE_SIZE, BOARD_SIZE * TILE_SIZE), "CHESS");
@@ -198,9 +200,23 @@ int main() {
     board.placePiece(new Rook(1, 'R', { 7, 7 }));
     for (int i = 0; i < BOARD_SIZE; i++) board.placePiece(new Pawn(1, 'P', { 6, i }));
 
+	board.computeZobristHash();
+	board.positionHistory.push_back(board.zobristKey);
+
+
     int currentPlayer = 0; // 0 = białe, 1 = czarne
     Position selected = { -1, -1 };
     Piece* selectedPiece = nullptr;
+
+	std::string msg = "Game started. White to move first.";
+	LOG(msg);
+	msg = "Initial Zobrist Hash: " + std::to_string(board.zobristKey);
+	LOG(msg);
+
+    if (board.zobristKey == 0) {
+		std::string msg = "Zobrist Hash initialized to zero, error";
+		LOG(msg);
+    }
 
     while (window.isOpen()) {
         sf::Event event;
@@ -230,6 +246,8 @@ int main() {
                                 char newSymbol = 'Q'; // Default to Queen
                                 board.promotePawn(board, target, newSymbol, currentPlayer);
                             }
+                            board.computeZobristHash();
+							board.positionHistory.push_back(board.zobristKey);
                             currentPlayer = 1 - currentPlayer;
                         }
 
@@ -349,6 +367,8 @@ int main() {
                             char newSymbol = 'Q'; // Default to Queen
                             board.promotePawn(board, to, newSymbol, currentPlayer);
                         }
+                        board.computeZobristHash();
+                        board.positionHistory.push_back(board.zobristKey);
                         currentPlayer = 0;
                     }
                     else {

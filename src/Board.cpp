@@ -6,6 +6,7 @@
 #include "Bishop.h"
 #include "Rook.h"
 #include "King.h"
+#include "engine/tables/zobrist.h"   
 #include <iostream>
 using namespace std;
 
@@ -156,4 +157,18 @@ void Board::promotePawn(Board &board, Position pos, char newSymbol, int color) {
 
 	board.squares[pos.row][pos.col] = newPiece;
 
+}
+void Board::computeZobristHash() {
+   zobristKey = 0;
+    for (int r = 0; r < 8; r++)
+    {
+        for (int c = 0; c < 8; c++) {
+			Piece* p = squares[r][c];
+            if (p) {
+				int idx = getPieceIndex(p->getSymbol(), p->getColor());
+				int square = r * 8 + c;
+				zobristKey ^= pieceKeys[idx][square];
+            }
+        }
+    }
 }

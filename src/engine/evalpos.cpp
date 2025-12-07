@@ -8,6 +8,8 @@
 #include <limits>
 #include "logger/logger.h"
 #include <string>
+#include "tables/zobrist.h"
+#include "tables/TT.h"
 
 // count nodes visited by negamax
 static long nodesVisited = 0;
@@ -36,6 +38,7 @@ struct Undo
     Position to;
     Piece* pieceMoved;
     Piece* pieceCaptured;
+	char promotion;
 };
 
 static void undoMove(Board& board, const Move& move, const Undo& undo)
@@ -51,6 +54,35 @@ static void undoMove(Board& board, const Move& move, const Undo& undo)
     if (undo.pieceCaptured) {
         undo.pieceCaptured->setPosition(move.to);
     }
+	// Handle promotion revert
+    if (move.promotion != 0) {
+        undo.pieceMoved->setSymbol('P');
+    }
+    int fromSq = move.from.row * 8 + move.from.col;
+    int toSq = move.to.row * 8 + move.to.col;
+	Piece* p = undo.pieceMoved; // Piece that moved
+    int pIdx = getPieceIndex(p->getSymbol(), p->getColor());
+
+    // Revert side
+    board.zobristKey ^= sideKey;
+
+	// Bring back the Zobrist key
+    if (move.promotion != 0) {
+        int promoIdx = getPieceIndex(move.promotion, p->getColor());
+        board.zobristKey ^= pieceKeys[promoIdx][toSq];
+    }
+    else {
+        board.zobristKey ^= pieceKeys[pIdx][toSq];
+    }
+
+    // Revert captured
+    if (undo.pieceCaptured) {
+        int capIdx = getPieceIndex(undo.pieceCaptured->getSymbol(), undo.pieceCaptured->getColor());
+        board.zobristKey ^= pieceKeys[capIdx][toSq];
+    }
+
+    // Insert piece back
+    board.zobristKey ^= pieceKeys[pIdx][fromSq];
 }
 static void applyMove(Board& board, const Move& move, Undo& undo)
 {
@@ -58,6 +90,35 @@ static void applyMove(Board& board, const Move& move, Undo& undo)
     undo.to = move.to;
     undo.pieceMoved = board.getPieceAt(move.from);
     undo.pieceCaptured = board.getPieceAt(move.to); // Might be nullptr
+    undo.promotion = move.promotion;
+
+    int fromSq = move.from.row * 8 + move.from.col;
+    int toSq = move.to.row * 8 + move.to.col;
+
+    Piece* p = board.getPieceAt(move.from);
+    int pIdx = getPieceIndex(p->getSymbol(), p->getColor());
+
+    // Zobrist remove piece
+    board.zobristKey ^= pieceKeys[pIdx][fromSq];
+
+	// Zobrist If captured, remove captured piece 
+    if (undo.pieceCaptured) {
+        int capIdx = getPieceIndex(undo.pieceCaptured->getSymbol(), undo.pieceCaptured->getColor());
+        board.zobristKey ^= pieceKeys[capIdx][toSq];
+    }
+
+    // Zobrist insert piece
+    // If promoted put new figure
+    if (move.promotion != 0) {
+        int promoIdx = getPieceIndex(move.promotion, p->getColor());
+        board.zobristKey ^= pieceKeys[promoIdx][toSq];
+    }
+    else {
+        board.zobristKey ^= pieceKeys[pIdx][toSq];
+    }
+
+    // Switch side
+    board.zobristKey ^= sideKey;
 
 	// Raw move application
     // Delete piece
@@ -69,6 +130,10 @@ static void applyMove(Board& board, const Move& move, Undo& undo)
 	// Update piece position
     if (undo.pieceMoved) {
         undo.pieceMoved->setPosition(move.to);
+    }
+	// Handle promotion
+    if (move.promotion != 0) {
+        undo.pieceMoved->setSymbol(move.promotion);
     }
 }
 
@@ -346,14 +411,41 @@ int quiescence(Board &board, int alpha, int beta, int color)
     return alpha;
 }
 
+bool isRepetition(const Board& board) {
+	// Move is a repetition if current zobristKey appeared before in positionHistory
+	// Search from the end to the beginning
+	// Skip last entry as it is current position
+
+    for (int i = board.positionHistory.size() - 1; i >= 0; --i) {
+        if (board.positionHistory[i] == board.zobristKey) {
+            return true; // Repetition found
+        }
+    }
+    return false;
+}
+
 // Negamax algorithm with alpha-beta pruning
 // Cutting off branches that won't influence the final decision
 int negamax(Board &board, int depth, int alpha, int beta, int color)
 {
+    if (isRepetition(board)) {
+		// 0 is equal position, slight minus for engine to avoid repetition
+        return -35;
+    }
+
     ++nodesVisited;
 	// Check for game over
 	// King eaten, return very high negative score
     //if (gameOver(board)) return -100000 - depth;
+
+    int ttScore;
+    Move ttMove;
+    // Read hash
+    unsigned long long key = board.zobristKey;
+
+    if (TT.probe(key, depth, alpha, beta, ttScore, ttMove)) {
+        return ttScore; // Score found in TT, immediately return
+    }
 
     if (depth == 0 || gameOver(board))
         return quiescence(board, alpha, beta, color);
@@ -369,6 +461,8 @@ int negamax(Board &board, int depth, int alpha, int beta, int color)
     orderMoves(moves);
 
     int best = -INF;
+	Move bestMove; // For TT storage
+    int oldAlpha = alpha;
 
     for (auto &move : moves)
     {
@@ -383,6 +477,12 @@ int negamax(Board &board, int depth, int alpha, int beta, int color)
         if (alpha >= beta)
             break; // beta cutoff
     }
+    TTFlag flag = TT_EXACT;
+    if (best <= oldAlpha) flag = TT_ALPHA; // Not better than alpha
+    else if (best >= beta) flag = TT_BETA; // Cutoff
+
+    TT.store(key, best, depth, flag, bestMove);
+
     return best;
 }
 
