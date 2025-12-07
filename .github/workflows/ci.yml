@@ -82,8 +82,7 @@ jobs:
           ctest --test-dir build-cov --output-on-failure
           gcovr -r . --xml -o coverage.xml --exclude build --exclude 'tests/*'
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
         with:
-          files: coverage.xml
-          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
