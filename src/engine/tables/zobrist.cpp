@@ -1,4 +1,4 @@
-#include "Zobrist.h"
+#include "zobrist.h"
 
 // Define the Zobrist keys
 unsigned long long pieceKeys[12][64];
