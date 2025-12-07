@@ -8,26 +8,26 @@
 
 class AsyncLogger {
 public:
-    // Pobiera instancjê (Singleton) - ¿ebyœ móg³ logowaæ z ka¿dego miejsca
+	// Singleton instance, so we can log from anywhere
     static AsyncLogger& getInstance() {
         static AsyncLogger instance;
         return instance;
     }
 
-    // Dodaje log do kolejki (To jest super szybkie!)
+	// Add log to queue, thread-safe, fast
     void log(const std::string& message) {
         std::unique_lock<std::mutex> lock(queueMutex);
         logQueue.push(message);
         lock.unlock();
-        cv.notify_one(); // ObudŸ w¹tek loggera
+        cv.notify_one(); // Wake up the thread
     }
 
-    // Konstruktor uruchamia w¹tek
+	// Constructor deploying the worker thread
     AsyncLogger() : running(true) {
         workerThread = std::thread(&AsyncLogger::processLogs, this);
     }
 
-    // Destruktor sprz¹ta
+    // Destructor
     ~AsyncLogger() {
         {
             std::unique_lock<std::mutex> lock(queueMutex);
@@ -46,32 +46,32 @@ private:
     std::thread workerThread;
     bool running;
 
-    // To robi osobny w¹tek w tle
+	// Open new thread to process logs
     void processLogs() {
         while (true) {
             std::unique_lock<std::mutex> lock(queueMutex);
 
-            // Czekaj, a¿ pojawi siê log albo koniec programu
+			// Wait for log to show up or the program to end
             cv.wait(lock, [this] { return !logQueue.empty() || !running; });
 
-            // Jeœli koniec i pusto, wyjdŸ
+            // Break if empty
             if (!running && logQueue.empty()) {
                 break;
             }
 
-            // Pobierz wszystkie wiadomoœci naraz (¿eby rzadziej blokowaæ mutex)
+			// Get all messages from the queue
             while (!logQueue.empty()) {
                 std::string msg = logQueue.front();
                 logQueue.pop();
 
-                // Zwalniamy mutex na czas samego wypisywania (I/O jest wolne)
+				// Unlock mutex for output, then lock again
                 lock.unlock();
-                std::cout << msg << "\n"; // Tu jest powolne cout
+                std::cout << msg << "\n"; // Slow cout
                 lock.lock();
             }
         }
     }
 };
 
-// Makro dla wygody - u¿ywaj LOG("tekst")
+// Makro for easier logging
 #define LOG(msg) AsyncLogger::getInstance().log(msg)
