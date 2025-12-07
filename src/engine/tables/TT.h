@@ -30,7 +30,7 @@ public:
     }
 
     void clear() {
-        std::fill(table.begin(), table.end(), TTEntry{ 0 });
+        std::fill(table.begin(), table.end(), TTEntry{ 0, 0, 0, TT_EXACT, Move() });
     }
 
     // Save position
