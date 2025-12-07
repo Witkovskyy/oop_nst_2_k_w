@@ -14,13 +14,149 @@
 #include "engine/evalpos.cpp"
 #include "engine/logger/logger.h"
 #include <string>
+#include <future>
 
 using namespace std;
 
 const int TILE_SIZE = 80;
 const int BOARD_SIZE = 8;
 
+Move runEngineAsync(Board boardCopy, int difficultyLevel) {
+
+    int maxDepthAllowed = 64;
+    int timeLimitMs = 4000;
+
+
+    // AI Difficulty Settings
+    // 1 - Easy (2 depth, instant, 25% random blunder)
+    // 2 - Medium (4 depth, 0.5s per move)
+    // 3 - Hard (64 depth, 4s per move)
+    switch (difficultyLevel) {
+    case 1: // Easy
+        maxDepthAllowed = 2; // Only thinks 2 moves ahead
+        timeLimitMs = 10;    // Plays instantly
+        break;
+    case 2: // Medium
+        maxDepthAllowed = 4; // 4 moves ahead
+        timeLimitMs = 500;   // Half a second max per move
+        break;
+    case 3: // Hard
+        maxDepthAllowed = 64; // Hikaru Nakamura level
+        timeLimitMs = 4000;   // 4 seconds max per move
+        break;
+    }
+    int aiSide = -1; // AI is playing black always, to change later
+    // Get legal moves for AI side
+    auto moves = legalMoves(boardCopy, to01(aiSide));
+    std::string msg = "AI moves generated: " + std::to_string(moves.size());
+    LOG(msg);
+
+    // Checkmate / Stalemate
+    if (moves.empty()) {
+        // Two options if no moves
+        if (isInCheck(boardCopy, to01(aiSide))) {
+            std::string msg = "Checkmate! Game over. ";
+            LOG(msg);
+            return Move{ {-1,-1}, {-1,-1}, nullptr, nullptr }; // Indicate game over
+        }
+        else {
+            std::string msg = "Stalemate! Draw. ";
+            LOG(msg);
+            return Move{ {-1,-1}, {-1,-1}, nullptr, nullptr }; // Indicate game over
+        }
+    }
+
+    // Sort here to improve alpha-beta efficiency
+    orderMoves(moves);
+
+    sf::Clock clock;
+    Move bestMoveOfAll = moves[0]; // Best move
+    bool timeUp = false;
+
+    for (int currentDepth = 1; currentDepth <= maxDepthAllowed; ++currentDepth) {
+
+        int alpha = -INF;
+        int beta = INF;
+        Move bestMoveThisDepth = moves[0];
+        int bestScoreThisDepth = -1000000;
+
+        for (int i = 0; i < moves.size(); ++i) {
+            // Primitive comparison
+            if (moves[i].from.row == bestMoveOfAll.from.row &&
+                moves[i].from.col == bestMoveOfAll.from.col &&
+                moves[i].to.row == bestMoveOfAll.to.row &&
+                moves[i].to.col == bestMoveOfAll.to.col) {
+
+                std::swap(moves[0], moves[i]); // Put it first
+                break;
+            }
+        }
+        // ROOT SEARCH
+        for (auto& move : moves) {
+            if (clock.getElapsedTime().asMilliseconds() > timeLimitMs) {
+                timeUp = true;
+                break; // Times up
+            }
+            Undo undo;
+            applyMove(boardCopy, move, undo);
+
+            // Remember negation
+            int score = -negamax(boardCopy, currentDepth - 1, -beta, -alpha, -aiSide);
+
+            undoMove(boardCopy, move, undo);
+
+            if (score > bestScoreThisDepth) {
+                bestScoreThisDepth = score;
+                bestMoveThisDepth = move;
+            }
+
+            if (score > alpha) {
+                alpha = score;
+                // Optional
+            std:string msg = "AI found better move " + std::to_string(currentDepth) +
+                " Score: " + std::to_string(score) +
+                " Move: (" + std::to_string(move.from.row) + "," + std::to_string(move.from.col) +
+                ") -> (" + std::to_string(move.to.row) + "," + std::to_string(move.to.col) + ")";
+            LOG(msg);
+            }
+        }
+        if (timeUp) {
+            std::string msg = "AI time limit reached at depth " + std::to_string(currentDepth);
+            LOG(msg);
+            break; // Exit depth loop
+        }
+        bestMoveOfAll = bestMoveThisDepth;
+
+        if (difficultyLevel == 1 && moves.size() > 1) {
+            // Easy level blunder simulation, 25% chance to make a random move so it's easier for the player
+            if (rand() % 4 == 0) {
+                int randomIdx = rand() % moves.size();
+                bestMoveOfAll = moves[randomIdx];
+                std::string msg = "AI blundered and picked a random move. Easy difficulty only";
+                LOG(msg);
+            }
+        }
+        std::string msg = "AI completed depth " + std::to_string(currentDepth) +
+            " Best score: " + std::to_string(bestScoreThisDepth) +
+            " Move: (" + std::to_string(bestMoveThisDepth.from.row) + "," + std::to_string(bestMoveThisDepth.from.col) +
+            ") -> (" + std::to_string(bestMoveThisDepth.to.row) + "," + std::to_string(bestMoveThisDepth.to.col) + ")";
+        LOG(msg);
+
+        if (bestScoreThisDepth > 90000) break; // Mate found, no need to search deeper
+        if (currentDepth >= maxDepthAllowed) {
+            break;
+        }
+    }
+	return bestMoveOfAll;
+}
+    
 int main() {
+	//Engine multithreading init
+	std::future<Move> engineFuture; // Future for engine move
+	bool isEngineThinking = false;  // AI thinking flag
+    int difficultyLevel = 3; // 1-Easy, 2-Medium, 3-Hard
+
+
     sf::RenderWindow window(sf::VideoMode(BOARD_SIZE * TILE_SIZE, BOARD_SIZE * TILE_SIZE), "CHESS");
 
 
@@ -71,33 +207,35 @@ int main() {
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) window.close();
 
-            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-                int col = event.mouseButton.x / TILE_SIZE;
-                int row = 7 - (event.mouseButton.y / TILE_SIZE);
+            if (!isEngineThinking && currentPlayer == 0) {
+                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+                    int col = event.mouseButton.x / TILE_SIZE;
+                    int row = 7 - (event.mouseButton.y / TILE_SIZE);
 
-                if (!selectedPiece) {
-                    // wybierz figurę
-                    selectedPiece = board.getPieceAt({ row, col });
-                    if (selectedPiece && selectedPiece->getColor() == currentPlayer)
-                        selected = { row, col };
-                    else
-                        selectedPiece = nullptr;
-                }
-                else {
-                    Position target = { row, col };
-                    Piece* captured = board.getPieceAt(target);
-
-                    if (board.movePiece(selected, target, selectedPiece)) {
-                        if (captured) delete captured;
-						if (selectedPiece->getSymbol() == 'P' && (target.row == 0 || target.row == 7)) {
-							char newSymbol = 'Q'; // Default to Queen
-							board.promotePawn(board, target, newSymbol, currentPlayer);
-						}
-                        currentPlayer = 1 - currentPlayer;
+                    if (!selectedPiece) {
+                        // wybierz figurę
+                        selectedPiece = board.getPieceAt({ row, col });
+                        if (selectedPiece && selectedPiece->getColor() == currentPlayer)
+                            selected = { row, col };
+                        else
+                            selectedPiece = nullptr;
                     }
+                    else {
+                        Position target = { row, col };
+                        Piece* captured = board.getPieceAt(target);
 
-                    selectedPiece = nullptr;
-                    selected = { -1, -1 };
+                        if (board.movePiece(selected, target, selectedPiece)) {
+                            if (captured) delete captured;
+                            if (selectedPiece->getSymbol() == 'P' && (target.row == 0 || target.row == 7)) {
+                                char newSymbol = 'Q'; // Default to Queen
+                                board.promotePawn(board, target, newSymbol, currentPlayer);
+                            }
+                            currentPlayer = 1 - currentPlayer;
+                        }
+
+                        selectedPiece = nullptr;
+                        selected = { -1, -1 };
+                    }
                 }
             }
         }
@@ -176,171 +314,55 @@ int main() {
 
         if (currentPlayer == 1) // AI MOVE
         {
-            OwnedBoard ob(board);
-            Board& copy = ob.board;
+			// Engine async handling start
+            if (!isEngineThinking) {
+                std::string msg = "AI is thinking...";
+				LOG(msg);
+				isEngineThinking = true;
+                engineFuture = std::async(std::launch::async, runEngineAsync, board, difficultyLevel);
+            }
+			// Check if engine is done
+            if (engineFuture.valid() && engineFuture.wait_for(std::chrono::milliseconds(0)) == std::future_status::ready) {
+                // Best move get
+                Move bestMoveOfAll = engineFuture.get();
+                std::string msg = "AI has made its move.";
+                LOG(msg);
+                if (bestMoveOfAll.pieceMoved == nullptr) {
+                    //Game over?
+                    std::string msg = "Game over detected from AI move.";
+                    LOG(msg);
 
-            int aiSide = -1; // AI is playing black always, to change later
-
-            //Generate moves
-            auto moves = legalMoves(copy, to01(aiSide));
-			std::string msg = "AI moves generated: " + std::to_string(moves.size());
-			LOG(msg);
-
-         /*   for (auto& m : moves) {
-                if (toupper(m.pieceMoved->getSymbol()) == 'P') {
-                    std::cout << "Pion: " << m.from.row << "," << m.from.col
-                        << " -> " << m.to.row << "," << m.to.col << std::endl;
-                }
-            }*/
-
-            // Checkmate / Stalemate
-            if (moves.empty()) {
-                // Two options if no moves
-                if (isInCheck(copy, to01(aiSide))) {
-					std::string msg = "Checkmate! Game over. ";
-					LOG(msg);
+                    // Game over handling here
+                    window.display();
+                    continue; // or break
                 }
                 else {
-					std::string msg = "Stalemate! Draw. ";
-					LOG(msg);
-                }
+                    Position from = bestMoveOfAll.from;
+                    Position to = bestMoveOfAll.to;
+                    Piece* realPiece = board.getPieceAt(from);
+                    Piece* captured = board.getPieceAt(to);
 
-                // Game over handling here
-                window.display();
-                continue; // or break
-            }
-
-			// AI Difficulty Settings
-			// 1 - Easy (2 depth, instant, 25% random blunder)
-			// 2 - Medium (4 depth, 0.5s per move)
-			// 3 - Hard (64 depth, 4s per move)
-
-			int difficultyLevel = 1; // 1-Easy, 2-Medium, 3-Hard
-            int maxDepthAllowed = 64; // Default is not limited ergo 64 max
-			int timeLimitMs = 4000; // Default time for each move is 4 seconds
-
-            switch (difficultyLevel) {
-            case 1: // Easy
-				maxDepthAllowed = 2; // Only thinks 2 moves ahead
-				timeLimitMs = 10;    // Plays instantly
-                break;
-            case 2: // Medium
-				maxDepthAllowed = 4; // 4 moves ahead
-				timeLimitMs = 500;   // Half a second max per move
-                break;
-            case 3: // Hard
-				maxDepthAllowed = 64; // Hikaru Nakamura level
-				timeLimitMs = 4000;   // 4 seconds max per move
-                break;
-            }
-
-            // Sort here to improve alpha-beta efficiency
-            orderMoves(moves);
-
-            Move bestMoveOfAll = moves[0]; // Best move
-            sf::Clock clock;
-
-            bool timeUp = false;
-
-            for (int currentDepth = 1; currentDepth <= maxDepthAllowed; ++currentDepth) {
-
-                int alpha = -INF;
-                int beta = INF;
-                Move bestMoveThisDepth = moves[0];
-                int bestScoreThisDepth = -1000000;
-
-                for (int i = 0; i < moves.size(); ++i) {
-                    // Primitive comparison
-                    if (moves[i].from.row == bestMoveOfAll.from.row &&
-                        moves[i].from.col == bestMoveOfAll.from.col &&
-                        moves[i].to.row == bestMoveOfAll.to.row &&
-                        moves[i].to.col == bestMoveOfAll.to.col) {
-
-						std::swap(moves[0], moves[i]); // Put it first
-                        break;
+                    if (realPiece) {
+                        board.movePiece(from, to, realPiece);
+                        if (captured) delete captured;
+                        if (realPiece->getSymbol() == 'P' && (to.row == 0 || to.row == 7)) {
+                            char newSymbol = 'Q'; // Default to Queen
+                            board.promotePawn(board, to, newSymbol, currentPlayer);
+                        }
+                        currentPlayer = 0;
                     }
-                }
-
-                // ROOT SEARCH
-                for (auto& move : moves) {
-                    if (clock.getElapsedTime().asMilliseconds() > timeLimitMs) {
-                        timeUp = true;
-						break; // Times up
+                    else {
+                        std::string msg = "Critical error. AI Move execution failed: No piece at from position (" +
+                            std::to_string(from.row) + "," + std::to_string(from.col) + ")";
+                        LOG(msg);
+                        currentPlayer = 0;
                     }
-                    Undo undo;
-                    applyMove(copy, move, undo);
-
-                    // Remember negation
-                    int score = -negamax(copy, currentDepth - 1, -beta, -alpha, -aiSide);
-
-                    undoMove(copy, move, undo);
-
-                    if (score > bestScoreThisDepth) {
-                        bestScoreThisDepth = score;
-                        bestMoveThisDepth = move;
-                    }
-
-                    if (score > alpha) {
-                        alpha = score;
-                        // Optional
-					std:string msg = "AI found better move " + std::to_string(currentDepth) +
-						" Score: " + std::to_string(score) +
-						" Move: (" + std::to_string(move.from.row) + "," + std::to_string(move.from.col) +
-						") -> (" + std::to_string(move.to.row) + "," + std::to_string(move.to.col) + ")";
-					LOG(msg);
-                    }
-                }
-                if (timeUp) {
-					std::string msg = "AI time limit reached at depth " + std::to_string(currentDepth);
-                    LOG(msg);
-					break; // Exit depth loop
-                }
-                bestMoveOfAll = bestMoveThisDepth;
-
-                if (difficultyLevel == 1 && moves.size() > 1) {
-					// Easy level blunder simulation, 25% chance to make a random move so it's easier for the player
-                    if (rand() % 4 == 0) {
-                        int randomIdx = rand() % moves.size();
-                        bestMoveOfAll = moves[randomIdx];
-						std::string msg = "AI blundered and picked a random move. Easy difficulty only";
-						LOG(msg);
-                    }
-                }
-				std::string msg = "AI completed depth " + std::to_string(currentDepth) +
-					" Best score: " + std::to_string(bestScoreThisDepth) +
-					" Move: (" + std::to_string(bestMoveThisDepth.from.row) + "," + std::to_string(bestMoveThisDepth.from.col) +
-					") -> (" + std::to_string(bestMoveThisDepth.to.row) + "," + std::to_string(bestMoveThisDepth.to.col) + ")";
-				LOG(msg);
-
-            if (bestScoreThisDepth > 90000) break; // Mate found, no need to search deeper
-            if (currentDepth >= maxDepthAllowed) {
-                break;
-            }
-        }
-
-            Position from = bestMoveOfAll.from;
-            Position to = bestMoveOfAll.to;
-            Piece* realPiece = board.getPieceAt(from);
-            Piece* captured = board.getPieceAt(to);
-
-            if (realPiece) {
-                board.movePiece(from, to, realPiece);
-                if (captured) delete captured;
-                if (realPiece->getSymbol() == 'P' && (to.row == 0 || to.row == 7)) {
-                    char newSymbol = 'Q'; // Default to Queen
-                    board.promotePawn(board, to, newSymbol, currentPlayer);
-                }
-            }
-            else {
-				std::string msg = "Critical error. AI Move execution failed: No piece at from position (" +
-					std::to_string(from.row) + "," + std::to_string(from.col) + ")";
-                LOG(msg);
-            }
 
             // Give move back
-            currentPlayer = 0;
+			isEngineThinking = false;
+                }
+            }
         }
-
         window.display();
     }
 
