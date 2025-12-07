@@ -197,7 +197,7 @@ static std::vector<Position> generateCapturesForPiece(Board &board, Position pos
 std::vector<Move> generateQuietMoves(Board& board, int color) {
     std::vector<Move> allMoves;
 	// Preallocate memory to save time
-    allMoves.reserve(50);
+    allMoves.reserve(60);
 
     for (int row = 0; row < 8; ++row) {
         for (int col = 0; col < 8; ++col) {
@@ -212,6 +212,16 @@ std::vector<Move> generateQuietMoves(Board& board, int color) {
                     mv.to = pos;
                     mv.pieceMoved = piece;
                     mv.pieceCaptured = nullptr; // No capture
+					mv.promotion = 0; // No promotion
+                    if (toupper(piece->getSymbol()) == 'P' && (pos.row == 0 || pos.row == 7)) {
+                        // Options for later
+                        //char promos[] = { 'Q', 'N', 'R', 'B' };
+                        //for (char p : promos) {
+                            mv.promotion = 'Q';
+                            allMoves.push_back(mv);
+                        //}
+                        continue;
+                    }
                     allMoves.push_back(mv);
                 }
             }
@@ -239,6 +249,16 @@ std::vector<Move> generateAllCaptures(Board& board, int color) {
                     mv.to = pos;
                     mv.pieceMoved = piece;
                     mv.pieceCaptured = board.getPieceAt(pos);
+                    mv.promotion = 0; // No promotion
+                    if (toupper(piece->getSymbol()) == 'P' && (pos.row == 0 || pos.row == 7)) {
+                        // Options for later
+                        //char promos[] = { 'Q', 'N', 'R', 'B' };
+                        //for (char p : promos) {
+                        mv.promotion = 'Q';
+                        allCaptures.push_back(mv);
+                        //}
+                        continue;
+                    }
                     allCaptures.push_back(mv);
                 }
             }

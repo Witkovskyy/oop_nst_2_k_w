@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <vector>
 #include "Piece.h"
 
 const int sizeboard = 8;
@@ -16,4 +17,7 @@ public:
     Piece* getPieceAt(Position pos);
 	bool validateMove(Position from, Position to, Piece* piece);
 	void promotePawn(Board &board, Position pos, char newSymbol, int color);
+	unsigned long long zobristKey = 0;
+	void computeZobristHash();
+	std::vector<unsigned long long> positionHistory;
 };

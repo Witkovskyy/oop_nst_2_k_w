@@ -10,6 +10,8 @@ endif()
 add_library(engine STATIC
   src/engine/evalpos.cpp
   src/engine/see.cpp
+  src/engine/moves.cpp
+  src/engine/tables/zobrist.cpp
 )
 
 add_executable(app
@@ -23,7 +25,8 @@ add_executable(app
   src/Queen.cpp
   src/Piece.cpp
   src/kNight.cpp
- src/engine/moves.cpp)
+
+)
 
 #add_executable(tests
  # src/tests/test_engine.cpp
