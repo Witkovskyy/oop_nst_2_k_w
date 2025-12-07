@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <vector>
 #include <limits>
+#include "logger/logger.h"
+#include <string>
 
 // count nodes visited by negamax
 static long nodesVisited = 0;
@@ -214,12 +216,12 @@ int eval(const Board& board, int color)
     int finalScore = whiteScore - blackScore;
 
     // DEBUG
-    static int debugCounter = 0;
+   /* static int debugCounter = 0;
     if (debugCounter < 5 && abs(finalScore) > 20) {
         std::cout << "[EVAL CHECK] White: " << whiteScore << " | Black: " << blackScore
             << " | Diff: " << finalScore << std::endl;
         debugCounter++;
-    }
+    }*/
 
     return finalScore * color;
 }

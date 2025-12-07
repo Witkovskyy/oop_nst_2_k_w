@@ -12,6 +12,8 @@
 #include "engine/val.h"
 #include "engine/deepcopy.h"
 #include "engine/evalpos.cpp"
+#include "engine/logger/logger.h"
+#include <string>
 
 using namespace std;
 
@@ -157,10 +159,12 @@ int main() {
             if (moves.empty()) {
                 // Two options if no moves
                 if (isInCheck(copy, to01(currentPlayer))) {
-                    std::cout << "SZACH MAT! Koniec gry." << std::endl;
+					std::string msg = "Checkmate! Game over. ";
+					LOG(msg);
                 }
                 else {
-                    std::cout << "PAT! Remis." << std::endl;
+					std::string msg = "Stalemate! Draw. ";
+					LOG(msg);
                 }
 
 				// Game over handling here
@@ -179,23 +183,26 @@ int main() {
 
             //Generate moves
             auto moves = legalMoves(copy, to01(aiSide));
+			std::string msg = "AI moves generated: " + std::to_string(moves.size());
+			LOG(msg);
 
-            std::cout << "--- RUCHY AI ---" << std::endl;
-            for (auto& m : moves) {
+         /*   for (auto& m : moves) {
                 if (toupper(m.pieceMoved->getSymbol()) == 'P') {
                     std::cout << "Pion: " << m.from.row << "," << m.from.col
                         << " -> " << m.to.row << "," << m.to.col << std::endl;
                 }
-            }
+            }*/
 
             // Checkmate / Stalemate
             if (moves.empty()) {
                 // Two options if no moves
                 if (isInCheck(copy, to01(aiSide))) {
-                    std::cout << "SZACH MAT! Koniec gry." << std::endl;
+					std::string msg = "Checkmate! Game over. ";
+					LOG(msg);
                 }
                 else {
-                    std::cout << "PAT! Remis." << std::endl;
+					std::string msg = "Stalemate! Draw. ";
+					LOG(msg);
                 }
 
                 // Game over handling here
@@ -208,9 +215,9 @@ int main() {
 			// 2 - Medium (4 depth, 0.5s per move)
 			// 3 - Hard (64 depth, 4s per move)
 
-			int difficultyLevel = 3; // 1-Easy, 2-Medium, 3-Hard
+			int difficultyLevel = 1; // 1-Easy, 2-Medium, 3-Hard
             int maxDepthAllowed = 64; // Default is not limited ergo 64 max
-			int timeLimitMs = 2000; // Default time for each move is 2 seconds
+			int timeLimitMs = 4000; // Default time for each move is 4 seconds
 
             switch (difficultyLevel) {
             case 1: // Easy
@@ -276,11 +283,16 @@ int main() {
                     if (score > alpha) {
                         alpha = score;
                         // Optional
-                        std::cout << "AI found better move" << score << std::endl;
+					std:string msg = "AI found better move " + std::to_string(currentDepth) +
+						" Score: " + std::to_string(score) +
+						" Move: (" + std::to_string(move.from.row) + "," + std::to_string(move.from.col) +
+						") -> (" + std::to_string(move.to.row) + "," + std::to_string(move.to.col) + ")";
+					LOG(msg);
                     }
                 }
                 if (timeUp) {
-                    std::cout << "Time's up! Stop searching. " << currentDepth << std::endl;
+					std::string msg = "AI time limit reached at depth " + std::to_string(currentDepth);
+                    LOG(msg);
 					break; // Exit depth loop
                 }
                 bestMoveOfAll = bestMoveThisDepth;
@@ -290,11 +302,15 @@ int main() {
                     if (rand() % 4 == 0) {
                         int randomIdx = rand() % moves.size();
                         bestMoveOfAll = moves[randomIdx];
-                        std::cout << "Random move has been picked." << std::endl;
+						std::string msg = "AI blundered and picked a random move. Easy difficulty only";
+						LOG(msg);
                     }
                 }
-                std::cout << "AI completed depth " << currentDepth << " Best score: " << bestScoreThisDepth << std::endl;
-            
+				std::string msg = "AI completed depth " + std::to_string(currentDepth) +
+					" Best score: " + std::to_string(bestScoreThisDepth) +
+					" Move: (" + std::to_string(bestMoveThisDepth.from.row) + "," + std::to_string(bestMoveThisDepth.from.col) +
+					") -> (" + std::to_string(bestMoveThisDepth.to.row) + "," + std::to_string(bestMoveThisDepth.to.col) + ")";
+				LOG(msg);
 
             if (bestScoreThisDepth > 90000) break; // Mate found, no need to search deeper
             if (currentDepth >= maxDepthAllowed) {
@@ -316,7 +332,9 @@ int main() {
                 }
             }
             else {
-                std::cout << "CRITICAL ERROR: AI Move execution failed." << std::endl;
+				std::string msg = "Critical error. AI Move execution failed: No piece at from position (" +
+					std::to_string(from.row) + "," + std::to_string(from.col) + ")";
+                LOG(msg);
             }
 
             // Give move back
