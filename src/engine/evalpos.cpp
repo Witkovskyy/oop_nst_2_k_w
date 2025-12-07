@@ -416,7 +416,6 @@ bool isRepetition(const Board& board) {
 	// Search from the end to the beginning
 	// Skip last entry as it is current position
 
-    int count = 0;
     for (int i = board.positionHistory.size() - 1; i >= 0; --i) {
         if (board.positionHistory[i] == board.zobristKey) {
             return true; // Repetition found
