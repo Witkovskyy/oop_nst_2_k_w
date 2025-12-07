@@ -82,6 +82,9 @@ jobs:
           ctest --test-dir build-cov --output-on-failure
           gcovr -r . --xml -o coverage.xml --exclude build --exclude 'tests/*'
 
+      - name: Install curl (Ubuntu/Debian)
+        run: apt-get update && apt-get install -y curl
+
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
