@@ -9,13 +9,14 @@ int main()
 
     // Test 1: eval simple material sum
     {
+        int color = 1;
         Board b;
         Piece *q = new Piece(0, 'Q', {0, 0});
         Piece *r = new Piece(1, 'R', {0, 1});
         b.placePiece(q);
         b.placePiece(r);
-        int got = eval(b);
-        int expect = pieceValFromSymbol('Q') - pieceValFromSymbol('R');
+        int got = eval(b, color);
+        int expect = pieceValFromSymbol('Q') + int(queenPST[0][0]) - pieceValFromSymbol('R') - int(rookPST[0][1]);
         if (got != expect)
         {
             std::cerr << "test_eval_simple FAILED: got " << got << " expected " << expect << "\n";
@@ -67,7 +68,7 @@ int main()
         Piece *wK = new Piece(0, 'K', {7, 7});
         Piece *bK = new Piece(1, 'K', {0, 0});
         Piece *wQ = new Piece(0, 'Q', {6, 6});
-        Piece *bQ = new Piece(1, 'Q', {1, 1});
+        Piece *bQ = new Piece(1, 'Q', {1, 0});
         b.placePiece(wK);
         b.placePiece(bK);
         b.placePiece(wP);
@@ -75,7 +76,7 @@ int main()
         b.placePiece(wQ);
         b.placePiece(bQ);
         Position target{2,2};
-        int s = see(b, target, 0);
+        int s = see(b, target, 1);
         std::cerr << "see returned " << s << "\n";
         delete wP; delete bP; delete wK; delete bK; delete wQ; delete bQ;
     }
