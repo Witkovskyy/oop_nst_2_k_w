@@ -16,8 +16,14 @@ add_library(engine STATIC
 )
 target_include_directories(engine PUBLIC src/engine)
 
-# Don't change these three lines
-find_package(Catch2 CONFIG REQUIRED)
+# Don't change these lines
+include(FetchContent)
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v3.5.2
+)
+FetchContent_MakeAvailable(Catch2)
 find_package(SQLite3 REQUIRED)
 find_package(SFML 2.6.2 EXACT COMPONENTS graphics window system audio REQUIRED)
 
