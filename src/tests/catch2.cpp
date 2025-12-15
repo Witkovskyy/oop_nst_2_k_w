@@ -16,6 +16,17 @@ TEST_CASE("Testing board moves", "[board]") {
 	Board board;
 	Rook* rook = new Rook(0, 'R', { 0, 0 });
 	board.placePiece(rook);
+	
+	INFO("Stan planszy przed ruchem:");
+	for (int r = 0; r < 8; r++) {
+		std::string rowStr;
+		for (int c = 0; c < 8; c++) {
+			Piece* p = board.getPieceAt({ r, c });
+			if (p == nullptr) rowStr += ". ";
+			else rowStr += std::string(1, p->getSymbol()) + " ";
+		}
+	INFO(rowStr); // Catch2 zbierze te logi
+	}
 	SECTION("Rook can move vertically") {
 		REQUIRE(rook->canMove({ 3, 0 }, &board) == true);
 	}
