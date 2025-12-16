@@ -266,6 +266,11 @@ int main() {
 	board.computeZobristHash();
 	board.positionHistory.push_back(board.zobristKey);
 
+    int currentPlayer = 0;
+    Position selected = { -1, -1 };
+    Piece* selectedPiece = nullptr;
+    bool gameOver = false;
+    vector<Position> validMoves;
 
     int currentPlayer = 0; // 0 = białe, 1 = czarne
     Position selected = { -1, -1 };
@@ -286,6 +291,13 @@ int main() {
 		std::string msg = "Zobrist Hash initialized to zero, error";
 		LOG(msg);
     }
+
+    while (window.isOpen()) {
+        float dt = dtClock.restart().asSeconds();
+
+    float timeWhite = timeLimitMinutes * 60.0f;
+    float timeBlack = timeLimitMinutes * 60.0f;
+    sf::Clock dtClock;
 
     while (window.isOpen()) {
         float dt = dtClock.restart().asSeconds();
