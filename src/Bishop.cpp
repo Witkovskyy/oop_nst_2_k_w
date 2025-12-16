@@ -5,7 +5,7 @@
 
 Bishop::Bishop(int c, char s, Position p) : Piece(c, 'B', p) {}
 
-bool Bishop::canMove(Position new_pos, Board* board) {
+bool Bishop::canMove(Position new_pos, Board &board) {
     Position cur_pos = getPosition();
 
     int row_diff = new_pos.row - cur_pos.row;
@@ -26,14 +26,14 @@ bool Bishop::canMove(Position new_pos, Board* board) {
     
 
     while (r != new_pos.row && c != new_pos.col) {
-        if (board->getPieceAt({ r, c }) != nullptr)
+        if (board.getPieceAt({ r, c }) != nullptr)
             return false; 
         r += row_step;
         c += col_step;
     }
 
  
-    Piece* target = board->getPieceAt(new_pos);
+    Piece* target = board.getPieceAt(new_pos);
     if (target == nullptr || target->getColor() != getColor())
         return true;
 

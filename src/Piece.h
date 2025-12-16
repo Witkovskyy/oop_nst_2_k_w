@@ -1,7 +1,10 @@
-#pragma once
+﻿#pragma once
 #include <iostream>
+using namespace std;
 
-struct Position{
+class Board;
+
+struct Position {
     int row;
     int col;
 };
@@ -23,5 +26,5 @@ class Piece
         void setColor(int c);
         void setSymbol(char s);
         void setPosition(Position setPos);
-        virtual bool canMove(Position newPos, Board& board);
+        virtual bool canMove(Position newPos, Board &board);
 };
