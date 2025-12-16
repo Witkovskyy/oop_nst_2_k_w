@@ -134,7 +134,7 @@ Move runEngineAsync(Board boardCopy, int difficultyLevel) {
             if (score > alpha) {
                 alpha = score;
                 // Optional
-            std:string msg = "AI found better move " + std::to_string(currentDepth) +
+            std::string msg = "AI found better move " + std::to_string(currentDepth) +
                 " Score: " + std::to_string(score) +
                 " Move: (" + std::to_string(move.from.row) + "," + std::to_string(move.from.col) +
                 ") -> (" + std::to_string(move.to.row) + "," + std::to_string(move.to.col) + ")";
@@ -177,10 +177,6 @@ int main() {
 	bool isEngineThinking = false;  // AI thinking flag
     int difficultyLevel = 3; // 1-Easy, 2-Medium, 3-Hard
 	initZobrist(); // Initialize Zobrist hashing
-
-
-    sf::RenderWindow window(sf::VideoMode(BOARD_SIZE * TILE_SIZE, BOARD_SIZE * TILE_SIZE), "CHESS");
-
 
     //tekstury figur
     // --- 1. KONFIGURACJA CZASU (W KONSOLI) ---
@@ -316,242 +312,221 @@ int main() {
             if (event.type == sf::Event::Closed) window.close();
 
             if (!isEngineThinking && currentPlayer == 0) {
-                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+                if (!gameOver && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+                    if (event.mouseButton.x >= BOARD_SIZE * TILE_SIZE) continue;
                     int col = event.mouseButton.x / TILE_SIZE;
                     int row = 7 - (event.mouseButton.y / TILE_SIZE);
+                    Position clickedPos = { row, col };
 
                     if (!selectedPiece) {
-                        // wybierz figurę
-                        selectedPiece = board.getPieceAt({ row, col });
-                        if (selectedPiece && selectedPiece->getColor() == currentPlayer)
-                            selected = { row, col };
-                        else
-                            selectedPiece = nullptr;
-                    }
-                    else {
-                        Position target = { row, col };
-                        Piece* captured = board.getPieceAt(target);
-
-                        if (board.movePiece(selected, target, selectedPiece)) {
-                            if (captured) delete captured;
-                            if (selectedPiece->getSymbol() == 'P' && (target.row == 0 || target.row == 7)) {
-                                char newSymbol = 'Q'; // Default to Queen
-                                board.promotePawn(board, target, newSymbol, currentPlayer);
-                            }
-                            board.computeZobristHash();
-							board.positionHistory.push_back(board.zobristKey);
-                            currentPlayer = 1 - currentPlayer;
+                        Piece* clickedPiece = board.getPieceAt(clickedPos);
+                        if (clickedPiece && clickedPiece->getColor() == currentPlayer) {
+                            selectedPiece = clickedPiece; selected = clickedPos;
+                            validMoves.clear();
+                            for (int r = 0; r < BOARD_SIZE; r++)
+                                for (int c = 0; c < BOARD_SIZE; c++)
+                                    if (board.isMoveSafe(selected, { r, c })) validMoves.push_back({ r, c });
                         }
+                        else {
+                            if (clickedPos.row == selected.row && clickedPos.col == selected.col) {
+                                selectedPiece = nullptr; selected = { -1, -1 }; validMoves.clear();
+                            }
 
-                        selectedPiece = nullptr;
-                        selected = { -1, -1 };
-            if (!gameOver && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-                if (event.mouseButton.x >= BOARD_SIZE * TILE_SIZE) continue;
+                            else {
+                                if (board.isMoveSafe(selected, clickedPos)) {
+                                    Piece* captured = board.getPieceAt(clickedPos);
+                                    Position target = { row, col };
 
-                int col = event.mouseButton.x / TILE_SIZE;
-                int row = 7 - (event.mouseButton.y / TILE_SIZE);
-                Position clickedPos = { row, col };
+                                    board.movePiece(selected, clickedPos, selectedPiece);
+                                    if (captured) delete captured;
+                                    if (selectedPiece->getSymbol() == 'P' && (target.row == 0 || target.row == 7)) {
+                                        char newSymbol = 'Q'; // Default to Queen
+                                        board.promotePawn(board, target, newSymbol, currentPlayer);
+                                        currentPlayer = 1 - currentPlayer;
 
-                if (!selectedPiece) {
-                    Piece* clickedPiece = board.getPieceAt(clickedPos);
-                    if (clickedPiece && clickedPiece->getColor() == currentPlayer) {
-                        selectedPiece = clickedPiece; selected = clickedPos;
-                        validMoves.clear();
-                        for (int r = 0; r < BOARD_SIZE; r++)
-                            for (int c = 0; c < BOARD_SIZE; c++)
-                                if (board.isMoveSafe(selected, { r, c })) validMoves.push_back({ r, c });
-                    }
-                }
-                else {
-                    if (clickedPos.row == selected.row && clickedPos.col == selected.col) {
-                        selectedPiece = nullptr; selected = { -1, -1 }; validMoves.clear();
-                    }
-                    else {
-                        if (board.isMoveSafe(selected, clickedPos)) {
-                            Piece* captured = board.getPieceAt(clickedPos);
-                            board.movePiece(selected, clickedPos, selectedPiece);
-                            if (captured) delete captured;
-
-                            currentPlayer = 1 - currentPlayer;
-
-                            if (board.isKingInCheck(currentPlayer)) {
-                                if (board.isCheckMate(currentPlayer)) {
-                                    statusText.setString("MAT!\nWygrywa gracz:\n" + string(currentPlayer == 0 ? "CZARNY" : "BIALY"));
-                                    gameOver = true;
+                                        if (board.isKingInCheck(currentPlayer)) {
+                                            if (board.isCheckMate(currentPlayer)) {
+                                                statusText.setString("MAT!\nWygrywa gracz:\n" + string(currentPlayer == 0 ? "CZARNY" : "BIALY"));
+                                                gameOver = true;
+                                            }
+                                            else statusText.setString("SZACH!");
+                                        }
+                                        else statusText.setString("");
+                                    }
+                                    selectedPiece = nullptr; selected = { -1, -1 };
+                                    validMoves.clear();
                                 }
-                                else statusText.setString("SZACH!");
                             }
-                            else statusText.setString("");
                         }
-                        selectedPiece = nullptr; selected = { -1, -1 }; validMoves.clear();
                     }
                 }
             }
-        }
 
-        window.clear();
-
-        // Rysowanie planszy i figur
-        for (int r = 0; r < BOARD_SIZE; r++) {
-            for (int c = 0; c < BOARD_SIZE; c++) {
-                sf::RectangleShape square(sf::Vector2f((float)TILE_SIZE, (float)TILE_SIZE));
-                square.setPosition((float)(c * TILE_SIZE), (float)((7 - r) * TILE_SIZE));
-                if ((r + c) % 2 == 0) square.setFillColor(sf::Color(240, 217, 181));
-                else square.setFillColor(sf::Color(181, 136, 99));
-                if (selectedPiece && r == selected.row && c == selected.col) square.setFillColor(sf::Color(118, 150, 86));
-                Piece* p = board.getPieceAt({ r,c });
-                if (p && p->getSymbol() == 'K' && p->getColor() == currentPlayer && board.isKingInCheck(currentPlayer))
-                    square.setFillColor(sf::Color(200, 50, 50));
-                window.draw(square);
-            }
-        }
-
-        for (Position pos : validMoves) {
-            float radius = TILE_SIZE / 6.0f;
-            sf::CircleShape dot(radius);
-            dot.setFillColor(sf::Color(100, 100, 100, 128));
-            dot.setOrigin(radius, radius);
-            dot.setPosition((float)(pos.col * TILE_SIZE) + (TILE_SIZE / 2.0f), (float)((7 - pos.row) * TILE_SIZE) + (TILE_SIZE / 2.0f));
-            if (!board.isEmpty(pos)) {
-                dot.setRadius(TILE_SIZE / 2.2f); dot.setOrigin(dot.getRadius(), dot.getRadius());
-                dot.setFillColor(sf::Color::Transparent); dot.setOutlineThickness(5);
-                dot.setOutlineColor(sf::Color(100, 100, 100, 128));
-            }
-            window.draw(dot);
-        }
-
-        for (int r = 0; r < BOARD_SIZE; r++) {
-            for (int c = 0; c < BOARD_SIZE; c++) {
-                Piece* piece = board.getPieceAt({ r, c });
-                if (!piece) continue;
-                sf::Sprite sprite;
-                int idx = (piece->getColor() == 1 ? 6 : 0);
-                switch (piece->getSymbol()) {
-                case 'P': idx += 0; break; case 'R': idx += 1; break; case 'N': idx += 2; break;
-                case 'B': idx += 3; break; case 'Q': idx += 4; break; case 'K': idx += 5; break;
-                }
-                sprite.setTexture(textures[idx]);
-                sprite.setPosition((float)(c * TILE_SIZE), (float)((7 - r) * TILE_SIZE));
-                sprite.setScale((float)TILE_SIZE / sprite.getLocalBounds().width, (float)TILE_SIZE / sprite.getLocalBounds().height);
-                window.draw(sprite);
-            }
-        }
-		if (currentPlayer == 0) // PLAYER MOVE
-		{
-            OwnedBoard ob(board);
-            Board& copy = ob.board;
-
-            auto moves = legalMoves(copy, to01(currentPlayer));
-            if (moves.empty()) {
-                // Two options if no moves
-                if (isInCheck(copy, to01(currentPlayer))) {
-					std::string msg = "Checkmate! Game over. ";
-					LOG(msg);
-                }
-                else {
-					std::string msg = "Stalemate! Draw. ";
-					LOG(msg);
-                }
-
-				// Game over handling here
-                window.display();
-                continue; // or break
-            }
-		}
-
-
-        if (currentPlayer == 1) // AI MOVE
-        {
-			// Engine async handling start
-            if (!isEngineThinking) {
-                std::string msg = "AI is thinking...";
-				LOG(msg);
-				isEngineThinking = true;
-                engineFuture = std::async(std::launch::async, runEngineAsync, board, difficultyLevel);
-            }
-			// Check if engine is done
-            if (engineFuture.valid() && engineFuture.wait_for(std::chrono::milliseconds(0)) == std::future_status::ready) {
-                // Best move get
-                Move bestMoveOfAll = engineFuture.get();
-                std::string msg = "AI has made its move.";
-                LOG(msg);
-                if (bestMoveOfAll.pieceMoved == nullptr) {
-                    //Game over?
-                    std::string msg = "Game over detected from AI move.";
-                    LOG(msg);
-
-                    // Game over handling here
-                    window.display();
-                    continue; // or break
-                }
-                else {
-                    Position from = bestMoveOfAll.from;
-                    Position to = bestMoveOfAll.to;
-                    Piece* realPiece = board.getPieceAt(from);
-                    Piece* captured = board.getPieceAt(to);
-
-                    if (realPiece) {
-                        board.movePiece(from, to, realPiece);
-                        if (captured) delete captured;
-                        if (realPiece->getSymbol() == 'P' && (to.row == 0 || to.row == 7)) {
-                            char newSymbol = 'Q'; // Default to Queen
-                            board.promotePawn(board, to, newSymbol, currentPlayer);
+                    window.clear();
+                    // Rysowanie planszy i figur
+                    for (int r = 0; r < BOARD_SIZE; r++) {
+                        for (int c = 0; c < BOARD_SIZE; c++) {
+                            sf::RectangleShape square(sf::Vector2f((float)TILE_SIZE, (float)TILE_SIZE));
+                            square.setPosition((float)(c * TILE_SIZE), (float)((7 - r) * TILE_SIZE));
+                            if ((r + c) % 2 == 0) square.setFillColor(sf::Color(240, 217, 181));
+                            else square.setFillColor(sf::Color(181, 136, 99));
+                            if (selectedPiece && r == selected.row && c == selected.col) square.setFillColor(sf::Color(118, 150, 86));
+                            Piece* p = board.getPieceAt({ r,c });
+                            if (p && p->getSymbol() == 'K' && p->getColor() == currentPlayer && board.isKingInCheck(currentPlayer))
+                                square.setFillColor(sf::Color(200, 50, 50));
+                            window.draw(square);
                         }
-                        board.computeZobristHash();
-                        board.positionHistory.push_back(board.zobristKey);
-                        currentPlayer = 0;
+                    }
+
+                    for (Position pos : validMoves) {
+                        float radius = TILE_SIZE / 6.0f;
+                        sf::CircleShape dot(radius);
+                        dot.setFillColor(sf::Color(100, 100, 100, 128));
+                        dot.setOrigin(radius, radius);
+                        dot.setPosition((float)(pos.col * TILE_SIZE) + (TILE_SIZE / 2.0f), (float)((7 - pos.row) * TILE_SIZE) + (TILE_SIZE / 2.0f));
+                        if (!board.isEmpty(pos)) {
+                            dot.setRadius(TILE_SIZE / 2.2f); dot.setOrigin(dot.getRadius(), dot.getRadius());
+                            dot.setFillColor(sf::Color::Transparent); dot.setOutlineThickness(5);
+                            dot.setOutlineColor(sf::Color(100, 100, 100, 128));
+                        }
+                        window.draw(dot);
+                    }
+
+                    for (int r = 0; r < BOARD_SIZE; r++) {
+                        for (int c = 0; c < BOARD_SIZE; c++) {
+                            Piece* piece = board.getPieceAt({ r, c });
+                            if (!piece) continue;
+                            sf::Sprite sprite;
+                            int idx = (piece->getColor() == 1 ? 6 : 0);
+                            switch (piece->getSymbol()) {
+                            case 'P': idx += 0; break; case 'R': idx += 1; break; case 'N': idx += 2; break;
+                            case 'B': idx += 3; break; case 'Q': idx += 4; break; case 'K': idx += 5; break;
+                            }
+                            sprite.setTexture(textures[idx]);
+                            sprite.setPosition((float)(c * TILE_SIZE), (float)((7 - r) * TILE_SIZE));
+                            sprite.setScale((float)TILE_SIZE / sprite.getLocalBounds().width, (float)TILE_SIZE / sprite.getLocalBounds().height);
+                            window.draw(sprite);
+                        }
+                    }
+                    if (currentPlayer == 0) // PLAYER MOVE
+                    {
+                        OwnedBoard ob(board);
+                        Board& copy = ob.board;
+
+                        auto moves = legalMoves(copy, to01(currentPlayer));
+                        if (moves.empty()) {
+                            // Two options if no moves
+                            if (isInCheck(copy, to01(currentPlayer))) {
+                                std::string msg = "Checkmate! Game over. ";
+                                LOG(msg);
+                            }
+                            else {
+                                std::string msg = "Stalemate! Draw. ";
+                                LOG(msg);
+                            }
+
+                            // Game over handling here
+                            window.display();
+                            continue; // or break
+                        }
+                    }
+
+
+                    if (currentPlayer == 1) // AI MOVE
+                    {
+                        // Engine async handling start
+                        if (!isEngineThinking) {
+                            std::string msg = "AI is thinking...";
+                            LOG(msg);
+                            isEngineThinking = true;
+                            engineFuture = std::async(std::launch::async, runEngineAsync, board, difficultyLevel);
+                        }
+                        // Check if engine is done
+                        if (engineFuture.valid() && engineFuture.wait_for(std::chrono::milliseconds(0)) == std::future_status::ready) {
+                            // Best move get
+                            Move bestMoveOfAll = engineFuture.get();
+                            std::string msg = "AI has made its move.";
+                            LOG(msg);
+                            if (bestMoveOfAll.pieceMoved == nullptr) {
+                                //Game over?
+                                std::string msg = "Game over detected from AI move.";
+                                LOG(msg);
+
+                                // Game over handling here
+                                window.display();
+                                continue; // or break
+                            }
+                            else {
+                                Position from = bestMoveOfAll.from;
+                                Position to = bestMoveOfAll.to;
+                                Piece* realPiece = board.getPieceAt(from);
+                                Piece* captured = board.getPieceAt(to);
+
+                                if (realPiece) {
+                                    board.movePiece(from, to, realPiece);
+                                    if (captured) delete captured;
+                                    if (realPiece->getSymbol() == 'P' && (to.row == 0 || to.row == 7)) {
+                                        char newSymbol = 'Q'; // Default to Queen
+                                        board.promotePawn(board, to, newSymbol, currentPlayer);
+                                    }
+                                    board.computeZobristHash();
+                                    board.positionHistory.push_back(board.zobristKey);
+                                    currentPlayer = 0;
+                                }
+                                else {
+                                    std::string msg = "Critical error. AI Move execution failed: No piece at from position (" +
+                                        std::to_string(from.row) + "," + std::to_string(from.col) + ")";
+                                    LOG(msg);
+                                    currentPlayer = 0;
+                                }
+
+                                // Give move back
+                                isEngineThinking = false;
+                            }
+                        }
+                    }
+
+                    // --- RYSOWANIE UI ---
+                    window.draw(sidebarBg);
+
+                    // Zegary
+                    window.draw(labelBlack);
+                    window.draw(blackTimerBox);
+                    blackTimerText.setString(formatTime(timeBlack));
+                    sf::FloatRect trB = blackTimerText.getLocalBounds();
+                    blackTimerText.setOrigin(trB.left + trB.width / 2.0f, trB.top + trB.height / 2.0f);
+                    blackTimerText.setPosition(blackTimerBox.getPosition().x + blackTimerBox.getSize().x / 2.0f, blackTimerBox.getPosition().y + blackTimerBox.getSize().y / 2.0f);
+                    window.draw(blackTimerText);
+
+                    window.draw(labelWhite);
+                    window.draw(whiteTimerBox);
+                    whiteTimerText.setString(formatTime(timeWhite));
+                    sf::FloatRect trW = whiteTimerText.getLocalBounds();
+                    whiteTimerText.setOrigin(trW.left + trW.width / 2.0f, trW.top + trW.height / 2.0f);
+                    whiteTimerText.setPosition(whiteTimerBox.getPosition().x + whiteTimerBox.getSize().x / 2.0f, whiteTimerBox.getPosition().y + whiteTimerBox.getSize().y / 2.0f);
+                    window.draw(whiteTimerText);
+
+                    // Napisy informacyjne (Turn & Status)
+                    if (!gameOver) {
+                        turnText.setString(currentPlayer == 0 ? "Ruch: BIALE" : "Ruch: CZARNE");
+                        turnText.setFillColor(sf::Color::White);
                     }
                     else {
-                        std::string msg = "Critical error. AI Move execution failed: No piece at from position (" +
-                            std::to_string(from.row) + "," + std::to_string(from.col) + ")";
-                        LOG(msg);
-                        currentPlayer = 0;
+                        turnText.setString("KONIEC GRY");
+                        turnText.setFillColor(sf::Color::Yellow);
                     }
 
-            // Give move back
-			isEngineThinking = false;
+                    // Wyśrodkowanie tekstu "Ruch: ..."
+                    centerText(turnText, (float)(BOARD_SIZE * TILE_SIZE / 2 - 60), (float)(BOARD_SIZE * TILE_SIZE), (float)SIDEBAR_WIDTH);
+                    window.draw(turnText);
+
+                    // Wyśrodkowanie tekstu Statusu (Szach / Mat / Czas)
+                    centerText(statusText, (float)(BOARD_SIZE * TILE_SIZE / 2), (float)(BOARD_SIZE * TILE_SIZE), (float)SIDEBAR_WIDTH);
+                    window.draw(statusText);
+
+                    window.display();
                 }
+
             }
-        }
-        // --- RYSOWANIE UI ---
-        window.draw(sidebarBg);
-
-        // Zegary
-        window.draw(labelBlack);
-        window.draw(blackTimerBox);
-        blackTimerText.setString(formatTime(timeBlack));
-        sf::FloatRect trB = blackTimerText.getLocalBounds();
-        blackTimerText.setOrigin(trB.left + trB.width / 2.0f, trB.top + trB.height / 2.0f);
-        blackTimerText.setPosition(blackTimerBox.getPosition().x + blackTimerBox.getSize().x / 2.0f, blackTimerBox.getPosition().y + blackTimerBox.getSize().y / 2.0f);
-        window.draw(blackTimerText);
-
-        window.draw(labelWhite);
-        window.draw(whiteTimerBox);
-        whiteTimerText.setString(formatTime(timeWhite));
-        sf::FloatRect trW = whiteTimerText.getLocalBounds();
-        whiteTimerText.setOrigin(trW.left + trW.width / 2.0f, trW.top + trW.height / 2.0f);
-        whiteTimerText.setPosition(whiteTimerBox.getPosition().x + whiteTimerBox.getSize().x / 2.0f, whiteTimerBox.getPosition().y + whiteTimerBox.getSize().y / 2.0f);
-        window.draw(whiteTimerText);
-
-        // Napisy informacyjne (Turn & Status)
-        if (!gameOver) {
-            turnText.setString(currentPlayer == 0 ? "Ruch: BIALE" : "Ruch: CZARNE");
-            turnText.setFillColor(sf::Color::White);
-        }
-        else {
-            turnText.setString("KONIEC GRY");
-            turnText.setFillColor(sf::Color::Yellow);
-        }
-
-        // Wyśrodkowanie tekstu "Ruch: ..."
-        centerText(turnText, (float)(BOARD_SIZE * TILE_SIZE / 2 - 60), (float)(BOARD_SIZE * TILE_SIZE), (float)SIDEBAR_WIDTH);
-        window.draw(turnText);
-
-        // Wyśrodkowanie tekstu Statusu (Szach / Mat / Czas)
-        centerText(statusText, (float)(BOARD_SIZE * TILE_SIZE / 2), (float)(BOARD_SIZE * TILE_SIZE), (float)SIDEBAR_WIDTH);
-        window.draw(statusText);
-
-        window.display();
+        return 0;
     }
-    return 0;
-}

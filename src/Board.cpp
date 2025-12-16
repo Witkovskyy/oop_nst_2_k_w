@@ -23,7 +23,7 @@ Board::Board() {
             squares[i][j] = nullptr;
 }
 
-Piece* Board::wyswietl() { return squares[0][0]; }
+Piece* Board::Display() { return squares[0][0]; }
 bool Board::isEmpty(Position pos) { return getPieceAt(pos) == nullptr; }
 
 Piece* Board::getPieceAt(Position pos) {
