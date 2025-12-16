@@ -56,6 +56,9 @@ add_custom_command(TARGET app POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
           ${CMAKE_SOURCE_DIR}/src/pieces
           $<TARGET_FILE_DIR:app>/pieces
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+          ${CMAKE_SOURCE_DIR}/src/arial.ttf
+          $<TARGET_FILE_DIR:app>/arial.ttf
 )
 
 # Tests executable
