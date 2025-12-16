@@ -5,7 +5,7 @@
 
 Queen::Queen(int c, char s, Position p) : Piece(c, 'Q', p) {}
 
-bool Queen::canMove(Position new_pos, Board* board) {
+bool Queen::canMove(Position new_pos, Board &board) {
     Position cur_pos = getPosition();
 
     if (new_pos.row < 0 || new_pos.row > 7 || new_pos.col < 0 || new_pos.col > 7) return false;
@@ -25,14 +25,14 @@ bool Queen::canMove(Position new_pos, Board* board) {
             int start = std::min(cur_pos.row, new_pos.row);
             int end = std::max(cur_pos.row, new_pos.row);
             for (int r = start + 1; r < end; r++) {
-                if (board->getPieceAt({ r, cur_pos.col }) != nullptr) return false;
+                if (board.getPieceAt({ r, cur_pos.col }) != nullptr) return false;
             }
         }
         else { // Poziomo
             int start = std::min(cur_pos.col, new_pos.col);
             int end = std::max(cur_pos.col, new_pos.col);
             for (int c = start + 1; c < end; c++) {
-                if (board->getPieceAt({ cur_pos.row, c }) != nullptr) return false;
+                if (board.getPieceAt({ cur_pos.row, c }) != nullptr) return false;
             }
         }
     }
@@ -48,14 +48,14 @@ bool Queen::canMove(Position new_pos, Board* board) {
         // To zapobiega zawieszeniu się gry na 40 sekund
         int safety = 0;
         while (r != new_pos.row && safety < 10) {
-            if (board->getPieceAt({ r, c }) != nullptr) return false;
+            if (board.getPieceAt({ r, c }) != nullptr) return false;
             r += r_step;
             c += c_step;
             safety++;
         }
     }
 
-    Piece* target = board->getPieceAt(new_pos);
+    Piece* target = board.getPieceAt(new_pos);
     if (target == nullptr || target->getColor() != getColor()) return true;
 
     return false;

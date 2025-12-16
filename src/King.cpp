@@ -8,7 +8,7 @@ using namespace std;
 // Konstruktor
 King::King(int c, char s, Position p) : Piece(c, 'K', p) {}
 
-bool King::canMove(Position new_pos, Board* board) {
+bool King::canMove(Position new_pos, Board &board) {
     // 1. Sprawdzenie granic planszy
     if (new_pos.row < 0 || new_pos.row >= 8 || new_pos.col < 0 || new_pos.col >= 8)
         return false;
@@ -26,7 +26,7 @@ bool King::canMove(Position new_pos, Board* board) {
         return false;
 
     // 3. Sprawdzenie kolizji z własnymi figurami
-    Piece* target = board->getPieceAt(new_pos);
+    Piece* target = board.getPieceAt(new_pos);
     if (target != nullptr && target->getColor() == getColor())
         return false;
 

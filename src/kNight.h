@@ -10,7 +10,7 @@ private:
 
 public:
 	Knight(int, char, Position);
-	bool canMove(Position, Board*);
+	bool canMove(Position pos, Board &board);
 
 };
 

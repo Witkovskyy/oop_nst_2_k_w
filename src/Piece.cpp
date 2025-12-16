@@ -28,4 +28,4 @@ void Piece::setSymbol(char s) {
 void Piece::setPosition(Position setPos) {
     current_position = setPos;
 }
-bool Piece::canMove(Position newPos, Board &board) {return true;}
+bool Piece::canMove(Position newPos, Board &board) {return false;}

@@ -26,5 +26,5 @@ class Piece
         void setColor(int c);
         void setSymbol(char s);
         void setPosition(Position setPos);
-        virtual bool canMove(Position newPos, Board& board);
+        virtual bool canMove(Position newPos, Board &board);
 };

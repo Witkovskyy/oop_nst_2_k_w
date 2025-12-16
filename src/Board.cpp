@@ -11,9 +11,9 @@
 #include <cmath>
 #include <vector>
 
-Piece* Board::Display() {
-    return squares[1][1];
-}
+//Piece* Board::Display() {
+//    return squares[1][1];
+//}
 using namespace std;
 const int B_SIZE = 8;
 
@@ -48,7 +48,7 @@ bool Board::movePiece(Position oldpos, Position newpos, Piece* piece) {
     if (!piece) return false;
     // Tutaj zakładamy, że ruch jest już zweryfikowany przez isMoveSafe w main.cpp
     // Ale dla pewności można zostawić sprawdzenie canMove, jeśli wywołujesz to spoza maina
-    if (piece->canMove(newpos, this)) {
+    if (piece->canMove(newpos, *this)) {
         squares[oldpos.row][oldpos.col] = nullptr;
         squares[newpos.row][newpos.col] = piece;
         piece->setPosition(newpos);
@@ -154,7 +154,7 @@ bool Board::isMoveSafe(Position start, Position end) {
     if (target && target->getColor() == p->getColor()) return false;
 
     // Sprawdzenie geometrii ruchu (To jest kosztowne w pętli, dlatego w isCheckMate to zoptymalizujemy)
-    if (!p->canMove(end, this)) return false;
+    if (!p->canMove(end, *this)) return false;
 
     Piece* cap = squares[end.row][end.col];
     Position old = p->getPosition();
@@ -259,11 +259,11 @@ void Board::DisplayBoard() {
     }
 }
 
-Piece* Board::getPieceAt(Position pos) {
-    if (pos.row < 0 || pos.row >= sizeboard || pos.col < 0 || pos.col >= sizeboard)
-        return nullptr; // poza planszą
-    return squares[pos.row][pos.col];
-}
+//Piece* Board::getPieceAt(Position pos) {
+//    if (pos.row < 0 || pos.row >= sizeboard || pos.col < 0 || pos.col >= sizeboard)
+//        return nullptr; // poza planszą
+//    return squares[pos.row][pos.col];
+//}
 
 void Board::promotePawn(Board &board, Position pos, char newSymbol, int color) {
     Piece* promoted = board.getPieceAt(pos);

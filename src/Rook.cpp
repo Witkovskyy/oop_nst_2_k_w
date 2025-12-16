@@ -5,7 +5,7 @@
 
 Rook::Rook(int c, char s, Position p) : Piece(c, 'R', p) {}
 
-bool Rook::canMove(Position new_pos, Board* board) {
+bool Rook::canMove(Position new_pos, Board &board) {
     Position cur_pos = getPosition();
 
     // 1. Ochrona granic
@@ -27,7 +27,7 @@ bool Rook::canMove(Position new_pos, Board* board) {
 
         // Sprawdzamy tylko pola POMIĘDZY start a end
         for (int r = start + 1; r < end; r++) {
-            if (board->getPieceAt({ r, cur_pos.col }) != nullptr) {
+            if (board.getPieceAt({ r, cur_pos.col }) != nullptr) {
                 return false; // Przeszkoda
             }
         }
@@ -38,14 +38,14 @@ bool Rook::canMove(Position new_pos, Board* board) {
         int end = std::max(cur_pos.col, new_pos.col);
 
         for (int c = start + 1; c < end; c++) {
-            if (board->getPieceAt({ cur_pos.row, c }) != nullptr) {
+            if (board.getPieceAt({ cur_pos.row, c }) != nullptr) {
                 return false; // Przeszkoda
             }
         }
     }
 
     // --- CEL ---
-    Piece* target = board->getPieceAt(new_pos);
+    Piece* target = board.getPieceAt(new_pos);
     if (target == nullptr) return true;
     if (target->getColor() != getColor()) return true;
 
