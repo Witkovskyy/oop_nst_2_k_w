@@ -1,7 +1,10 @@
-#pragma once
+﻿#pragma once
 #include <iostream>
+using namespace std;
 
-struct Position{
+class Board;
+
+struct Position {
     int row;
     int col;
 };
