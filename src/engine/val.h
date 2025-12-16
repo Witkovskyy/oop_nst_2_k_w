@@ -27,7 +27,7 @@ static const int INF = std::numeric_limits<int>::max();
 
 //static const int depth = 6; // Fixed search depth, might change later
 
-static const int pawnPST[8][8] = {
+inline static const int pawnPST[8][8] = {
 	{ 0,  0,  0,  0,  0,  0,  0,  0}, // Promotion Line 8
     {50, 50, 50, 50, 50, 50, 50, 50}, // Linia 7
     {10, 10, 20, 30, 30, 20, 10, 10}, 
@@ -49,7 +49,7 @@ static const int pawnPST[8][8] = {
 //    {0, 0, 0,    0,    0, 0, 0, 0}
 //};
 
-int knightPST[8][8] =
+inline static const int knightPST[8][8] =
 {
 	{-50,-40,-30,-30,-30,-30,-40,-50},
 	{-40,-20,  0,  0,  0,  0,-20,-40},
@@ -60,7 +60,7 @@ int knightPST[8][8] =
 	{-40,-20, 0, 5, 5, 0,-20,-40},
 	{-50,-40,-30,-30,-30,-30,-40,-50}
 };
-int bishopPST[8][8] =
+inline static const int bishopPST[8][8] =
 {
 	{-20,-10,-10,-10,-10,-10,-10,-20},
 	{-10,  0,  0,  0,  0,  0,  0,-10},
@@ -71,7 +71,7 @@ int bishopPST[8][8] =
 	{-10,5,0,0,0,0,5,-10},
 	{-20,-10,-10,-10,-10,-10,-10,-20}
 };
-int rookPST[8][8] = {{
+inline static const int rookPST[8][8] = {{
 	0, 0, 0, 0, 0, 0, 0, 0 },
 	{ 5,10,10,10,10,10,10,5 },
 	{ -5,0,0,0,0,0,0,-5 },
@@ -80,7 +80,7 @@ int rookPST[8][8] = {{
 	{ -5,0,0,0,0,0,0,-5 },
 	{ -5,0,0,0,0,0,0,-5 },
 	{ 0, 0, 0, 5, 5, 0, 0, 0 }};
-int queenPST[8][8] = {{
+inline static const int queenPST[8][8] = {{
 -20,-10,-10, -5, -5,-10,-10,-20 },
 { -10,  0,  0,  0,  0,  0,  0,-10 },
 { -10,  0,  5,  5,  5,  5,  0,-10 },
@@ -89,7 +89,7 @@ int queenPST[8][8] = {{
 { -10, 5, 5, 5, 5, 5, 0,-10 },
 { -10, 0, 5, 0, 0, 0, 0,-10 },
 { -20,-10,-10, -5, -5,-10,-10,-20 }};
-int kingPST[8][8] = { {
+inline static const int kingPST[8][8] = { {
 	-30,-40,-40,-50,-50,-40,-40,-30 },
 { -30,-40,-40,-50,-50,-40,-40,-30 },
 { -30,-40,-40,-50,-50,-40,-40,-30 },
