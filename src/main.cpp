@@ -7,7 +7,7 @@
 #include "Piece.h"
 #include "Pawn.h"
 #include "Rook.h"
-#include "Knight.h"
+#include "kNight.h"
 #include "Bishop.h"
 #include "Queen.h"
 #include "King.h"
@@ -175,7 +175,7 @@ int main() {
 	//Engine multithreading init
 	std::future<Move> engineFuture; // Future for engine move
 	bool isEngineThinking = false;  // AI thinking flag
-    int difficultyLevel = 2; // 1-Easy, 2-Medium, 3-Hard
+    int difficultyLevel = 1; // 1-Easy, 2-Medium, 3-Hard
 	initZobrist(); // Initialize Zobrist hashing
 
     //tekstury figur
