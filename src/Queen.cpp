@@ -19,7 +19,6 @@ bool Queen::canMove(Position new_pos, Board &board) {
 
     if (!isDiagonal && !isStraight) return false;
 
-    // --- RUCH PROSTY (Jak Wieża - bezpiecznie) ---
     if (isStraight) {
         if (col_diff == 0) { // Pionowo
             int start = std::min(cur_pos.row, new_pos.row);
@@ -36,7 +35,6 @@ bool Queen::canMove(Position new_pos, Board &board) {
             }
         }
     }
-    // --- RUCH PO SKOSIE ---
     else if (isDiagonal) {
         int r_step = (row_diff > 0) ? 1 : -1;
         int c_step = (col_diff > 0) ? 1 : -1;

@@ -1,5 +1,5 @@
 ﻿#include <iostream>
-#include <cmath> // Dodane dla funkcji abs()
+#include <cmath> 
 #include "Piece.h"
 #include "Pawn.h"
 #include "Board.h"
