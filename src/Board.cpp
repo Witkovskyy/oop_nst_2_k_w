@@ -220,26 +220,26 @@ bool Board::isCheckMate(int color) {
 
                         candidates.push_back({ nr, nc });
 
-                        // Jeśli napotkamy jakąkolwiek figurę, dalej nie możemy iść (blokada)
-                        // isMoveSafe sprawdzi, czy to wróg (bicie) czy swój (stop), ale pętla musi się tu urwać
+                        // Stop if we can't go further
+                        // isMoveSafe checks if enemy or friendly piece
                         if (squares[nr][nc] != nullptr) break;
                     }
                 }
             }
 
-            // Teraz sprawdzamy tylko wygenerowane, sensowne ruchy
+            // Only check valid candidates
             for (auto target : candidates) {
-                // Filtrowanie wyjścia poza planszę
+				// Filter out of board moves
                 if (target.row < 0 || target.row >= B_SIZE || target.col < 0 || target.col >= B_SIZE) continue;
 
-                // Sprawdzamy czy ruch ratuje przed matem
+                // Check if move saves from checkmate
                 if (isMoveSafe(start, target)) {
-                    return false; // Znaleziono ratunek! Gra toczy się dalej.
+					return false; // Found a move that saves the king
                 }
             }
         }
     }
-    return true; // Przeanalizowano wszystkie sensowne ruchy i żaden nie ratuje króla -> MAT
+	return true; // Nothing saves the king - checkmate
 }
 
 void Board::DisplayBoard() {
@@ -278,6 +278,58 @@ void Board::computeZobristHash() {
 				int idx = getPieceIndex(p->getSymbol(), p->getColor());
 				int square = r * 8 + c;
 				zobristKey ^= pieceKeys[idx][square];
+            }
+        }
+    }
+}
+
+// Destructor
+Board::~Board() {
+    for (int i = 0; i < B_SIZE; i++) {
+        for (int j = 0; j < B_SIZE; j++) {
+            if (squares[i][j] != nullptr) {
+                delete squares[i][j];
+                squares[i][j] = nullptr;
+            }
+        }
+    }
+}
+// Copy Constructor
+Board::Board(const Board& other) {
+	// Hash and history
+    this->zobristKey = other.zobristKey;
+    this->positionHistory = other.positionHistory;
+
+	// Deep copy of squares
+    for (int r = 0; r < B_SIZE; r++) {
+        for (int c = 0; c < B_SIZE; c++) {
+            Piece* src = other.squares[r][c];
+
+            if (src == nullptr) {
+                this->squares[r][c] = nullptr;
+            }
+            else {
+				// New piece based on type
+                int color = src->getColor();
+                char sym = src->getSymbol();
+                Position pos = src->getPosition();
+
+                Piece* newPiece = nullptr;
+
+				// Create real new piece based on symbol
+                switch (sym) {
+                case 'P': newPiece = new Pawn(color, sym, pos); break;
+                case 'R': newPiece = new Rook(color, sym, pos); break;
+                case 'N': newPiece = new Knight(color, sym, pos); break;
+                case 'B': newPiece = new Bishop(color, sym, pos); break;
+                case 'Q': newPiece = new Queen(color, sym, pos); break;
+                case 'K': newPiece = new King(color, sym, pos); break;
+                default:  newPiece = new Pawn(color, sym, pos); break;
+                }
+
+                // newPiece->value = src->value; ?
+
+                this->squares[r][c] = newPiece;
             }
         }
     }

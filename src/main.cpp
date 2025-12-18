@@ -13,7 +13,6 @@
 #include "King.h"
 #include "engine/engine.h"
 #include "engine/val.h"
-#include "engine/deepcopy.h"
 #include "engine/evalpos.cpp"
 #include "engine/logger/logger.h"
 #include <string>
@@ -21,6 +20,11 @@
 #include "engine/tables/zobrist.h"
 
 using namespace std;
+
+// Global difficulty level
+const int difficultyLevel = 1; // 1-Easy, 2-Medium, 3-Hard
+
+
 
 const int TILE_SIZE = 80;
 const int BOARD_SIZE = 8;
@@ -49,7 +53,7 @@ Move runEngineAsync(Board boardCopy, int difficultyLevel) {
 
 
     // AI Difficulty Settings
-    // 1 - Easy (2 depth, instant, 25% random blunder)
+    // 1 - Easy (2 depth, instant, 33% random blunder)
     // 2 - Medium (4 depth, 0.5s per move)
     // 3 - Hard (64 depth, 4s per move)
     switch (difficultyLevel) {
@@ -59,11 +63,11 @@ Move runEngineAsync(Board boardCopy, int difficultyLevel) {
         break;
     case 2: // Medium
         maxDepthAllowed = 4; // 4 moves ahead
-        timeLimitMs = 500;   // Half a second max per move
+        timeLimitMs = 350;   // 0,35 second max per move
         break;
     case 3: // Hard
         maxDepthAllowed = 64; // Hikaru Nakamura level
-        timeLimitMs = 4000;   // 4 seconds max per move
+        timeLimitMs = 2000;   // 2 seconds max per move
         break;
     }
     int aiSide = -1; // AI is playing black always, to change later
@@ -149,8 +153,8 @@ Move runEngineAsync(Board boardCopy, int difficultyLevel) {
         bestMoveOfAll = bestMoveThisDepth;
 
         if (difficultyLevel == 1 && moves.size() > 1) {
-            // Easy level blunder simulation, 25% chance to make a random move so it's easier for the player
-            if (rand() % 4 == 0) {
+            // Easy level blunder simulation, 33% chance to make a random move so it's easier for the player
+            if (rand() % 3 == 0) {
                 int randomIdx = rand() % moves.size();
                 bestMoveOfAll = moves[randomIdx];
                 std::string msg = "AI blundered and picked a random move. Easy difficulty only";
@@ -175,7 +179,6 @@ int main() {
 	//Engine multithreading init
 	std::future<Move> engineFuture; // Future for engine move
 	bool isEngineThinking = false;  // AI thinking flag
-    int difficultyLevel = 1; // 1-Easy, 2-Medium, 3-Hard
 	initZobrist(); // Initialize Zobrist hashing
 
     // TIME SETTING IN CONSOLE
@@ -375,6 +378,15 @@ int main() {
                                 // Change player
                                 currentPlayer = 1 - currentPlayer;
 
+                                if (board.isKingInCheck(currentPlayer)) {
+                                    if (board.isCheckMate(currentPlayer)) {
+                                        statusText.setString("MAT!\nWygrywa gracz:\n" + string(currentPlayer == 0 ? "CZARNY" : "BIALY"));
+                                        gameOver = true;
+                                    }
+                                    else statusText.setString("SZACH!");
+                                }
+                                else statusText.setString("");
+
                                 // Reset selection
                                 selectedPiece = nullptr;
                                 selected = { -1, -1 };
@@ -445,13 +457,12 @@ int main() {
             }
             if (currentPlayer == 0) // PLAYER MOVE
             {
-                OwnedBoard ob(board);
-                Board& copy = ob.board;
 
-                auto moves = legalMoves(copy, to01(currentPlayer));
+                auto moves = legalMoves(board, to01(currentPlayer));
+				//std::cout << "Player legal moves: " << moves.size() << std::endl;
                 if (moves.empty()) {
                     // Two options if no moves
-                    if (isInCheck(copy, to01(currentPlayer))) {
+                    if (isInCheck(board, 0)) {
                         std::string msg = "Checkmate! Game over. ";
                         LOG(msg);
                     }
@@ -460,10 +471,19 @@ int main() {
                         LOG(msg);
                     }
 
+
                     // Game over handling here
-                    window.display();
                     gameOver = true; 
                 }
+
+                if (board.isKingInCheck(currentPlayer)) {
+                    if (board.isCheckMate(currentPlayer)) {
+                        statusText.setString("MAT!\nWygrywa gracz:\n" + string(currentPlayer == 0 ? "CZARNY" : "BIALY"));
+                        gameOver = true;
+                    }
+                    else statusText.setString("SZACH!");
+                }
+                else statusText.setString("");
             }
 
 
@@ -486,10 +506,15 @@ int main() {
                         //Game over?
                         std::string msg = "Game over detected from AI move.";
                         LOG(msg);
-
+                        if (isInCheck(board, 1)) {
+                            statusText.setString("SZACH MAT!\nWygrywaja\nBIALE");
+                        }
+                        else {
+                            statusText.setString("PAT!\nRemis");
+                        }
                         // Game over handling here
-                        window.display();
-                        continue; // or break
+                        gameOver = true;
+                        isEngineThinking = false;
                     }
                     else {
                         Position from = bestMoveOfAll.from;
@@ -518,6 +543,14 @@ int main() {
                         // Give move back
                         isEngineThinking = false;
                     }
+                    if (board.isKingInCheck(currentPlayer)) {
+                        if (board.isCheckMate(currentPlayer)) {
+                            statusText.setString("MAT!\nWygrywa gracz:\n" + string(currentPlayer == 0 ? "CZARNY" : "BIALY"));
+                            gameOver = true;
+                        }
+                        else statusText.setString("SZACH!");
+                    }
+                    else statusText.setString("");
                 }
             }
 

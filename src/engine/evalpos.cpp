@@ -1,7 +1,6 @@
 #pragma once
 #include "../Board.h"
 #include "val.h"
-#include "deepcopy.h"
 #include "moves.h"
 #include <algorithm>
 #include <vector>
