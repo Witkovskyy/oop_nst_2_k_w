@@ -13,6 +13,7 @@ public:
     Board();
 	Board(const Board& other); // Copy constructor
 	~Board(); // Destructor
+	Board& operator=(const Board& other); // Copy assignment operator
 
 	// New methods for game state checks
 	Position findKing(int color);                   // Find king position

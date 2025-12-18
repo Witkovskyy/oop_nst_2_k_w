@@ -334,3 +334,51 @@ Board::Board(const Board& other) {
         }
     }
 }
+Board& Board::operator=(const Board& other) {
+    if (this == &other) {
+		return *this; // Safety check for self-assignment
+    }
+
+	// Clear existing pieces, no memory leaks
+    for (int i = 0; i < B_SIZE; i++) {
+        for (int j = 0; j < B_SIZE; j++) {
+            if (squares[i][j] != nullptr) {
+                delete squares[i][j];
+                squares[i][j] = nullptr;
+            }
+        }
+    }
+
+    // Perform copy
+    this->zobristKey = other.zobristKey;
+    this->positionHistory = other.positionHistory;
+
+    for (int r = 0; r < B_SIZE; r++) {
+        for (int c = 0; c < B_SIZE; c++) {
+            Piece* src = other.squares[r][c];
+            if (src == nullptr) {
+                this->squares[r][c] = nullptr;
+            }
+            else {
+				// Copy piece
+                int color = src->getColor();
+                char sym = src->getSymbol();
+                Position pos = src->getPosition();
+
+                Piece* newPiece = nullptr;
+                switch (sym) {
+                case 'P': newPiece = new Pawn(color, sym, pos); break;
+                case 'R': newPiece = new Rook(color, sym, pos); break;
+                case 'N': newPiece = new Knight(color, sym, pos); break;
+                case 'B': newPiece = new Bishop(color, sym, pos); break;
+                case 'Q': newPiece = new Queen(color, sym, pos); break;
+                case 'K': newPiece = new King(color, sym, pos); break;
+                default:  newPiece = new Pawn(color, sym, pos); break;
+                }
+                this->squares[r][c] = newPiece;
+            }
+        }
+    }
+
+    return *this;
+}

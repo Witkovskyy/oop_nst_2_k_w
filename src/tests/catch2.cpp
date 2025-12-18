@@ -46,10 +46,8 @@ TEST_CASE("Rook Tests", "[board][rook]") {
 
         REQUIRE(rook->canMove({ 3, 0 }, board) == false);
 
-        delete blocker; // Sprz¹tanie blokady
     }
 
-    delete rook; // Sprz¹tanie g³ównej figury
 }
 
 // --- TESTY PIONA ---
@@ -73,7 +71,6 @@ TEST_CASE("Pawn Tests", "[board][pawn]") {
 
         REQUIRE(pawn->canMove({ 3, 1 }, board) == false);
 
-        delete blockingPawn;
     }
     SECTION("Pawn cannot move when blocked directly") {
         Pawn* blockingPawn = new Pawn(1, 'P', { 2, 1 });
@@ -81,10 +78,8 @@ TEST_CASE("Pawn Tests", "[board][pawn]") {
 
         REQUIRE(pawn->canMove({ 2, 1 }, board) == false);
 
-        delete blockingPawn;
     }
 
-    delete pawn;
 }
 
 // --- TESTY SKOCZKA ---
@@ -100,7 +95,6 @@ TEST_CASE("Knight Tests", "[board][knight]") {
         REQUIRE(knight->canMove({ 2, 3 }, board) == true);
     }
 
-    delete knight;
 }
 
 // --- TESTY GOÑCA ---
@@ -119,10 +113,8 @@ TEST_CASE("Bishop Tests", "[board][bishop]") {
 
         REQUIRE(bishop->canMove({ 5, 3 }, board) == false);
 
-        delete blockingPawn;
     }
 
-    delete bishop;
 }
 
 // --- TESTY HETMANA ---
@@ -146,10 +138,8 @@ TEST_CASE("Queen Tests", "[board][queen]") {
 
         REQUIRE(queen->canMove({ 6, 6 }, board) == false);
 
-        delete blockingPawn;
     }
 
-    delete queen;
 }
 
 // --- TESTY KRÓLA ---
@@ -176,8 +166,6 @@ TEST_CASE("King Tests", "[board][king]") {
 
         REQUIRE(king->canMove({ 5, 4 }, board) == false);
 
-        delete blockingPawn;
     }
 
-    delete king;
 }
