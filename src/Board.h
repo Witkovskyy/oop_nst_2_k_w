@@ -2,7 +2,6 @@
 #include <iostream>
 #include <vector>
 #include "Piece.h"
-#include <vector>
 
 const int sizeboard = 8;
 
@@ -12,16 +11,16 @@ public:
     Piece* Display();
 public:
     Board();
-    //Position findKingPos(int color);
-   // bool isKingInCheck(int color);
-    //bool isCheckMate(int color);
+	Board(const Board& other); // Copy constructor
+	~Board(); // Destructor
+	Board& operator=(const Board& other); // Copy assignment operator
 
-    // --- NOWE METODY DO SZACHA I MATA ---
-    Position findKing(int color);                   // Znajdź pozycję króla
-    bool isSquareAttacked(Position pos, int enemyColor); // Czy pole jest atakowane?
-    bool isKingInCheck(int color);                  // Czy król jest szachowany?
-    bool isMoveSafe(Position start, Position end);  // Czy ruch nie powoduje szacha? (Obsługa ZWIĄZANIA)
-    bool isCheckMate(int color);                    // Czy to MAT?
+	// New methods for game state checks
+	Position findKing(int color);                   // Find king position
+	bool isSquareAttacked(Position pos, int enemyColor); // Is the square attacked?
+	bool isKingInCheck(int color);                  // Is king in check?
+    bool isMoveSafe(Position start, Position end);  // Pins 
+	bool isCheckMate(int color);                    // Is checkmate?
 
     void placePiece(Piece* piece);
     bool isEmpty(Position pos);

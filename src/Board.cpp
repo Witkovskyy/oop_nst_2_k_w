@@ -11,9 +11,6 @@
 #include <cmath>
 #include <vector>
 
-//Piece* Board::Display() {
-//    return squares[1][1];
-//}
 using namespace std;
 const int B_SIZE = 8;
 
@@ -46,8 +43,6 @@ bool Board::validateMove(Position old_pos, Position new_pos, Piece* piece) {
 
 bool Board::movePiece(Position oldpos, Position newpos, Piece* piece) {
     if (!piece) return false;
-    // Tutaj zakładamy, że ruch jest już zweryfikowany przez isMoveSafe w main.cpp
-    // Ale dla pewności można zostawić sprawdzenie canMove, jeśli wywołujesz to spoza maina
     if (piece->canMove(newpos, *this)) {
         squares[oldpos.row][oldpos.col] = nullptr;
         squares[newpos.row][newpos.col] = piece;
@@ -58,7 +53,6 @@ bool Board::movePiece(Position oldpos, Position newpos, Piece* piece) {
 }
 
 Position Board::findKing(int color) {
-    // Optymalizacja: Można by to cache'ować w zmiennej, ale przy 64 polach to nie jest główne gardło.
     for (int r = 0; r < B_SIZE; r++)
         for (int c = 0; c < B_SIZE; c++) {
             Piece* p = squares[r][c];
@@ -70,7 +64,7 @@ Position Board::findKing(int color) {
 bool Board::isSquareAttacked(Position pos, int enemyColor) {
     if (pos.row < 0 || pos.row >= B_SIZE) return false;
 
-    // 1. LINIE PROSTE (Wieża/Hetman)
+    // Straights
     int straight[4][2] = { {1,0}, {-1,0}, {0,1}, {0,-1} };
     for (auto d : straight) {
         for (int i = 1; i < B_SIZE; i++) {
@@ -84,7 +78,7 @@ bool Board::isSquareAttacked(Position pos, int enemyColor) {
         }
     }
 
-    // 2. SKOSY (Goniec/Hetman)
+    // Diagonals
     int diag[4][2] = { {1,1}, {1,-1}, {-1,1}, {-1,-1} };
     for (auto d : diag) {
         for (int i = 1; i < B_SIZE; i++) {
@@ -98,7 +92,7 @@ bool Board::isSquareAttacked(Position pos, int enemyColor) {
         }
     }
 
-    // 3. SKOCZEK
+    // Knight
     int km[8][2] = { {2,1},{2,-1},{-2,1},{-2,-1},{1,2},{1,-2},{-1,2},{-1,-2} };
     for (auto m : km) {
         int r = pos.row + m[0], c = pos.col + m[1];
@@ -108,10 +102,10 @@ bool Board::isSquareAttacked(Position pos, int enemyColor) {
         }
     }
 
-    // 4. PIONEK (Uwaga na kierunek ataku przeciwnika)
-    // Jeśli atakują nas BIAŁE (enemy=0), to one są na dole i biją w górę (row+1)
-    // Jeśli atakują nas CZARNE (enemy=1), to one są na górze i biją w dół (row-1)
-    // My sprawdzamy "skąd przyleciało", więc odwracamy logikę:
+    // Pawn
+    // If white attacks (enemy=0), and hitting up (row+1)
+    // If black attacks (enemy=1), and hotting down (row-1)
+	// We check where did it come from so we turn the logic around
     int attackDir = (enemyColor == 0) ? -1 : 1;
 
     int pr = pos.row + attackDir;
@@ -126,7 +120,7 @@ bool Board::isSquareAttacked(Position pos, int enemyColor) {
         }
     }
 
-    // 5. KRÓL
+    // King
     for (int i = -1; i <= 1; i++) for (int j = -1; j <= 1; j++) {
         if (i == 0 && j == 0) continue;
         int r = pos.row + i, c = pos.col + j;
@@ -149,17 +143,17 @@ bool Board::isMoveSafe(Position start, Position end) {
     Piece* p = getPieceAt(start);
     if (!p) return false;
 
-    // Najpierw szybka weryfikacja czy pole docelowe nie jest zajęte przez swojego
+	// First we check if the target square has a friendly piece
     Piece* target = getPieceAt(end);
     if (target && target->getColor() == p->getColor()) return false;
 
-    // Sprawdzenie geometrii ruchu (To jest kosztowne w pętli, dlatego w isCheckMate to zoptymalizujemy)
+	// Find out if the piece can move there in the first place
     if (!p->canMove(end, *this)) return false;
 
     Piece* cap = squares[end.row][end.col];
     Position old = p->getPosition();
 
-    // Symulacja
+	// Simulate the move
     squares[end.row][end.col] = p;
     squares[start.row][start.col] = nullptr;
     p->setPosition(end);
@@ -174,8 +168,8 @@ bool Board::isMoveSafe(Position start, Position end) {
     return safe;
 }
 
-// --- OPTYMALIZACJA GŁÓWNA ---
-// Zamiast sprawdzać wszystkie pola (64x64), sprawdzamy tylko sensowne ruchy
+// Main optimization
+// We check only the moves that make sense
 bool Board::isCheckMate(int color) {
     if (!isKingInCheck(color)) return false;
 
@@ -184,38 +178,37 @@ bool Board::isCheckMate(int color) {
             Piece* p = squares[r][c];
             if (!p || p->getColor() != color) continue;
 
-            // Generujemy listę potencjalnych celów w zależności od typu figury
-            // Zamiast pętli 0..7 po całej planszy
+			// Generate list of potential moves for this piece
+            // 0..7 through the board
             vector<Position> candidates;
             char sym = p->getSymbol();
             Position start = { r, c };
 
-            if (sym == 'P') { // PIONEK
+            if (sym == 'P') { // Pawn
                 int dir = (color == 0) ? 1 : -1;
-                // Ruch o 1
+                // Move by 1
                 candidates.push_back({ r + dir, c });
-                // Ruch o 2 (tylko z pozycji startowej)
+                // Move by 2
                 if ((color == 0 && r == 1) || (color == 1 && r == 6))
                     candidates.push_back({ r + 2 * dir, c });
-                // Bicia
+                // Captures
                 candidates.push_back({ r + dir, c - 1 });
                 candidates.push_back({ r + dir, c + 1 });
             }
-            else if (sym == 'N') { // SKOCZEK
+            else if (sym == 'N') { // Knight
                 int moves[8][2] = { {2,1},{2,-1},{-2,1},{-2,-1},{1,2},{1,-2},{-1,2},{-1,-2} };
                 for (auto m : moves) candidates.push_back({ r + m[0], c + m[1] });
             }
-            else if (sym == 'K') { // KRÓL
+            else if (sym == 'K') { // King
                 for (int i = -1; i <= 1; i++) for (int j = -1; j <= 1; j++)
                     if (i != 0 || j != 0) candidates.push_back({ r + i, c + j });
             }
-            else { // FIGURY LINIOWE (R, B, Q)
-                // Dla nich musimy "iść" w danym kierunku aż do przeszkody
+			else { // Sliders : Rook, Bishop, Queen
                 vector<pair<int, int>> dirs;
-                if (sym == 'R' || sym == 'Q') { // Prosto
+				if (sym == 'R' || sym == 'Q') { // Straight
                     dirs.push_back({ 1,0 }); dirs.push_back({ -1,0 }); dirs.push_back({ 0,1 }); dirs.push_back({ 0,-1 });
                 }
-                if (sym == 'B' || sym == 'Q') { // Skosy
+                if (sym == 'B' || sym == 'Q') { // Diagonal
                     dirs.push_back({ 1,1 }); dirs.push_back({ 1,-1 }); dirs.push_back({ -1,1 }); dirs.push_back({ -1,-1 });
                 }
 
@@ -227,26 +220,26 @@ bool Board::isCheckMate(int color) {
 
                         candidates.push_back({ nr, nc });
 
-                        // Jeśli napotkamy jakąkolwiek figurę, dalej nie możemy iść (blokada)
-                        // isMoveSafe sprawdzi, czy to wróg (bicie) czy swój (stop), ale pętla musi się tu urwać
+                        // Stop if we can't go further
+                        // isMoveSafe checks if enemy or friendly piece
                         if (squares[nr][nc] != nullptr) break;
                     }
                 }
             }
 
-            // Teraz sprawdzamy tylko wygenerowane, sensowne ruchy
+            // Only check valid candidates
             for (auto target : candidates) {
-                // Filtrowanie wyjścia poza planszę
+				// Filter out of board moves
                 if (target.row < 0 || target.row >= B_SIZE || target.col < 0 || target.col >= B_SIZE) continue;
 
-                // Sprawdzamy czy ruch ratuje przed matem
+                // Check if move saves from checkmate
                 if (isMoveSafe(start, target)) {
-                    return false; // Znaleziono ratunek! Gra toczy się dalej.
+					return false; // Found a move that saves the king
                 }
             }
         }
     }
-    return true; // Przeanalizowano wszystkie sensowne ruchy i żaden nie ratuje króla -> MAT
+	return true; // Nothing saves the king - checkmate
 }
 
 void Board::DisplayBoard() {
@@ -288,4 +281,104 @@ void Board::computeZobristHash() {
             }
         }
     }
+}
+
+// Destructor
+Board::~Board() {
+    for (int i = 0; i < B_SIZE; i++) {
+        for (int j = 0; j < B_SIZE; j++) {
+            if (squares[i][j] != nullptr) {
+                delete squares[i][j];
+                squares[i][j] = nullptr;
+            }
+        }
+    }
+}
+// Copy Constructor
+Board::Board(const Board& other) {
+	// Hash and history
+    this->zobristKey = other.zobristKey;
+    this->positionHistory = other.positionHistory;
+
+	// Deep copy of squares
+    for (int r = 0; r < B_SIZE; r++) {
+        for (int c = 0; c < B_SIZE; c++) {
+            Piece* src = other.squares[r][c];
+
+            if (src == nullptr) {
+                this->squares[r][c] = nullptr;
+            }
+            else {
+				// New piece based on type
+                int color = src->getColor();
+                char sym = src->getSymbol();
+                Position pos = src->getPosition();
+
+                Piece* newPiece = nullptr;
+
+				// Create real new piece based on symbol
+                switch (sym) {
+                case 'P': newPiece = new Pawn(color, sym, pos); break;
+                case 'R': newPiece = new Rook(color, sym, pos); break;
+                case 'N': newPiece = new Knight(color, sym, pos); break;
+                case 'B': newPiece = new Bishop(color, sym, pos); break;
+                case 'Q': newPiece = new Queen(color, sym, pos); break;
+                case 'K': newPiece = new King(color, sym, pos); break;
+                default:  newPiece = new Pawn(color, sym, pos); break;
+                }
+
+                // newPiece->value = src->value; ?
+
+                this->squares[r][c] = newPiece;
+            }
+        }
+    }
+}
+Board& Board::operator=(const Board& other) {
+    if (this == &other) {
+		return *this; // Safety check for self-assignment
+    }
+
+	// Clear existing pieces, no memory leaks
+    for (int i = 0; i < B_SIZE; i++) {
+        for (int j = 0; j < B_SIZE; j++) {
+            if (squares[i][j] != nullptr) {
+                delete squares[i][j];
+                squares[i][j] = nullptr;
+            }
+        }
+    }
+
+    // Perform copy
+    this->zobristKey = other.zobristKey;
+    this->positionHistory = other.positionHistory;
+
+    for (int r = 0; r < B_SIZE; r++) {
+        for (int c = 0; c < B_SIZE; c++) {
+            Piece* src = other.squares[r][c];
+            if (src == nullptr) {
+                this->squares[r][c] = nullptr;
+            }
+            else {
+				// Copy piece
+                int color = src->getColor();
+                char sym = src->getSymbol();
+                Position pos = src->getPosition();
+
+                Piece* newPiece = nullptr;
+                switch (sym) {
+                case 'P': newPiece = new Pawn(color, sym, pos); break;
+                case 'R': newPiece = new Rook(color, sym, pos); break;
+                case 'N': newPiece = new Knight(color, sym, pos); break;
+                case 'B': newPiece = new Bishop(color, sym, pos); break;
+                case 'Q': newPiece = new Queen(color, sym, pos); break;
+                case 'K': newPiece = new King(color, sym, pos); break;
+                default:  newPiece = new Pawn(color, sym, pos); break;
+                }
+                this->squares[r][c] = newPiece;
+            }
+        }
+    }
+
+    return *this;
 }

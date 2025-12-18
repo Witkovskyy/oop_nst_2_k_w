@@ -13,7 +13,6 @@
 #include "King.h"
 #include "engine/engine.h"
 #include "engine/val.h"
-#include "engine/deepcopy.h"
 #include "engine/evalpos.cpp"
 #include "engine/logger/logger.h"
 #include <string>
@@ -22,11 +21,16 @@
 
 using namespace std;
 
+// Global difficulty level
+const int difficultyLevel = 1; // 1-Easy, 2-Medium, 3-Hard
+
+
+
 const int TILE_SIZE = 80;
 const int BOARD_SIZE = 8;
-const int SIDEBAR_WIDTH = 260; // Nieco szerszy panel dla pewności
+const int SIDEBAR_WIDTH = 260; // Wider panel for better readability
 
-// Funkcja centrująca tekst w poziomie względem panelu bocznego
+// Function centering text in sidebar
 void centerText(sf::Text& text, float y, float boardWidth, float sidebarWidth) {
     sf::FloatRect textRect = text.getLocalBounds();
     text.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
@@ -49,7 +53,7 @@ Move runEngineAsync(Board boardCopy, int difficultyLevel) {
 
 
     // AI Difficulty Settings
-    // 1 - Easy (2 depth, instant, 25% random blunder)
+    // 1 - Easy (2 depth, instant, 33% random blunder)
     // 2 - Medium (4 depth, 0.5s per move)
     // 3 - Hard (64 depth, 4s per move)
     switch (difficultyLevel) {
@@ -59,11 +63,11 @@ Move runEngineAsync(Board boardCopy, int difficultyLevel) {
         break;
     case 2: // Medium
         maxDepthAllowed = 4; // 4 moves ahead
-        timeLimitMs = 500;   // Half a second max per move
+        timeLimitMs = 350;   // 0,35 second max per move
         break;
     case 3: // Hard
         maxDepthAllowed = 64; // Hikaru Nakamura level
-        timeLimitMs = 4000;   // 4 seconds max per move
+        timeLimitMs = 2000;   // 2 seconds max per move
         break;
     }
     int aiSide = -1; // AI is playing black always, to change later
@@ -149,8 +153,8 @@ Move runEngineAsync(Board boardCopy, int difficultyLevel) {
         bestMoveOfAll = bestMoveThisDepth;
 
         if (difficultyLevel == 1 && moves.size() > 1) {
-            // Easy level blunder simulation, 25% chance to make a random move so it's easier for the player
-            if (rand() % 4 == 0) {
+            // Easy level blunder simulation, 33% chance to make a random move so it's easier for the player
+            if (rand() % 3 == 0) {
                 int randomIdx = rand() % moves.size();
                 bestMoveOfAll = moves[randomIdx];
                 std::string msg = "AI blundered and picked a random move. Easy difficulty only";
@@ -175,11 +179,9 @@ int main() {
 	//Engine multithreading init
 	std::future<Move> engineFuture; // Future for engine move
 	bool isEngineThinking = false;  // AI thinking flag
-    int difficultyLevel = 1; // 1-Easy, 2-Medium, 3-Hard
 	initZobrist(); // Initialize Zobrist hashing
 
-    //tekstury figur
-    // --- 1. KONFIGURACJA CZASU (W KONSOLI) ---
+    // TIME SETTING IN CONSOLE
     float timeLimitMinutes;
     cout << "--- USTAWIENIA GRY ---" << endl;
     cout << "Podaj czas na partie dla gracza (w minutach): ";
@@ -188,40 +190,41 @@ int main() {
         cout << "Bledne dane, ustawiono 10 minut." << endl;
     }
 
-    // --- INICJALIZACJA SFML ---
+    // SFML INIT
     sf::RenderWindow window(sf::VideoMode(BOARD_SIZE * TILE_SIZE + SIDEBAR_WIDTH, BOARD_SIZE * TILE_SIZE), "CHESS - C++ Engine");
 
     sf::Font font;
     if (!font.loadFromFile("arial.ttf")) {
-        cout << "BLAD: Brak pliku arial.ttf w folderze projektu!" << endl;
+		std::string msg = "ERROR: Missing arial.ttf font file in project folder!";
+		LOG(msg);
     }
 
-    // --- ELEMENTY UI ---
+    // UI ELEMENTS
 
-    // Tło panelu
+    // Panel background
     sf::RectangleShape sidebarBg(sf::Vector2f((float)SIDEBAR_WIDTH, (float)(BOARD_SIZE * TILE_SIZE)));
     sidebarBg.setPosition((float)(BOARD_SIZE * TILE_SIZE), 0);
     sidebarBg.setFillColor(sf::Color(40, 40, 40));
 
-    // --- ZEGARY (Teraz identyczny styl dla obu) ---
-    sf::Color timerBgColor(220, 220, 220); // Jasnoszary dla obu
-    sf::Color timerTextColor = sf::Color::Black; // Czarny tekst dla obu
+    // TIMERS
+    sf::Color timerBgColor(220, 220, 220); // Light grey for both
+	sf::Color timerTextColor = sf::Color::Black; // Black text for both
 
-    // Zegar CZARNYCH (Góra)
+    // Black clock - top
     sf::RectangleShape blackTimerBox(sf::Vector2f(SIDEBAR_WIDTH - 40.f, 80.f));
     blackTimerBox.setPosition((float)(BOARD_SIZE * TILE_SIZE + 20), 50.f);
     blackTimerBox.setFillColor(timerBgColor);
     blackTimerBox.setOutlineThickness(3);
-    blackTimerBox.setOutlineColor(sf::Color::Black); // Czarna obwódka
+    blackTimerBox.setOutlineColor(sf::Color::Black); // Black border
 
-    // Zegar BIAŁYCH (Dół)
+    // White clock - bottom
     sf::RectangleShape whiteTimerBox(sf::Vector2f(SIDEBAR_WIDTH - 40.f, 80.f));
     whiteTimerBox.setPosition((float)(BOARD_SIZE * TILE_SIZE + 20), (float)(BOARD_SIZE * TILE_SIZE - 130));
     whiteTimerBox.setFillColor(timerBgColor);
     whiteTimerBox.setOutlineThickness(3);
-    whiteTimerBox.setOutlineColor(sf::Color::White); // Biała obwódka (jedyna różnica)
+    whiteTimerBox.setOutlineColor(sf::Color::White); // White border
 
-    // Teksty
+    // Texts
     sf::Text whiteTimerText, blackTimerText, turnText, statusText, labelWhite, labelBlack;
 
     whiteTimerText.setFont(font); whiteTimerText.setCharacterSize(50); whiteTimerText.setFillColor(timerTextColor);
@@ -229,18 +232,17 @@ int main() {
 
     turnText.setFont(font);       turnText.setCharacterSize(26); turnText.setFillColor(sf::Color::White);
 
-    // Status text - mniejszy font, żeby się zmieścił
+	// Status text - smaller font so it can fit more lines
     statusText.setFont(font);     statusText.setCharacterSize(22); statusText.setFillColor(sf::Color(255, 80, 80)); statusText.setStyle(sf::Text::Bold);
 
-    // Podpisy
+	// Sub-labels
     labelBlack.setFont(font); labelBlack.setString("GRACZ CZARNY"); labelBlack.setCharacterSize(18); labelBlack.setFillColor(sf::Color(180, 180, 180));
     labelBlack.setPosition((float)(BOARD_SIZE * TILE_SIZE + 25), 25.f);
 
     labelWhite.setFont(font); labelWhite.setString("GRACZ BIALY"); labelWhite.setCharacterSize(18); labelWhite.setFillColor(sf::Color(180, 180, 180));
     labelWhite.setPosition((float)(BOARD_SIZE * TILE_SIZE + 25), (float)(BOARD_SIZE * TILE_SIZE - 155));
 
-    // --- ŁADOWANIE TEKSTUR I PLANSZY ---
-    // (Tu bez zmian - skrótowo wklejone ładowanie)
+    // LOADING BOARD AND TEXTURES
     sf::Texture textures[12];
     textures[0].loadFromFile("pieces/White_Pawn.png"); textures[1].loadFromFile("pieces/White_Rook.png");
     textures[2].loadFromFile("pieces/White_Knight.png"); textures[3].loadFromFile("pieces/White_Bishop.png");
@@ -250,13 +252,13 @@ int main() {
     textures[10].loadFromFile("pieces/Black_Queen.png"); textures[11].loadFromFile("pieces/Black_King.png");
 
     Board board;
-    // Białe
+    // White
     board.placePiece(new Rook(0, 'R', { 0, 0 })); board.placePiece(new Knight(0, 'N', { 0, 1 }));
     board.placePiece(new Bishop(0, 'B', { 0, 2 })); board.placePiece(new Queen(0, 'Q', { 0, 3 }));
     board.placePiece(new King(0, 'K', { 0, 4 })); board.placePiece(new Bishop(0, 'B', { 0, 5 }));
     board.placePiece(new Knight(0, 'N', { 0, 6 })); board.placePiece(new Rook(0, 'R', { 0, 7 }));
     for (int i = 0; i < BOARD_SIZE; i++) board.placePiece(new Pawn(0, 'P', { 1, i }));
-    // Czarne
+    // Black
     board.placePiece(new Rook(1, 'R', { 7, 0 })); board.placePiece(new Knight(1, 'N', { 7, 1 }));
     board.placePiece(new Bishop(1, 'B', { 7, 2 })); board.placePiece(new Queen(1, 'Q', { 7, 3 }));
     board.placePiece(new King(1, 'K', { 7, 4 })); board.placePiece(new Bishop(1, 'B', { 7, 5 }));
@@ -266,7 +268,7 @@ int main() {
 	board.computeZobristHash();
 	board.positionHistory.push_back(board.zobristKey);
 
-    int currentPlayer = 0; // 0 = białe, 1 = czarne
+	int currentPlayer = 0; // 0 = WHITE, 1 = BLACK
     Position selected = { -1, -1 };
     Piece* selectedPiece = nullptr;
     bool gameOver = false;
@@ -293,7 +295,7 @@ int main() {
             if (currentPlayer == 0) timeWhite -= dt;
             else timeBlack -= dt;
 
-            // Używamy \n w napisach, żeby były w wielu liniach
+			// Newlines everywhere for readability
             if (timeWhite <= 0) {
                 gameOver = true;
                 statusText.setString("KONIEC CZASU!\nWygrywaja\nCZARNE");
@@ -317,14 +319,14 @@ int main() {
                     int row = 7 - (event.mouseButton.y / TILE_SIZE);
                     Position clickedPos = { row, col };
 
-                    // 1. Jeśli nic nie jest wybrane -> WYBIERAMY
+                    // Pick a piece if nothing pickes
                     if (selectedPiece == nullptr) {
                         Piece* clickedPiece = board.getPieceAt(clickedPos);
                         if (clickedPiece && clickedPiece->getColor() == currentPlayer) {
                             selectedPiece = clickedPiece;
                             selected = clickedPos;
 
-                            // Generujemy ruchy RAZ i zapisujemy w wektorze
+                            // Generate once and store in a vector
                             validMoves.clear();
                             for (int r = 0; r < 8; r++) {
                                 for (int c = 0; c < 8; c++) {
@@ -333,27 +335,26 @@ int main() {
                                     }
                                 }
                             }
-                            std::cout << "Wybrano figure. Dostepne ruchy: " << validMoves.size() << endl;
+							std::string msg = "Selected piece at (" + std::to_string(clickedPos.row) + "," + std::to_string(clickedPos.col) + ")";
+							LOG(msg);
                         }
                     }
-                    // 2. Jeśli coś jest wybrane -> RUSZAMY lub ODZNACZAMY
+					// If something is picked - try to move or change selection
                     else {
-                        // A. Czy kliknięto w tę samą figurę? -> Odznacz
+						// The same piece clicked - > Deselect
                         if (clickedPos.row == selected.row && clickedPos.col == selected.col) {
                             selectedPiece = nullptr;
                             selected = { -1, -1 };
                             validMoves.clear();
                         }
-                        // B. Czy kliknięto w inną swoją figurę? -> Zmień zaznaczenie
+						// Different piece clicked - > Change selection
                         else if (board.getPieceAt(clickedPos) && board.getPieceAt(clickedPos)->getColor() == currentPlayer) {
                             selectedPiece = board.getPieceAt(clickedPos);
                             selected = clickedPos;
-                            // ... tu regeneracja validMoves dla nowej figury (jak w pkt 1) ...
-                            // (Dla uproszczenia kodu pominąłem, ale warto to obsłużyć)
                         }
-                        // C. Próba RUCHU
+                        // Try to move
                         else {
-                            // Sprawdzamy, czy kliknięte pole jest na liście validMoves
+                            // Check if the field is in validMoves
                             bool isLegal = false;
                             for (Position p : validMoves) {
                                 if (p.row == clickedPos.row && p.col == clickedPos.col) {
@@ -363,32 +364,45 @@ int main() {
                             }
 
                             if (isLegal) {
-                                // Wykonaj ruch!
+                                // Make a move
                                 Piece* captured = board.getPieceAt(clickedPos);
-
-                                // WAŻNE: movePiece musi dostać referencję, jeśli tak zmieniłeś w Board.h
-                                // Jeśli Board::movePiece przyjmuje wskaźnik, zostaw selectedPiece
                                 board.movePiece(selected, clickedPos, selectedPiece);
 
-                                if (captured) delete captured; // Sprzątamy z pamięci
+                                if (captured) delete captured; // Cleanup
 
-                                // Promocja
+                                // Promotion
                                 if (selectedPiece->getSymbol() == 'P' && (clickedPos.row == 0 || clickedPos.row == 7)) {
                                     board.promotePawn(board, clickedPos, 'Q', currentPlayer);
                                 }
 
-                                // Zmiana tury
+                                // Change player
                                 currentPlayer = 1 - currentPlayer;
 
-                                // Reset zaznaczenia
+                                if (board.isKingInCheck(currentPlayer)) {
+                                    if (board.isCheckMate(currentPlayer)) {
+                                        statusText.setString("MAT!\nWygrywa gracz:\n" + string(currentPlayer == 0 ? "CZARNY" : "BIALY"));
+                                        gameOver = true;
+                                    }
+                                    else statusText.setString("SZACH!");
+                                }
+                                else statusText.setString("");
+
+                                // Reset selection
                                 selectedPiece = nullptr;
                                 selected = { -1, -1 };
                                 validMoves.clear();
 
-                                std::cout << "Ruch wykonany. Zmiana gracza na: " << currentPlayer << endl;
+                                // Logging
+								std::string msg = "Move executed from (" + std::to_string(selected.row) + "," + std::to_string(selected.col) +
+									") to (" + std::to_string(clickedPos.row) + "," + std::to_string(clickedPos.col) + ")";
+								LOG(msg);
+								msg = "Changing player to " + std::string(currentPlayer == 0 ? "WHITE" : "BLACK");
+								LOG(msg);
                             }
                             else {
-                                std::cout << "Ruch niemozliwy (nie ma go w validMoves)!" << endl;
+								std::string msg = "Illegal move attempted from (" + std::to_string(selected.row) + "," + std::to_string(selected.col) +
+									") to (" + std::to_string(clickedPos.row) + "," + std::to_string(clickedPos.col) + ")";
+								LOG(msg);
                             }
                         }
                     }
@@ -396,7 +410,7 @@ int main() {
             }
         }
             window.clear();
-            // Rysowanie planszy i figur
+            // Draw board and pieces
             for (int r = 0; r < BOARD_SIZE; r++) {
                 for (int c = 0; c < BOARD_SIZE; c++) {
                     sf::RectangleShape square(sf::Vector2f((float)TILE_SIZE, (float)TILE_SIZE));
@@ -443,13 +457,12 @@ int main() {
             }
             if (currentPlayer == 0) // PLAYER MOVE
             {
-                OwnedBoard ob(board);
-                Board& copy = ob.board;
 
-                auto moves = legalMoves(copy, to01(currentPlayer));
+                auto moves = legalMoves(board, to01(currentPlayer));
+				//std::cout << "Player legal moves: " << moves.size() << std::endl;
                 if (moves.empty()) {
                     // Two options if no moves
-                    if (isInCheck(copy, to01(currentPlayer))) {
+                    if (isInCheck(board, 0)) {
                         std::string msg = "Checkmate! Game over. ";
                         LOG(msg);
                     }
@@ -458,10 +471,19 @@ int main() {
                         LOG(msg);
                     }
 
+
                     // Game over handling here
-                    window.display();
                     gameOver = true; 
                 }
+
+                if (board.isKingInCheck(currentPlayer)) {
+                    if (board.isCheckMate(currentPlayer)) {
+                        statusText.setString("MAT!\nWygrywa gracz:\n" + string(currentPlayer == 0 ? "CZARNY" : "BIALY"));
+                        gameOver = true;
+                    }
+                    else statusText.setString("SZACH!");
+                }
+                else statusText.setString("");
             }
 
 
@@ -484,10 +506,15 @@ int main() {
                         //Game over?
                         std::string msg = "Game over detected from AI move.";
                         LOG(msg);
-
+                        if (isInCheck(board, 1)) {
+                            statusText.setString("SZACH MAT!\nWygrywaja\nBIALE");
+                        }
+                        else {
+                            statusText.setString("PAT!\nRemis");
+                        }
                         // Game over handling here
-                        window.display();
-                        continue; // or break
+                        gameOver = true;
+                        isEngineThinking = false;
                     }
                     else {
                         Position from = bestMoveOfAll.from;
@@ -516,13 +543,21 @@ int main() {
                         // Give move back
                         isEngineThinking = false;
                     }
+                    if (board.isKingInCheck(currentPlayer)) {
+                        if (board.isCheckMate(currentPlayer)) {
+                            statusText.setString("MAT!\nWygrywa gracz:\n" + string(currentPlayer == 0 ? "CZARNY" : "BIALY"));
+                            gameOver = true;
+                        }
+                        else statusText.setString("SZACH!");
+                    }
+                    else statusText.setString("");
                 }
             }
 
-            // --- RYSOWANIE UI ---
+            // UI DRAWING
             window.draw(sidebarBg);
 
-            // Zegary
+            // Timers
             window.draw(labelBlack);
             window.draw(blackTimerBox);
             blackTimerText.setString(formatTime(timeBlack));
@@ -539,7 +574,7 @@ int main() {
             whiteTimerText.setPosition(whiteTimerBox.getPosition().x + whiteTimerBox.getSize().x / 2.0f, whiteTimerBox.getPosition().y + whiteTimerBox.getSize().y / 2.0f);
             window.draw(whiteTimerText);
 
-            // Napisy informacyjne (Turn & Status)
+            // Turn and status
             if (!gameOver) {
                 turnText.setString(currentPlayer == 0 ? "Ruch: BIALE" : "Ruch: CZARNE");
                 turnText.setFillColor(sf::Color::White);
@@ -549,11 +584,11 @@ int main() {
                 turnText.setFillColor(sf::Color::Yellow);
             }
 
-            // Wyśrodkowanie tekstu "Ruch: ..."
+            // Text centering
             centerText(turnText, (float)(BOARD_SIZE * TILE_SIZE / 2 - 60), (float)(BOARD_SIZE * TILE_SIZE), (float)SIDEBAR_WIDTH);
             window.draw(turnText);
 
-            // Wyśrodkowanie tekstu Statusu (Szach / Mat / Czas)
+            // Status centering
             centerText(statusText, (float)(BOARD_SIZE * TILE_SIZE / 2), (float)(BOARD_SIZE * TILE_SIZE), (float)SIDEBAR_WIDTH);
             window.draw(statusText);
 
