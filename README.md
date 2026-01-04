@@ -74,13 +74,7 @@ The project features a custom-built chess engine capable of playing against a hu
 
 * **Mouse Left Click:** Select a piece.
 * **Mouse Drag & Drop:** Move a piece to a target square.
-* **Right Click:** Deselect piece (optional, depending on implementation).
-
 ---
-
-##  Testing
-
-The project maintains high code coverage using the **Catch2** framework. The tests cover board logic, piece movement rules, engine evaluation, and Zobrist hashing integrity.
 
 To run the tests:
 
