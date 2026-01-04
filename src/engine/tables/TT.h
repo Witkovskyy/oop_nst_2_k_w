@@ -89,4 +89,4 @@ public:
 };
 
 // 64 MB Transposition Table instance
-static TranspositionTable TT(64);
+extern TranspositionTable TT;
