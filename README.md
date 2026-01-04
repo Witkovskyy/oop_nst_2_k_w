@@ -1,4 +1,4 @@
-﻿# C++ Chess Engine & GUI
+﻿# Chess Game Project
 
 A feature-rich Chess Engine and Graphical User Interface built with **C++17** and **SFML**. This project demonstrates advanced Object-Oriented Programming concepts, custom AI algorithms, and multithreaded architecture.
 
