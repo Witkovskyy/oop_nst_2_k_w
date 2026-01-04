@@ -146,7 +146,10 @@ int see(Board& board, Position target, int sideToMove)
         Position from = getCheapestAttacker(copy, target, stm, attackerValue);
 
 		// If no attacker found, stop
-        if (from.row == -1) break;
+        if (from.row == -1) {
+			if (gain.size() == 1) return 0; // No captures at all
+            break;
+        }
 
 		// New value after capture, new victim is the attacker
         gain.push_back(attackerValue);

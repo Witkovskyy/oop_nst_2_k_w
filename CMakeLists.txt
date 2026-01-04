@@ -13,6 +13,7 @@ add_library(engine STATIC
   src/engine/see.cpp
   src/engine/moves.cpp
   src/engine/tables/zobrist.cpp
+  src/engine/tables/TT.cpp
 )
 target_include_directories(engine PUBLIC src/engine)
 
@@ -65,6 +66,7 @@ add_custom_command(TARGET app POST_BUILD
 
 add_executable(tests
   src/tests/catch2.cpp
+  src/tests/coverage_tests.cpp
   src/Board.cpp
   src/Piece.cpp
   src/Bishop.cpp
@@ -73,6 +75,8 @@ add_executable(tests
   src/Pawn.cpp
   src/Queen.cpp
   src/kNight.cpp
+  src/engine/evalpos.cpp
+  src/engine/tables/TT.cpp
 )
 
 target_link_libraries(tests 

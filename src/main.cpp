@@ -22,7 +22,6 @@
 
 using namespace std;
 
-TranspositionTable TT(64);
 // Global settings
 int difficultyLevel = 2; // 1-Easy, 2-Medium, 3-Hard
 int timeLimitMinutes = 10; // Default 10 minutes
