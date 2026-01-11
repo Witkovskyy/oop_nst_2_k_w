@@ -7,6 +7,14 @@
 
 // Helper border check, inline makes it faster
 
+/**
+ * @brief Check whether valid.
+ *
+ * @details Returns a boolean condition derived from current state/arguments.
+ * @param r Parameter.
+ * @param c Parameter.
+ * @return True if the condition holds; otherwise false.
+ */
 inline bool isValid(int r, int c) {
     return r >= 0 && r < 8 && c >= 0 && c < 8;
 }
@@ -98,6 +106,15 @@ static Position getCheapestAttacker(Board& board, Position target, int color, in
         };
 
     // Diagonals
+	/**
+ * @brief Perform scan.
+ *
+ * @details Implements the behavior implied by the function name.
+ * @param bishopDeltas Parameter.
+ * @param B Parameter.
+ * @param B Parameter.
+ * @return Result of the operation.
+ */
 	scan(bishopDeltas, 4, 'B', 'B'); // Double Bishop
     // Straights
     scan(rookDeltas, 4, 'R', 'R');
@@ -120,6 +137,16 @@ static Position getCheapestAttacker(Board& board, Position target, int color, in
     return bestPos;
 }
 
+
+/**
+ * @brief Perform see.
+ *
+ * @details Implements the behavior implied by the function name.
+ * @param board Board state to operate on.
+ * @param target Parameter.
+ * @param sideToMove Move data/descriptor.
+ * @return Integer result.
+ */
 
 int see(Board& board, Position target, int sideToMove)
 {

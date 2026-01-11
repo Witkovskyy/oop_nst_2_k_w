@@ -1,8 +1,26 @@
-﻿#include "Rook.h"
+/**
+ * @brief Check whether this piece can move to the given square (piece rules only).
+ *
+ * @details Validates movement pattern for the specific piece type. Additional game rules (e.g., leaving king in check) are handled elsewhere.
+ * @param new_pos Board position/index.
+ * @param board Board state to operate on.
+ * @return True if the condition holds; otherwise false.
+ */
+
+
+#include "Rook.h"
 #include "Board.h"
 #include <cmath>
 #include <algorithm> // Necessary
 
+/**
+ * @brief Check whether this piece can move to the given square (piece rules only).
+ *
+ * @details Validates movement pattern for the specific piece type. Additional game rules (e.g., leaving king in check) are handled elsewhere.
+ * @param new_pos Board position/index.
+ * @param board Board state to operate on.
+ * @return True if the condition holds; otherwise false.
+ */
 Rook::Rook(int c, char s, Position p) : Piece(c, 'R', p) {}
 
 bool Rook::canMove(Position new_pos, Board &board) {
@@ -22,6 +40,13 @@ bool Rook::canMove(Position new_pos, Board &board) {
 
 	// Vertical straight move
     if (isVertical) {
+        /**
+ * @brief Piece method: for.
+ *
+ * @details Applies to a single chess piece instance.
+ * @param r Parameter.
+ * @return Result of the operation.
+ */
         int start = std::min(cur_pos.row, new_pos.row);
         int end = std::max(cur_pos.row, new_pos.row);
 
@@ -33,6 +58,13 @@ bool Rook::canMove(Position new_pos, Board &board) {
         }
     }
 	// Horizontal straight move
+    /**
+ * @brief Piece method: if.
+ *
+ * @details Applies to a single chess piece instance.
+ * @param isHorizontal Parameter.
+ * @return Result of the operation.
+ */
     else if (isHorizontal) {
         int start = std::min(cur_pos.col, new_pos.col);
         int end = std::max(cur_pos.col, new_pos.col);
@@ -45,6 +77,13 @@ bool Rook::canMove(Position new_pos, Board &board) {
     }
 
     // Target
+    /**
+     * @brief Get piece at.
+     *
+     * @details Documentation for `getPieceAt`.
+     * @param new_pos Parameter.
+     * @return Requested value.
+     */
     Piece* target = board.getPieceAt(new_pos);
     if (target == nullptr) return true;
     if (target->getColor() != getColor()) return true;

@@ -22,6 +22,12 @@
 
 using namespace std;
 
+/**
+ * @brief Perform t t.
+ *
+ * @details Implements the behavior implied by the function name.
+ * @return Result of the operation.
+ */
 TranspositionTable TT(64);
 // Global settings
 int difficultyLevel = 2; // 1-Easy, 2-Medium, 3-Hard
@@ -32,6 +38,12 @@ const int BOARD_SIZE = 8;
 const int SIDEBAR_WIDTH = 260;
 
 // Helper function to reset board pieces
+/**
+ * @brief Set up pieces.
+ *
+ * @details Updates internal state based on provided arguments.
+ * @param board Board state to operate on.
+ */
 void setupPieces(Board& board) {
     // White
     board.placePiece(new Rook(0, 'R', { 0, 0 })); board.placePiece(new Knight(0, 'N', { 0, 1 }));
@@ -48,6 +60,14 @@ void setupPieces(Board& board) {
 }
 
 // Function centering text
+/**
+ * @brief Perform center text.
+ *
+ * @details Implements the behavior implied by the function name.
+ * @param text Parameter.
+ * @param x_center Parameter.
+ * @param y_center Parameter.
+ */
 void centerText(sf::Text& text, float x_center, float y_center) {
     sf::FloatRect textRect = text.getLocalBounds();
     text.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
@@ -59,10 +79,18 @@ string formatTime(float timeInSeconds) {
     int minutes = (int)timeInSeconds / 60;
     int seconds = (int)timeInSeconds % 60;
     stringstream ss;
+
     ss << setfill('0') << setw(2) << minutes << ":" << setw(2) << seconds;
     return ss.str();
 }
-
+/**
+* @brief Perform run engine async.
+*
+* @details Implements the behavior implied by the function name.
+* @param boardCopy Board state to operate on.
+* @param difficultyLevel Parameter.
+* @return Result of the operation.
+*/
 Move runEngineAsync(Board boardCopy, int difficultyLevel) {
     int maxDepthAllowed = 64;
     int timeLimitMs = 4000;
@@ -120,6 +148,7 @@ Move runEngineAsync(Board boardCopy, int difficultyLevel) {
                 break;
             }
             Undo undo;
+ 
             applyMove(boardCopy, move, undo);
             int score = -negamax(boardCopy, currentDepth - 1, -beta, -alpha, -aiSide);
             undoMove(boardCopy, move, undo);
@@ -147,6 +176,12 @@ Move runEngineAsync(Board boardCopy, int difficultyLevel) {
     return bestMoveOfAll;
 }
 
+/**
+ * @brief Perform main.
+ *
+ * @details Implements the behavior implied by the function name.
+ * @return Integer result.
+ */
 int main() {
     std::future<Move> engineFuture;
     bool isEngineThinking = false;
@@ -154,6 +189,7 @@ int main() {
 
     // Konfiguracja czasu (startowa)
     float initialTime = timeLimitMinutes * 60.0f;
+
 
     sf::RenderWindow window(sf::VideoMode(BOARD_SIZE * TILE_SIZE + SIDEBAR_WIDTH, BOARD_SIZE * TILE_SIZE), "CHESS - C++ Engine");
 
@@ -163,6 +199,7 @@ int main() {
     }
 
     // --- UI ELEMENTS SETUP ---
+
     sf::RectangleShape sidebarBg(sf::Vector2f((float)SIDEBAR_WIDTH, (float)(BOARD_SIZE * TILE_SIZE)));
     sidebarBg.setPosition((float)(BOARD_SIZE * TILE_SIZE), 0);
     sidebarBg.setFillColor(sf::Color(40, 40, 40));
@@ -171,6 +208,7 @@ int main() {
     sf::Color timerBgColor(220, 220, 220);
     sf::Color timerTextColor = sf::Color::Black;
 
+ 
     sf::RectangleShape blackTimerBox(sf::Vector2f(SIDEBAR_WIDTH - 40.f, 60.f));
     blackTimerBox.setPosition((float)(BOARD_SIZE * TILE_SIZE + 20), 50.f);
     blackTimerBox.setFillColor(timerBgColor);
@@ -181,6 +219,7 @@ int main() {
 
     // Text Objects
     sf::Text whiteTimerText, blackTimerText, turnText, statusText, labelWhite, labelBlack;
+
     whiteTimerText.setFont(font); whiteTimerText.setCharacterSize(40); whiteTimerText.setFillColor(timerTextColor);
     blackTimerText.setFont(font); blackTimerText.setCharacterSize(40); blackTimerText.setFillColor(timerTextColor);
 
@@ -188,6 +227,7 @@ int main() {
     statusText.setFont(font); statusText.setCharacterSize(20); statusText.setFillColor(sf::Color(255, 80, 80)); statusText.setStyle(sf::Text::Bold);
 
     labelBlack.setFont(font); labelBlack.setString("GRACZ CZARNY"); labelBlack.setCharacterSize(16); labelBlack.setFillColor(sf::Color(180, 180, 180));
+
     labelBlack.setPosition((float)(BOARD_SIZE * TILE_SIZE + 25), 25.f);
 
     labelWhite.setFont(font); labelWhite.setString("GRACZ BIALY"); labelWhite.setCharacterSize(16); labelWhite.setFillColor(sf::Color(180, 180, 180));
@@ -199,6 +239,7 @@ int main() {
 
     // 1. Difficulty Section
     sf::Text diffLabel;
+ 
     diffLabel.setFont(font); diffLabel.setString("POZIOM TRUDNOSCI:");
     diffLabel.setCharacterSize(16); diffLabel.setFillColor(sf::Color::White);
     diffLabel.setPosition(btnX + 5, btnY);
@@ -208,6 +249,7 @@ int main() {
     sf::RectangleShape btnHard(sf::Vector2f(70, 40)); btnHard.setPosition(btnX + 150, btnY + 30);
 
     sf::Text txtEasy, txtMed, txtHard;
+
     txtEasy.setFont(font); txtEasy.setString("Latwy"); txtEasy.setCharacterSize(16); txtEasy.setFillColor(sf::Color::Black);
     txtMed.setFont(font); txtMed.setString("Sredni"); txtMed.setCharacterSize(16); txtMed.setFillColor(sf::Color::Black);
     txtHard.setFont(font); txtHard.setString("Trudny"); txtHard.setCharacterSize(16); txtHard.setFillColor(sf::Color::Black);
@@ -219,6 +261,7 @@ int main() {
     // 2. Time Control Section
     float timeY = btnY + 90;
     sf::Text timeLabel;
+
     timeLabel.setFont(font); timeLabel.setString("CZAS GRY:");
     timeLabel.setCharacterSize(16); timeLabel.setFillColor(sf::Color::White);
     timeLabel.setPosition(btnX + 5, timeY);
@@ -228,6 +271,7 @@ int main() {
     sf::RectangleShape btnTime10(sf::Vector2f(70, 40)); btnTime10.setPosition(btnX + 150, timeY + 30);
 
     sf::Text txtT1, txtT5, txtT10;
+
     txtT1.setFont(font); txtT1.setString("1"); txtT1.setCharacterSize(16); txtT1.setFillColor(sf::Color::Black);
     txtT5.setFont(font); txtT5.setString("5"); txtT5.setCharacterSize(16); txtT5.setFillColor(sf::Color::Black);
     txtT10.setFont(font); txtT10.setString("10"); txtT10.setCharacterSize(16); txtT10.setFillColor(sf::Color::Black);
@@ -238,6 +282,7 @@ int main() {
 
     // 3. New Game Button
     float ngY = timeY + 90;
+
     sf::RectangleShape btnNewGame(sf::Vector2f(SIDEBAR_WIDTH - 40.f, 50.f));
     btnNewGame.setPosition(btnX, ngY);
     btnNewGame.setFillColor(sf::Color(100, 200, 100)); // Green
@@ -249,6 +294,7 @@ int main() {
 
     // LOADING BOARD AND TEXTURES
     sf::Texture textures[12];
+
     textures[0].loadFromFile("pieces/White_Pawn.png"); textures[1].loadFromFile("pieces/White_Rook.png");
     textures[2].loadFromFile("pieces/White_Knight.png"); textures[3].loadFromFile("pieces/White_Bishop.png");
     textures[4].loadFromFile("pieces/White_Queen.png"); textures[5].loadFromFile("pieces/White_King.png");
@@ -272,6 +318,13 @@ int main() {
     float timeBlack = initialTime;
     sf::Clock dtClock;
 
+    /**
+ * @brief Perform l o g.
+ *
+ * @details Implements the behavior implied by the function name.
+ * @param started Parameter.
+ * @return Result of the operation.
+ */
     LOG("Game started.");
 
     while (window.isOpen()) {
@@ -310,6 +363,7 @@ int main() {
 
                 // 1. Difficulty Selection
                 if (btnEasy.getGlobalBounds().contains((float)mx, (float)my)) difficultyLevel = 1;
+
                 else if (btnMed.getGlobalBounds().contains((float)mx, (float)my)) difficultyLevel = 2;
                 else if (btnHard.getGlobalBounds().contains((float)mx, (float)my)) difficultyLevel = 3;
 
@@ -323,7 +377,6 @@ int main() {
                 else if (btnTime10.getGlobalBounds().contains((float)mx, (float)my)) {
                     timeLimitMinutes = 10; resetNeeded = true;
                 }
-
                 // 3. New Game Button (Triggers Reset)
                 else if (btnNewGame.getGlobalBounds().contains((float)mx, (float)my)) {
                     resetNeeded = true;
@@ -363,6 +416,7 @@ int main() {
                     Position clickedPos = { row, col };
 
                     if (selectedPiece == nullptr) {
+
                         Piece* clickedPiece = board->getPieceAt(clickedPos);
                         if (clickedPiece && clickedPiece->getColor() == currentPlayer) {
                             selectedPiece = clickedPiece;
@@ -387,6 +441,7 @@ int main() {
                             selectedPiece = board->getPieceAt(clickedPos);
                             selected = clickedPos;
                             // Recalculate moves for new selection
+
                             validMoves.clear();
                             for (int r = 0; r < 8; r++) {
                                 for (int c = 0; c < 8; c++) {
@@ -405,6 +460,7 @@ int main() {
                             }
 
                             if (isLegal) {
+
                                 Piece* captured = board->getPieceAt(clickedPos);
                                 board->movePiece(selected, clickedPos, selectedPiece);
                                 if (captured) delete captured;
@@ -434,7 +490,6 @@ int main() {
                 }
             }
         }
-
         window.clear();
 
         // Draw Board

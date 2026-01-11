@@ -3,8 +3,16 @@
 #include "Board.h"
 #include "Bishop.h"
 
-Bishop::Bishop(int c, char s, Position p) : Piece(c, 'B', p) {}
 
+Bishop::Bishop(int c, char s, Position p) : Piece(c, 'B', p) {}
+/**
+ * @brief Check whether this piece can move to the given square (piece rules only).
+ *
+ * @details Validates movement pattern for the specific piece type. Additional game rules (e.g., leaving king in check) are handled elsewhere.
+ * @param new_pos Board position/index.
+ * @param board Board state to operate on.
+ * @return True if the condition holds; otherwise false.
+ */
 bool Bishop::canMove(Position new_pos, Board &board) {
     Position cur_pos = getPosition();
 
@@ -33,6 +41,13 @@ bool Bishop::canMove(Position new_pos, Board &board) {
     }
 
  
+    /**
+     * @brief Get piece at.
+     *
+     * @details Documentation for `getPieceAt`.
+     * @param new_pos Parameter.
+     * @return Requested value.
+     */
     Piece* target = board.getPieceAt(new_pos);
     if (target == nullptr || target->getColor() != getColor())
         return true;

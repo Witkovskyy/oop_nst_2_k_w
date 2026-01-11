@@ -9,12 +9,24 @@
 class AsyncLogger {
 public:
 	// Singleton instance, so we can log from anywhere
+    /**
+ * @brief Get instance.
+ *
+ * @details Returns a value derived from current state.
+ * @return Requested value.
+ */
     static AsyncLogger& getInstance() {
         static AsyncLogger instance;
         return instance;
     }
 
 	// Add log to queue, thread-safe, fast
+    /**
+ * @brief Perform log.
+ *
+ * @details Implements the behavior implied by the function name.
+ * @param message Parameter.
+ */
     void log(const std::string& message) {
         std::unique_lock<std::mutex> lock(queueMutex);
         logQueue.push(message);
@@ -23,11 +35,21 @@ public:
     }
 
 	// Constructor deploying the worker thread
+    /**
+ * @brief Construct the instance.
+ *
+ * @details Cleans up owned resources (if any).
+ */
     AsyncLogger() : running(true) {
         workerThread = std::thread(&AsyncLogger::processLogs, this);
     }
 
     // Destructor
+    /**
+ * @brief Destroy the instance and release resources.
+ *
+ * @details Cleans up owned resources (if any).
+ */
     ~AsyncLogger() {
         {
             std::unique_lock<std::mutex> lock(queueMutex);
@@ -47,11 +69,24 @@ private:
     bool running;
 
 	// Open new thread to process logs
+    /**
+ * @brief Handle s logs.
+ *
+ * @details Processes an event or input and updates state.
+ */
     void processLogs() {
         while (true) {
             std::unique_lock<std::mutex> lock(queueMutex);
 
 			// Wait for log to show up or the program to end
+            /**
+             * @brief Perform `wait`.
+             *
+             * @details Documentation for `wait`.
+             * @param lock Parameter.
+             * @param running Parameter.
+             * @return Result of the operation.
+             */
             cv.wait(lock, [this] { return !logQueue.empty() || !running; });
 
             // Break if empty
