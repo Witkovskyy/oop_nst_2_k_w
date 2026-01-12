@@ -1,0 +1,107 @@
+\doxysection{val.\+h}
+\hypertarget{val_8h_source}{}\label{val_8h_source}\index{src/engine/val.h@{src/engine/val.h}}
+\doxymbox{\hyperlink{val_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ pieceValFromSymbol(\textcolor{keywordtype}{char}\ symbol)}
+\DoxyCodeLine{00021\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ symbol\ =\ toupper(symbol);}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordflow}{switch}\ (symbol)}
+\DoxyCodeLine{00024\ \ \ \ \ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'P'}:\ \textcolor{comment}{//\ Pawn}}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 100;}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'N'}:\ \textcolor{comment}{//\ Knight}}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 320;}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'B'}:\ \textcolor{comment}{//\ Bishop}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 350;}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'R'}:\ \textcolor{comment}{//\ Rook}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 500;}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'Q'}:\ \textcolor{comment}{//\ Queen}}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1500;}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'K'}:\ \textcolor{comment}{//\ King}}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 20000;}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;\ \textcolor{comment}{//\ Empty\ or\ unknown}}
+\DoxyCodeLine{00039\ \ \ \ \ \}}
+\DoxyCodeLine{00040\ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ INF\ =\ std::numeric\_limits<int>::max();}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{//static\ const\ int\ depth\ =\ 6;\ //\ Fixed\ search\ depth,\ might\ change\ later}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ pawnPST[8][8]\ =\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \{\ 0,\ \ 0,\ \ 0,\ \ 0,\ \ 0,\ \ 0,\ \ 0,\ \ 0\},\ \textcolor{comment}{//\ Promotion\ Line\ 8}}
+\DoxyCodeLine{00054\ \ \ \ \ \{50,\ 50,\ 50,\ 50,\ 50,\ 50,\ 50,\ 50\},\ \textcolor{comment}{//\ Linia\ 7}}
+\DoxyCodeLine{00055\ \ \ \ \ \{10,\ 10,\ 20,\ 30,\ 30,\ 20,\ 10,\ 10\},\ }
+\DoxyCodeLine{00056\ \ \ \ \ \{\ 5,\ \ 5,\ 10,\ 25,\ 25,\ 10,\ \ 5,\ \ 5\},\ \textcolor{comment}{//\ Strong\ center\ +25}}
+\DoxyCodeLine{00057\ \ \ \ \ \{\ 0,\ \ 0,\ \ 0,\ 20,\ 20,\ \ 0,\ \ 0,\ \ 0\},\ \textcolor{comment}{//\ Center\ +20}}
+\DoxyCodeLine{00058\ \ \ \ \ \{\ 5,\ -\/5,-\/10,\ 10,\ 10,-\/10,\ -\/5,\ \ 5\},\ }
+\DoxyCodeLine{00059\ \ \ \ \ \{\ 5,\ 10,\ 10,-\/20,-\/20,\ 10,\ 10,\ \ 5\},\ }
+\DoxyCodeLine{00060\ \ \ \ \ \{\ 0,\ \ 0,\ \ 0,\ \ 0,\ \ 0,\ \ 0,\ \ 0,\ \ 0\}\ \ \textcolor{comment}{//\ Line\ 1}}
+\DoxyCodeLine{00061\ \};}
+\DoxyCodeLine{00062\ \textcolor{comment}{//Radioactive\ pawns}}
+\DoxyCodeLine{00063\ \textcolor{comment}{//static\ const\ int\ pawnPST[8][8]\ =\ \{}}
+\DoxyCodeLine{00064\ \textcolor{comment}{//\ \ \ \ \{0,\ 0,\ 0,\ \ \ \ 0,\ \ \ \ 0,\ 0,\ 0,\ 0\},}}
+\DoxyCodeLine{00065\ \textcolor{comment}{//\ \ \ \ \{0,\ 0,\ 0,\ \ \ \ 0,\ \ \ \ 0,\ 0,\ 0,\ 0\},}}
+\DoxyCodeLine{00066\ \textcolor{comment}{//\ \ \ \ \{0,\ 0,\ 0,\ \ \ \ 0,\ \ \ \ 0,\ 0,\ 0,\ 0\},}}
+\DoxyCodeLine{00067\ \textcolor{comment}{//\ \ \ \ \{0,\ 0,\ 0,\ 9999,\ 9999,\ 0,\ 0,\ 0\},\ }}
+\DoxyCodeLine{00068\ \textcolor{comment}{//\ \ \ \ \{0,\ 0,\ 0,\ 9999,\ 9999,\ 0,\ 0,\ 0\},}}
+\DoxyCodeLine{00069\ \textcolor{comment}{//\ \ \ \ \{0,\ 0,\ 0,\ \ \ \ 0,\ \ \ \ 0,\ 0,\ 0,\ 0\},}}
+\DoxyCodeLine{00070\ \textcolor{comment}{//\ \ \ \ \{0,\ 0,\ 0,\ \ \ \ 0,\ \ \ \ 0,\ 0,\ 0,\ 0\},}}
+\DoxyCodeLine{00071\ \textcolor{comment}{//\ \ \ \ \{0,\ 0,\ 0,\ \ \ \ 0,\ \ \ \ 0,\ 0,\ 0,\ 0\}}}
+\DoxyCodeLine{00072\ \textcolor{comment}{//\};}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ knightPST[8][8]\ =}
+\DoxyCodeLine{00075\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \{-\/50,-\/40,-\/30,-\/30,-\/30,-\/30,-\/40,-\/50\},}
+\DoxyCodeLine{00077\ \ \ \ \ \{-\/40,-\/20,\ \ 0,\ \ 0,\ \ 0,\ \ 0,-\/20,-\/40\},}
+\DoxyCodeLine{00078\ \ \ \ \ \{-\/30,\ \ 0,\ 10,\ 15,\ 15,\ 10,\ \ 0,-\/30\},}
+\DoxyCodeLine{00079\ \ \ \ \ \{-\/30,\ \ 5,\ 15,\ 20,\ 20,\ 15,\ \ 5,-\/30\},}
+\DoxyCodeLine{00080\ \ \ \ \ \{-\/30,\ \ 0,\ 15,\ 20,\ 20,\ 15,\ \ 0,-\/30\},}
+\DoxyCodeLine{00081\ \ \ \ \ \{-\/30,\ 5,\ 10,\ 15,\ 15,\ 10,\ 5,-\/30\},}
+\DoxyCodeLine{00082\ \ \ \ \ \{-\/40,-\/20,\ 0,\ 5,\ 5,\ 0,-\/20,-\/40\},}
+\DoxyCodeLine{00083\ \ \ \ \ \{-\/50,-\/40,-\/30,-\/30,-\/30,-\/30,-\/40,-\/50\}}
+\DoxyCodeLine{00084\ \};}
+\DoxyCodeLine{00085\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ bishopPST[8][8]\ =}
+\DoxyCodeLine{00086\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \{-\/20,-\/10,-\/10,-\/10,-\/10,-\/10,-\/10,-\/20\},}
+\DoxyCodeLine{00088\ \ \ \ \ \{-\/10,\ \ 0,\ \ 0,\ \ 0,\ \ 0,\ \ 0,\ \ 0,-\/10\},}
+\DoxyCodeLine{00089\ \ \ \ \ \{-\/10,\ \ 0,\ \ 5,\ 10,\ 10,\ \ 5,\ \ 0,-\/10\},}
+\DoxyCodeLine{00090\ \ \ \ \ \{-\/10,\ 5,\ 5,\ 10,\ 10,\ 5,\ 5,-\/10\},}
+\DoxyCodeLine{00091\ \ \ \ \ \{-\/10,\ 0,10,10,10,10,0,-\/10\},}
+\DoxyCodeLine{00092\ \ \ \ \ \{-\/10,10,10,10,10,10,10,-\/10\},}
+\DoxyCodeLine{00093\ \ \ \ \ \{-\/10,5,0,0,0,0,5,-\/10\},}
+\DoxyCodeLine{00094\ \ \ \ \ \{-\/20,-\/10,-\/10,-\/10,-\/10,-\/10,-\/10,-\/20\}}
+\DoxyCodeLine{00095\ \};}
+\DoxyCodeLine{00096\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ rookPST[8][8]\ =\ \{\{}
+\DoxyCodeLine{00097\ \ \ \ \ 0,\ 0,\ 0,\ 0,\ 0,\ 0,\ 0,\ 0\ \},}
+\DoxyCodeLine{00098\ \ \ \ \ \{\ 5,10,10,10,10,10,10,5\ \},}
+\DoxyCodeLine{00099\ \ \ \ \ \{\ -\/5,0,0,0,0,0,0,-\/5\ \},}
+\DoxyCodeLine{00100\ \ \ \ \ \{\ -\/5,0,0,0,0,0,0,-\/5\ \},}
+\DoxyCodeLine{00101\ \ \ \ \ \{\ -\/5,0,0,0,0,0,0,-\/5\ \},}
+\DoxyCodeLine{00102\ \ \ \ \ \{\ -\/5,0,0,0,0,0,0,-\/5\ \},}
+\DoxyCodeLine{00103\ \ \ \ \ \{\ -\/5,0,0,0,0,0,0,-\/5\ \},}
+\DoxyCodeLine{00104\ \ \ \ \ \{\ 0,\ 0,\ 0,\ 5,\ 5,\ 0,\ 0,\ 0\ \}\};}
+\DoxyCodeLine{00105\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ queenPST[8][8]\ =\ \{\{}
+\DoxyCodeLine{00106\ -\/20,-\/10,-\/10,\ -\/5,\ -\/5,-\/10,-\/10,-\/20\ \},}
+\DoxyCodeLine{00107\ \{\ -\/10,\ \ 0,\ \ 0,\ \ 0,\ \ 0,\ \ 0,\ \ 0,-\/10\ \},}
+\DoxyCodeLine{00108\ \{\ -\/10,\ \ 0,\ \ 5,\ \ 5,\ \ 5,\ \ 5,\ \ 0,-\/10\ \},}
+\DoxyCodeLine{00109\ \{\ -\/5,\ 0,\ 5,\ 5,\ 5,\ 5,\ 0,\ -\/5\ \},}
+\DoxyCodeLine{00110\ \{\ 0,\ 0,\ 5,\ 5,\ 5,\ 5,\ 0,\ -\/5\ \},}
+\DoxyCodeLine{00111\ \{\ -\/10,\ 5,\ 5,\ 5,\ 5,\ 5,\ 0,-\/10\ \},}
+\DoxyCodeLine{00112\ \{\ -\/10,\ 0,\ 5,\ 0,\ 0,\ 0,\ 0,-\/10\ \},}
+\DoxyCodeLine{00113\ \{\ -\/20,-\/10,-\/10,\ -\/5,\ -\/5,-\/10,-\/10,-\/20\ \}\};}
+\DoxyCodeLine{00114\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ kingPST[8][8]\ =\ \{\ \{}
+\DoxyCodeLine{00115\ \ \ \ \ -\/30,-\/40,-\/40,-\/50,-\/50,-\/40,-\/40,-\/30\ \},}
+\DoxyCodeLine{00116\ \{\ -\/30,-\/40,-\/40,-\/50,-\/50,-\/40,-\/40,-\/30\ \},}
+\DoxyCodeLine{00117\ \{\ -\/30,-\/40,-\/40,-\/50,-\/50,-\/40,-\/40,-\/30\ \},}
+\DoxyCodeLine{00118\ \{\ -\/30,-\/40,-\/40,-\/50,-\/50,-\/40,-\/40,-\/30\ \},}
+\DoxyCodeLine{00119\ \{\ -\/20,-\/30,-\/30,-\/40,-\/40,-\/30,-\/30,-\/20\ \},}
+\DoxyCodeLine{00120\ \{\ -\/10,-\/20,-\/20,-\/20,-\/20,-\/20,-\/20,-\/10\ \},}
+\DoxyCodeLine{00121\ \{\ 20,\ 20,\ \ 0,\ \ 0,\ \ 0,\ \ 0,\ 20,\ 20\ \},}
+\DoxyCodeLine{00122\ \{\ 20,\ 30,\ 10,\ \ 0,\ \ 0,\ 10,\ 30,\ 20\ \}\ \};}
+
+\end{DoxyCode}

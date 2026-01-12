@@ -1,8 +1,22 @@
+/**
+ * @brief Test helper: main.
+ *
+ * @details Used by the unit/integration test suite.
+ * @return Integer result.
+ */
+
+
 #include <iostream>
 #include "../Board.h"
 #include "../engine/engine.h"
 #include "../engine/val.h"
 
+/**
+ * @brief Test helper: main.
+ *
+ * @details Used by the unit/integration test suite.
+ * @return Integer result.
+ */
 int main()
 {
     int failed = 0;
@@ -11,6 +25,13 @@ int main()
     {
         int color = 1;
         Board b;
+        /**
+ * @brief Test helper: if.
+ *
+ * @details Used by the unit/integration test suite.
+ * @param got Parameter.
+ * @return Result of the operation.
+ */
         Piece *q = new Piece(0, 'Q', {0, 0});
         Piece *r = new Piece(1, 'R', {0, 1});
         b.placePiece(q);
@@ -32,6 +53,13 @@ int main()
     // Test 2: negamax runs and increments nodesVisited
     {
         Board b;
+        /**
+ * @brief Test helper: if.
+ *
+ * @details Used by the unit/integration test suite.
+ * @param after Parameter.
+ * @return Result of the operation.
+ */
         Piece *wK = new Piece(0, 'K', {7, 7});
         Piece *bK = new Piece(1, 'K', {0, 0});
         Piece *wQ = new Piece(0, 'Q', {6, 6});
@@ -39,6 +67,13 @@ int main()
         Piece *bB = new Piece(1, 'B', {2, 2});
         Piece *bN = new Piece(1, 'N', {3, 3});
         b.placePiece(wK);
+        /**
+ * @brief Test helper: if.
+ *
+ * @details Used by the unit/integration test suite.
+ * @param after Parameter.
+ * @return Result of the operation.
+ */
         b.placePiece(bK);
         b.placePiece(wQ);
         b.placePiece(bQ);
@@ -46,6 +81,13 @@ int main()
         b.placePiece(bN);
         long before = get_nodes_visited();
         int res = negamax(b, 1, -100000, 100000, 0);
+        /**
+ * @brief Test helper: if.
+ *
+ * @details Used by the unit/integration test suite.
+ * @param after Parameter.
+ * @return Result of the operation.
+ */
         long after = get_nodes_visited();
         (void)res;
         if (after <= before)
@@ -63,6 +105,13 @@ int main()
     // Test 3: see executes
     {
         Board b;
+        /**
+ * @brief Test helper: if.
+ *
+ * @details Used by the unit/integration test suite.
+ * @param failed Parameter.
+ * @return Result of the operation.
+ */
         Piece *wP = new Piece(0, 'P', {1, 1});
         Piece *bP = new Piece(1, 'P', {2, 2});
         Piece *wK = new Piece(0, 'K', {7, 7});
@@ -70,6 +119,13 @@ int main()
         Piece *wQ = new Piece(0, 'Q', {6, 6});
         Piece *bQ = new Piece(1, 'Q', {1, 0});
         b.placePiece(wK);
+        /**
+ * @brief Test helper: if.
+ *
+ * @details Used by the unit/integration test suite.
+ * @param failed Parameter.
+ * @return Result of the operation.
+ */
         b.placePiece(bK);
         b.placePiece(wP);
         b.placePiece(bP);

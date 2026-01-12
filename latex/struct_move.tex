@@ -1,0 +1,39 @@
+\doxysection{Move Struct Reference}
+\hypertarget{struct_move}{}\label{struct_move}\index{Move@{Move}}
+
+
+\doxylink{struct_move}{Move} structure.  
+
+
+
+
+{\ttfamily \+\#include $<$moves.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_move_add76f7fa185380a7a02b6904bf48dc87}\label{struct_move_add76f7fa185380a7a02b6904bf48dc87} 
+\doxymbox{\hyperlink{struct_position}{Position}} {\bfseries from}
+\item 
+\Hypertarget{struct_move_a6b0d3fd05bd190244015848d4a1b0aae}\label{struct_move_a6b0d3fd05bd190244015848d4a1b0aae} 
+\doxymbox{\hyperlink{struct_position}{Position}} {\bfseries to}
+\item 
+\Hypertarget{struct_move_adf94973a83c67c0e1e6ab755c9ac621e}\label{struct_move_adf94973a83c67c0e1e6ab755c9ac621e} 
+\doxymbox{\hyperlink{class_piece}{Piece}} \texorpdfstring{$\ast$}{*} {\bfseries piece\+Moved}
+\item 
+\Hypertarget{struct_move_a73e3fa6b2e552ccacd7466e93bcbb2a7}\label{struct_move_a73e3fa6b2e552ccacd7466e93bcbb2a7} 
+\doxymbox{\hyperlink{class_piece}{Piece}} \texorpdfstring{$\ast$}{*} {\bfseries piece\+Captured}
+\item 
+\Hypertarget{struct_move_a709a8604e3631c83bc9c8cd742bbf45f}\label{struct_move_a709a8604e3631c83bc9c8cd742bbf45f} 
+char {\bfseries promotion} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\doxylink{struct_move}{Move} structure. 
+
+Represents a chess move with relevant details. @args from Starting position of the move. @args to Ending position of the move. @args piece\+Moved Pointer to the piece being moved. @args piece\+Captured Pointer to the piece being captured (if any). @args promotion Character representing the promotion piece (if any). 
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+src/\+engine/\+\doxymbox{\hyperlink{moves_8h}{moves.\+h}}\end{DoxyCompactItemize}

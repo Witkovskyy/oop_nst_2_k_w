@@ -1,13 +1,29 @@
+/**
+ * @file TT.h
+ * @brief File declaration for Transposition Table.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #pragma once
 #include <vector>
 #include "../moves.h"
 
+/**
+ * @brief Transposition Table Flags
+ * 
+ */
 enum TTFlag {
     TT_EXACT,   // Exact
     TT_ALPHA,   // Upper Bound 
     TT_BETA     // Lower Bound 
 };
-
+/**
+ * @brief Transposition Table Entry
+ * 
+ */
 struct TTEntry {
     unsigned long long key; // Collision
     int score;
@@ -15,12 +31,30 @@ struct TTEntry {
     TTFlag flag;
     Move bestMove;         
 };
-
+/**
+ * @brief Transposition Table
+ * 
+ */
 class TranspositionTable {
 public:
+    /**
+     * @brief Transposition Table data storage.
+     * 
+     */
     std::vector<TTEntry> table;
+    /**
+     * @brief Transposition Table size.
+     * 
+     */
     int size;
 
+    /**
+     * @brief Perform transposition table.
+     *
+     * @details Implements the behavior implied by the function name.
+     * @param sizeInMB Parameter.
+     * @return Result of the operation.
+     */
     TranspositionTable(int sizeInMB) {
 		// How many entries fit in the given size
         int entrySize = sizeof(TTEntry);
@@ -29,11 +63,26 @@ public:
         size = numEntries;
     }
 
+    /**
+     * @brief Perform clear.
+     *
+     * @details Implements the behavior implied by the function name.
+     */
     void clear() {
         std::fill(table.begin(), table.end(), TTEntry{ 0, 0, 0, TT_EXACT, Move() });
     }
 
     // Save position
+    /**
+     * @brief Perform store.
+     *
+     * @details Implements the behavior implied by the function name.
+     * @param key Parameter.
+     * @param score Parameter.
+     * @param depth Search depth in plies.
+     * @param flag Parameter.
+     * @param bestMove Move data/descriptor.
+     */
     void store(unsigned long long key, int score, int depth, TTFlag flag, Move bestMove) {
         int index = key % size;
 
@@ -60,6 +109,18 @@ public:
     }
 
     // Read position
+    /**
+     * @brief Perform probe.
+     *
+     * @details Implements the behavior implied by the function name.
+     * @param key Parameter.
+     * @param depth Search depth in plies.
+     * @param alpha Alpha-beta bound.
+     * @param beta Alpha-beta bound.
+     * @param outScore Parameter.
+     * @param outMove Move data/descriptor.
+     * @return True if the condition holds; otherwise false.
+     */
     bool probe(unsigned long long key, int depth, int alpha, int beta, int& outScore, Move& outMove) {
         if (key == 0) return false;
         int index = key % size;
@@ -89,4 +150,8 @@ public:
 };
 
 // 64 MB Transposition Table instance
+/**
+ * @brief Global Transposition Table instance
+ * 
+ */
 extern TranspositionTable TT;

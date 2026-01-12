@@ -1,0 +1,21 @@
+\doxysection{moves.\+h}
+\hypertarget{moves_8h_source}{}\label{moves_8h_source}\index{src/engine/moves.h@{src/engine/moves.h}}
+\doxymbox{\hyperlink{moves_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_board_8h}{../Board.h}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_piece_8h}{../Piece.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00024\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_move}{Move}}\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \doxymbox{\hyperlink{struct_position}{Position}}\ from;}
+\DoxyCodeLine{00026\ \ \ \ \ \doxymbox{\hyperlink{struct_position}{Position}}\ to;}
+\DoxyCodeLine{00027\ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ pieceMoved;}
+\DoxyCodeLine{00028\ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ pieceCaptured;}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{char}\ promotion\ =\ 0;\ \textcolor{comment}{//\ 0\ =\ no\ promotion,\ otherwise\ char\ code\ of\ promoted\ piece}}
+\DoxyCodeLine{00030\ \};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00040\ std::vector<Move>\ \doxymbox{\hyperlink{moves_8h_ac7bd6a3f7dcafd4832a00ce5ed103058}{generateQuietMoves}}(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ color);}
+\DoxyCodeLine{00049\ std::vector<Move>\ \doxymbox{\hyperlink{moves_8h_a89c28d1f0b1c5466438f80f803cd8dba}{generateAllCaptures}}(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ color);}
+
+\end{DoxyCode}

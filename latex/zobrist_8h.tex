@@ -1,0 +1,75 @@
+\doxysection{src/\+engine/\+tables/\+zobrist.h File Reference}
+\hypertarget{zobrist_8h}{}\label{zobrist_8h}\index{src/engine/tables/zobrist.h@{src/engine/tables/zobrist.h}}
+
+
+File declaration for Zobrist hashing.  
+
+
+{\ttfamily \+\#include $<$random$>$}\newline
+{\ttfamily \+\#include $<$vector$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{zobrist_8h_a0bdf4ec348aa34399a8f7c7f4ae13f5c}{init\+Zobrist}} ()
+\begin{DoxyCompactList}\small\item\em Perform init zobrist. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{zobrist_8h_aaeb6c6faaa8a9ac32280044ce72ecd06}{get\+Piece\+Index}} (char symbol, int color)
+\begin{DoxyCompactList}\small\item\em Get piece index. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{zobrist_8h_a0834c090fd7c954b3714b2da02d7dbe1}\label{zobrist_8h_a0834c090fd7c954b3714b2da02d7dbe1} 
+unsigned long long {\bfseries piece\+Keys} \+[12]\+\+[64]\+
+\item 
+\Hypertarget{zobrist_8h_a741ed296df85ef076b6ef861f528b080}\label{zobrist_8h_a741ed296df85ef076b6ef861f528b080} 
+unsigned long long {\bfseries side\+Key}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+File declaration for Zobrist hashing. 
+
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2026-\/01-\/12
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2026 
+\end{DoxyCopyright}
+
+
+\label{doc-func-members}
+\Hypertarget{zobrist_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{zobrist_8h_aaeb6c6faaa8a9ac32280044ce72ecd06}\index{zobrist.h@{zobrist.h}!getPieceIndex@{getPieceIndex}}
+\index{getPieceIndex@{getPieceIndex}!zobrist.h@{zobrist.h}}
+\doxysubsubsection{\texorpdfstring{getPieceIndex()}{getPieceIndex()}}
+{\footnotesize\ttfamily \label{zobrist_8h_aaeb6c6faaa8a9ac32280044ce72ecd06} 
+int get\+Piece\+Index (\begin{DoxyParamCaption}\item[{char}]{symbol}{, }\item[{int}]{color}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get piece index. 
+
+Returns a value derived from current state. 
+\begin{DoxyParams}{Parameters}
+{\em symbol} & Parameter. \\
+\hline
+{\em color} & Side/\+color parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Requested value. 
+\end{DoxyReturn}
+\Hypertarget{zobrist_8h_a0bdf4ec348aa34399a8f7c7f4ae13f5c}\index{zobrist.h@{zobrist.h}!initZobrist@{initZobrist}}
+\index{initZobrist@{initZobrist}!zobrist.h@{zobrist.h}}
+\doxysubsubsection{\texorpdfstring{initZobrist()}{initZobrist()}}
+{\footnotesize\ttfamily \label{zobrist_8h_a0bdf4ec348aa34399a8f7c7f4ae13f5c} 
+void init\+Zobrist (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Perform init zobrist. 
+
+Implements the behavior implied by the function name. 

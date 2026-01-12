@@ -1,10 +1,26 @@
-﻿#include "Rook.h"
+/**
+ * @file Rook.cpp
+ * @brief File implementation for Rook piece.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
+#include "Rook.h"
 #include "Board.h"
 #include <cmath>
 #include <algorithm> // Necessary
 
 Rook::Rook(int c, char s, Position p) : Piece(c, 'R', p) {}
-
+/**
+ * @brief Check whether this piece can move to the given square (piece rules only).
+ * 
+ * @param new_pos Board position/index.
+ * @param board Board state to operate on.
+ * @return true If the move is valid.
+ * @return false If the move is not valid.
+ */
 bool Rook::canMove(Position new_pos, Board &board) {
     Position cur_pos = getPosition();
 
@@ -43,8 +59,6 @@ bool Rook::canMove(Position new_pos, Board &board) {
             }
         }
     }
-
-    // Target
     Piece* target = board.getPieceAt(new_pos);
     if (target == nullptr) return true;
     if (target->getColor() != getColor()) return true;

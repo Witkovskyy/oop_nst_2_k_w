@@ -1,6 +1,22 @@
+/**
+ * @file val.h
+ * @brief File declaration for piece values and positional score tables.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #pragma once
 #include <limits>
 
+/**
+ * @brief Perform piece val from symbol.
+ *
+ * @details Implements the behavior implied by the function name.
+ * @param symbol Parameter.
+ * @return Integer result.
+ */
 static inline int pieceValFromSymbol(char symbol)
 {
     symbol = toupper(symbol);
@@ -23,6 +39,12 @@ static inline int pieceValFromSymbol(char symbol)
     }
 }
 
+/**
+ * @brief Perform `max`.
+ *
+ * @details Documentation for `max`.
+ * @return Result of the operation.
+ */
 static const int INF = std::numeric_limits<int>::max();
 
 //static const int depth = 6; // Fixed search depth, might change later

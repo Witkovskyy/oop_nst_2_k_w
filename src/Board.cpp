@@ -1,4 +1,13 @@
-﻿#include "Board.h"
+﻿/**
+ * @file Board.cpp
+ * @brief File implementation for Board class.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
+#include "Board.h"
 #include "Piece.h"
 #include "Pawn.h"
 #include "kNight.h"
@@ -14,20 +23,50 @@
 using namespace std;
 const int B_SIZE = 8;
 
+/**
+ * @brief Board operation: display.
+ *
+ * @details Operates on the current board representation and game state.
+ * @return Result of the operation.
+ */
 Board::Board() {
     for (int i = 0; i < B_SIZE; i++)
         for (int j = 0; j < B_SIZE; j++)
             squares[i][j] = nullptr;
 }
 
+/**
+ * @brief Board operation: display.
+ *
+ * @details Operates on the current board representation and game state.
+ * @return Result of the operation.
+ */
 Piece* Board::Display() { return squares[0][0]; }
+/**
+ * @brief Check whether empty.
+ * 
+ * @param pos 
+ * @return true 
+ * @return false 
+ */
 bool Board::isEmpty(Position pos) { return getPieceAt(pos) == nullptr; }
-
+/**
+ * @brief Get the Piece at a given position.
+ * 
+ * @param pos Position on the board.
+ * @return Piece* Pointer to the piece at the position, or nullptr if empty.
+ */
 Piece* Board::getPieceAt(Position pos) {
     if (pos.row < 0 || pos.row >= B_SIZE || pos.col < 0 || pos.col >= B_SIZE) return nullptr;
     return squares[pos.row][pos.col];
 }
 
+/**
+ * @brief Board operation: place piece.
+ *
+ * @details Operates on the current board representation and game state.
+ * @param piece Parameter.
+ */
 void Board::placePiece(Piece* piece) {
     if (!piece) return;
     Position pos = piece->getPosition();
@@ -35,12 +74,29 @@ void Board::placePiece(Piece* piece) {
         squares[pos.row][pos.col] = piece;
 }
 
+/**
+ * @brief Board operation: validate move.
+ *
+ * @details Operates on the current board representation and game state.
+ * @param old_pos Board position/index.
+ * @param new_pos Board position/index.
+ * @param piece Parameter.
+ * @return True if the condition holds; otherwise false.
+ */
 bool Board::validateMove(Position old_pos, Position new_pos, Piece* piece) {
     if (new_pos.row < 0 || new_pos.row >= 8 || new_pos.col < 0 || new_pos.col >= 8)
         return false;
 	return true;
 }
-
+/**
+ * @brief Move a piece on the board.
+ * 
+ * @param oldpos Original position of the piece.
+ * @param newpos New position to move the piece to.
+ * @param piece Pointer to the piece to move.
+ * @return true If the move was successful.
+ * @return false 
+ */
 bool Board::movePiece(Position oldpos, Position newpos, Piece* piece) {
     if (!piece) return false;
     if (piece->canMove(newpos, *this)) {
@@ -51,7 +107,13 @@ bool Board::movePiece(Position oldpos, Position newpos, Piece* piece) {
     }
     return false;
 }
-
+/**
+* @brief Board operation: find king.
+*
+* @details Operates on the current board representation and game state.
+* @param color Side/color parameter.
+* @return Result of the operation.
+*/
 Position Board::findKing(int color) {
     for (int r = 0; r < B_SIZE; r++)
         for (int c = 0; c < B_SIZE; c++) {
@@ -61,6 +123,14 @@ Position Board::findKing(int color) {
     return { -1, -1 };
 }
 
+/**
+ * @brief Check whether square attacked.
+ *
+ * @details Operates on the current board representation and game state.
+ * @param pos Board position/index.
+ * @param enemyColor Side/color parameter.
+ * @return True if the condition holds; otherwise false.
+ */
 bool Board::isSquareAttacked(Position pos, int enemyColor) {
     if (pos.row < 0 || pos.row >= B_SIZE) return false;
 
@@ -133,12 +203,26 @@ bool Board::isSquareAttacked(Position pos, int enemyColor) {
     return false;
 }
 
+/**
+ * @brief Check whether king in check.
+ *
+ * @details Operates on the current board representation and game state.
+ * @param color Side/color parameter.
+ * @return True if the condition holds; otherwise false.
+ */
 bool Board::isKingInCheck(int color) {
     Position k = findKing(color);
     if (k.row == -1) return false;
     return isSquareAttacked(k, (color == 0) ? 1 : 0);
 }
-
+/**
+ * @brief Check whether is move safe.
+ * 
+ * @param start 
+ * @param end 
+ * @return true 
+ * @return false 
+ */
 bool Board::isMoveSafe(Position start, Position end) {
     Piece* p = getPieceAt(start);
     if (!p) return false;
@@ -157,7 +241,6 @@ bool Board::isMoveSafe(Position start, Position end) {
     squares[end.row][end.col] = p;
     squares[start.row][start.col] = nullptr;
     p->setPosition(end);
-
     bool safe = !isKingInCheck(p->getColor());
 
     // Cofnięcie
@@ -170,6 +253,13 @@ bool Board::isMoveSafe(Position start, Position end) {
 
 // Main optimization
 // We check only the moves that make sense
+/**
+ * @brief Check whether check mate.
+ *
+ * @details Operates on the current board representation and game state.
+ * @param color Side/color parameter.
+ * @return True if the condition holds; otherwise false.
+ */
 bool Board::isCheckMate(int color) {
     if (!isKingInCheck(color)) return false;
 
@@ -217,7 +307,6 @@ bool Board::isCheckMate(int color) {
                         int nr = r + d.first * i;
                         int nc = c + d.second * i;
                         if (nr < 0 || nr >= B_SIZE || nc < 0 || nc >= B_SIZE) break;
-
                         candidates.push_back({ nr, nc });
 
                         // Stop if we can't go further
@@ -242,6 +331,11 @@ bool Board::isCheckMate(int color) {
 	return true; // Nothing saves the king - checkmate
 }
 
+/**
+ * @brief Board operation: display board.
+ *
+ * @details Operates on the current board representation and game state.
+ */
 void Board::DisplayBoard() {
     for (int r = B_SIZE - 1; r >= 0; r--) {
         for (int c = 0; c < B_SIZE; c++) {
@@ -258,6 +352,15 @@ void Board::DisplayBoard() {
 //    return squares[pos.row][pos.col];
 //}
 
+/**
+ * @brief Board operation: promote pawn.
+ *
+ * @details Operates on the current board representation and game state.
+ * @param board Board state to operate on.
+ * @param pos Board position/index.
+ * @param newSymbol Parameter.
+ * @param color Side/color parameter.
+ */
 void Board::promotePawn(Board &board, Position pos, char newSymbol, int color) {
     Piece* promoted = board.getPieceAt(pos);
 	if (promoted->getSymbol() != 'P') return; // Only pawns can be promoted
@@ -268,6 +371,11 @@ void Board::promotePawn(Board &board, Position pos, char newSymbol, int color) {
 	board.squares[pos.row][pos.col] = newPiece;
 
 }
+/**
+ * @brief Board operation: compute zobrist hash.
+ *
+ * @details Operates on the current board representation and game state.
+ */
 void Board::computeZobristHash() {
    zobristKey = 0;
     for (int r = 0; r < 8; r++)

@@ -1,0 +1,23 @@
+\doxysection{src/\+engine/\+tables/\+zobrist.cpp File Reference}
+\hypertarget{zobrist_8cpp}{}\label{zobrist_8cpp}\index{src/engine/tables/zobrist.cpp@{src/engine/tables/zobrist.cpp}}
+
+
+Zobrist hashing initialization.  
+
+
+{\ttfamily \+\#include "{}zobrist.\+h"{}}\newline
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{zobrist_8cpp_a0834c090fd7c954b3714b2da02d7dbe1}\label{zobrist_8cpp_a0834c090fd7c954b3714b2da02d7dbe1} 
+unsigned long long {\bfseries piece\+Keys} \+[12]\+\+[64]\+
+\item 
+\Hypertarget{zobrist_8cpp_a741ed296df85ef076b6ef861f528b080}\label{zobrist_8cpp_a741ed296df85ef076b6ef861f528b080} 
+unsigned long long {\bfseries side\+Key}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Zobrist hashing initialization. 
+
+This module creates the random key tables used by the engine. The exact randomness source and seeding determine whether hashes are stable across runs. 

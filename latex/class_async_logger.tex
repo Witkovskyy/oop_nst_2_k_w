@@ -1,0 +1,91 @@
+\doxysection{Async\+Logger Class Reference}
+\hypertarget{class_async_logger}{}\label{class_async_logger}\index{AsyncLogger@{AsyncLogger}}
+
+
+Class for asynchronous logging.  
+
+
+
+
+{\ttfamily \+\#include $<$logger.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{class_async_logger_a98e238eaf56d5e11dfa70c6cb9998cc3}{log}} (const std::\+string \&message)
+\begin{DoxyCompactList}\small\item\em Perform log. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_async_logger_a1ec00e14d6d7bd41638028cb792c4efe}{Async\+Logger}} ()
+\begin{DoxyCompactList}\small\item\em Construct the instance. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_async_logger_abafc27353d7abc7d6ef51a1e252a0462}{\texorpdfstring{$\sim$}{\string~}\+Async\+Logger}} ()
+\begin{DoxyCompactList}\small\item\em Destroy the instance and release resources. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \doxymbox{\hyperlink{class_async_logger}{Async\+Logger}} \& \doxymbox{\hyperlink{class_async_logger_a89ac26fe43702d88e0dfa27ca0690f28}{get\+Instance}} ()
+\begin{DoxyCompactList}\small\item\em Get instance. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class for asynchronous logging. 
+
+\label{doc-constructors}
+\Hypertarget{class_async_logger_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_async_logger_a1ec00e14d6d7bd41638028cb792c4efe}\index{AsyncLogger@{AsyncLogger}!AsyncLogger@{AsyncLogger}}
+\index{AsyncLogger@{AsyncLogger}!AsyncLogger@{AsyncLogger}}
+\doxysubsubsection{\texorpdfstring{AsyncLogger()}{AsyncLogger()}}
+{\footnotesize\ttfamily \label{class_async_logger_a1ec00e14d6d7bd41638028cb792c4efe} 
+Async\+Logger::\+\+Async\+Logger (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Construct the instance. 
+
+Cleans up owned resources (if any). \Hypertarget{class_async_logger_abafc27353d7abc7d6ef51a1e252a0462}\index{AsyncLogger@{AsyncLogger}!````~AsyncLogger@{\texorpdfstring{$\sim$}{\string~}AsyncLogger}}
+\index{````~AsyncLogger@{\texorpdfstring{$\sim$}{\string~}AsyncLogger}!AsyncLogger@{AsyncLogger}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}AsyncLogger()}{\string~AsyncLogger()}}
+{\footnotesize\ttfamily \label{class_async_logger_abafc27353d7abc7d6ef51a1e252a0462} 
+Async\+Logger::\+\texorpdfstring{$\sim$}{\string~}\+Async\+Logger (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Destroy the instance and release resources. 
+
+Cleans up owned resources (if any). 
+
+\label{doc-func-members}
+\Hypertarget{class_async_logger_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_async_logger_a89ac26fe43702d88e0dfa27ca0690f28}\index{AsyncLogger@{AsyncLogger}!getInstance@{getInstance}}
+\index{getInstance@{getInstance}!AsyncLogger@{AsyncLogger}}
+\doxysubsubsection{\texorpdfstring{getInstance()}{getInstance()}}
+{\footnotesize\ttfamily \label{class_async_logger_a89ac26fe43702d88e0dfa27ca0690f28} 
+\doxymbox{\hyperlink{class_async_logger}{Async\+Logger}} \& Async\+Logger::\+get\+Instance (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Get instance. 
+
+Returns a value derived from current state. \begin{DoxyReturn}{Returns}
+Requested value. 
+\end{DoxyReturn}
+\Hypertarget{class_async_logger_a98e238eaf56d5e11dfa70c6cb9998cc3}\index{AsyncLogger@{AsyncLogger}!log@{log}}
+\index{log@{log}!AsyncLogger@{AsyncLogger}}
+\doxysubsubsection{\texorpdfstring{log()}{log()}}
+{\footnotesize\ttfamily \label{class_async_logger_a98e238eaf56d5e11dfa70c6cb9998cc3} 
+void Async\+Logger::\+log (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{message}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Perform log. 
+
+Implements the behavior implied by the function name. 
+\begin{DoxyParams}{Parameters}
+{\em message} & Parameter. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+src/\+engine/\+logger/\+\doxymbox{\hyperlink{logger_8h}{logger.\+h}}\end{DoxyCompactItemize}

@@ -1,3 +1,21 @@
+/**
+ * @file moves.cpp
+ * @brief Pseudo-legal move generation (quiet moves and captures).
+ *
+ * This file generates pseudo-legal moves for each piece type. "Pseudo-legal" means:
+ * the moves follow piece movement rules, but may still leave the moving side in check.
+ *
+ * @details
+ * The legality filtering is performed in evalpos.cpp (legalMoves()), which applies a move and
+ * rejects it if the king is left in check.
+ *
+ * Current limitations:
+ * - No castling rights / castling moves are generated.
+ * - No en-passant capture is generated.
+ * - Promotions are generated as a single default choice (typically queen) unless expanded elsewhere.
+ */
+
+
 #include "../Board.h"
 #include "moves.h"
 #include <vector>
@@ -20,6 +38,14 @@ static int kingMoves[][2] = { {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}
 
 
 // Helper border check, inline makes it faster
+/**
+ * @brief Check whether valid pos.
+ *
+ * @details Returns a boolean condition derived from current state/arguments.
+ * @param r Parameter is row.
+ * @param c Parameter is column.
+ * @return True if the condition holds; otherwise false.
+ */
 inline bool isValidPos(int r, int c) {
     return r >= 0 && r < 8 && c >= 0 && c < 8;
 }
@@ -29,7 +55,6 @@ static std::vector<Position> generateMovesForPiece(Board &board, Position pos, P
     std::vector<Position> moves;
     if (!piece)
         return moves;
-
     char symbol = toupper((unsigned char)piece->getSymbol());
 	int r = pos.row;
 	int c = pos.col;
@@ -107,6 +132,16 @@ static std::vector<Position> generateMovesForPiece(Board &board, Position pos, P
     return moves;
 }
 
+/**
+ * @brief Perform generate captures for piece.
+ *
+ * @details Implements the behavior implied by the function name.
+ * @param board Board state to operate on.
+ * @param pos Board position/index.
+ * @param symbol Parameter.
+ * @param color Side/color parameter.
+ * @return Collection of results.
+ */
 static std::vector<Position> generateCapturesForPiece(Board &board, Position pos, char symbol, int color){
     symbol = toupper(symbol);
     std::vector<Position> captures;
@@ -122,7 +157,7 @@ static std::vector<Position> generateCapturesForPiece(Board &board, Position pos
                     int nc = c + d[1];
                     if (isValidPos(nr, nc) && !board.isEmpty({ nr, nc })) {
                         if (board.getPieceAt({ nr, nc })->getColor() != color)
-                            captures.push_back({ nr, nc });
+                        captures.push_back({ nr, nc });
                     }
 					// TODO: En Passant need to be handled here, but requires more game state info
                 }
@@ -194,6 +229,15 @@ static std::vector<Position> generateCapturesForPiece(Board &board, Position pos
 }
 
 
+/**
+ * @brief Perform generate quiet moves.
+ *
+ * @details Implements the behavior implied by the function name.
+ * @param board Board state to operate on.
+ * @param color Side/color parameter.
+ * @return Collection of results.
+ */
+
 std::vector<Move> generateQuietMoves(Board& board, int color) {
     std::vector<Move> allMoves;
 	// Preallocate memory to save time
@@ -233,6 +277,15 @@ std::vector<Move> generateQuietMoves(Board& board, int color) {
     //}
     return allMoves;
 }
+
+/**
+ * @brief Perform generate all captures.
+ *
+ * @details Implements the behavior implied by the function name.
+ * @param board Board state to operate on.
+ * @param color Side/color parameter.
+ * @return Collection of results.
+ */
 
 std::vector<Move> generateAllCaptures(Board& board, int color) {
     std::vector<Move> allCaptures;

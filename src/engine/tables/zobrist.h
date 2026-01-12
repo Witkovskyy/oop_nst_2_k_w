@@ -1,3 +1,12 @@
+/**
+ * @file zobrist.h
+ * @brief File declaration for Zobrist hashing.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #pragma once
 #include <random>
 #include <vector>
@@ -10,6 +19,11 @@ extern unsigned long long pieceKeys[12][64];
 extern unsigned long long sideKey; // Key for each side to move
 
 // Initialize Zobrist keys
+/**
+ * @brief Perform init zobrist.
+ *
+ * @details Implements the behavior implied by the function name.
+ */
 inline void initZobrist() {
     std::mt19937_64 rng(12345); // Static seed for reproducibility
 
@@ -22,6 +36,14 @@ inline void initZobrist() {
 }
 
 // Mapping helper
+/**
+ * @brief Get piece index.
+ *
+ * @details Returns a value derived from current state.
+ * @param symbol Parameter.
+ * @param color Side/color parameter.
+ * @return Requested value.
+ */
 inline int getPieceIndex(char symbol, int color) {
     symbol = toupper(symbol);
     int index = 0;

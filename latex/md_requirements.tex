@@ -1,0 +1,48 @@
+\chapter{Specyfikacja Funkcjonalnoœci }
+\hypertarget{md_requirements}{}\label{md_requirements}\index{Specyfikacja Funkcjonalnoœci@{Specyfikacja Funkcjonalnoœci}}
+\label{md_requirements_autotoc_md15}%
+\Hypertarget{md_requirements_autotoc_md15}%
+\hypertarget{md_requirements_autotoc_md16}{}\doxysection{\texorpdfstring{1. Zarz¹dzanie Rozgrywk¹ (Game Management)}{1. Zarz¹dzanie Rozgrywk¹ (Game Management)}}\label{md_requirements_autotoc_md16}
+
+\begin{DoxyItemize}
+\item {\bfseries{Nowa Gra:\+}} U¿ytkownik ma mo¿liwoœæ utworzenia nowej gry.
+\item {\bfseries{Wybór Koloru:\+}}
+\begin{DoxyItemize}
+\item U¿ytkownik wybiera kolor bierek.
+\item Alternatywnie system przydziela kolor automatycznie.
+\end{DoxyItemize}
+\item {\bfseries{Inicjalizacja:\+}} System poprawnie inicjalizuje planszê do stanu pocz¹tkowego.
+\item {\bfseries{Poddanie (Surrender):\+}} Dostêpny i widoczny przycisk umo¿liwiaj¹cy u¿ytkownikowi poddanie partii.
+\item {\bfseries{Zegar (Timer):\+}} System limituje czas u¿ytkownika na wykonanie ruchu.
+\end{DoxyItemize}\hypertarget{md_requirements_autotoc_md17}{}\doxysection{\texorpdfstring{2. Logika i Zasady (Game Logic \& Validation)}{2. Logika i Zasady (Game Logic \& Validation)}}\label{md_requirements_autotoc_md17}
+
+\begin{DoxyItemize}
+\item {\bfseries{Monitorowanie Stanu:\+}} System ci¹gle weryfikuje status gry pod k¹tem Szacha, Mata oraz Remisu (Draw).
+\item {\bfseries{Zaawansowana Walidacja:\+}}
+\begin{DoxyItemize}
+\item Wykrywanie i obs³uga bicia w przelocie (En-\/passant).
+\item Wykrywanie figur zwi¹zanych (Pinned figures) i blokowanie nielegalnych ruchów ods³aniaj¹cych króla.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_requirements_autotoc_md18}{}\doxysection{\texorpdfstring{3. Tryby Gry (Game Modes)}{3. Tryby Gry (Game Modes)}}\label{md_requirements_autotoc_md18}
+
+\begin{DoxyItemize}
+\item {\bfseries{Gra z AI:\+}} Rozgrywka przeciwko komputerowi.
+\begin{DoxyItemize}
+\item Obs³uga poziomów trudnoœci (Easy, Medium, Hard).
+\end{DoxyItemize}
+\item {\bfseries{Lokalne PvP (Opcjonalne):\+}} Mo¿liwoœæ gry dla dwóch graczy na jednym urz¹dzeniu.
+\end{DoxyItemize}\hypertarget{md_requirements_autotoc_md19}{}\doxysection{\texorpdfstring{4. Interfejs i UX}{4. Interfejs i UX}}\label{md_requirements_autotoc_md19}
+
+\begin{DoxyItemize}
+\item {\bfseries{Obs³uga B³êdów:\+}} Aplikacja obs³uguje b³êdy w sposób przyjazny dla u¿ytkownika (graceful error handling), nie przerywaj¹c dzia³ania programu.
+\item {\bfseries{GUI (Etap póŸniejszy):\+}} Implementacja interfejsu graficznego (okienkowego).
+\end{DoxyItemize}\hypertarget{md_requirements_autotoc_md20}{}\doxysection{\texorpdfstring{5. Zapewnienie Jakoœci (Quality Assurance)}{5. Zapewnienie Jakoœci (Quality Assurance)}}\label{md_requirements_autotoc_md20}
+
+\begin{DoxyItemize}
+\item {\bfseries{Testy:\+}} Zaimplementowane testy weryfikuj¹ce poprawnoœæ:\+
+\begin{DoxyItemize}
+\item Reprezentacji planszy.
+\item Generowania i walidacji ruchów.
+\item Dzia³ania silnika gry. 
+\end{DoxyItemize}
+\end{DoxyItemize}

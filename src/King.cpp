@@ -1,4 +1,13 @@
-﻿#include "Piece.h"
+﻿/**
+ * @file King.cpp
+ * @brief File implementation for King piece.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
+#include "Piece.h"
 #include "King.h"
 #include "Board.h"
 #include <cmath> // abs()
@@ -7,7 +16,14 @@ using namespace std;
 
 // Constructor
 King::King(int c, char s, Position p) : Piece(c, 'K', p) {}
-
+/**
+ * @brief Check whether this piece can move to the given square (piece rules only).
+ *
+ * @details Validates movement pattern for the specific piece type. Additional game rules (e.g., leaving king in check) are handled elsewhere.
+ * @param new_pos Board position/index.
+ * @param board Board state to operate on.
+ * @return True if the condition holds; otherwise false.
+ */
 bool King::canMove(Position new_pos, Board &board) {
 	// Board boundaries and basic movement rules for King
     if (new_pos.row < 0 || new_pos.row >= 8 || new_pos.col < 0 || new_pos.col >= 8)

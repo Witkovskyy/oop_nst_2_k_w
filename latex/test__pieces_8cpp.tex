@@ -1,0 +1,399 @@
+\doxysection{src/\+tests/\+test\+\_\+pieces.cpp File Reference}
+\hypertarget{test__pieces_8cpp}{}\label{test__pieces_8cpp}\index{src/tests/test\_pieces.cpp@{src/tests/test\_pieces.cpp}}
+
+
+File implementation for piece tests.  
+
+
+{\ttfamily \+\#include $<$gtest/\+gtest.\+h$>$}\newline
+{\ttfamily \+\#include "{}../\+src/\+\+Board.\+h"{}}\newline
+{\ttfamily \+\#include "{}../\+src/\+\+Pawn.\+h"{}}\newline
+{\ttfamily \+\#include "{}../\+src/\+\+Rook.\+h"{}}\newline
+{\ttfamily \+\#include "{}../\+src/\+\+Piece.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_board}{Board}} $>$ \doxymbox{\hyperlink{test__pieces_8cpp_ab58f8273185452ff19a837ba92cac1f4}{make\+Empty\+Board}} ()
+\begin{DoxyCompactList}\small\item\em Test helper:\+ make empty board. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}} (Board\+Test, Place\+Piece\+And\+Get\+Piece\+At)
+\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_aa525de2e85e10d418e7d9c1fde204d49}{TEST}} (Board\+Test, Is\+Empty)
+\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_a446f3e0e4e32128a502949f5da1604a5}{TEST}} (Board\+Test, Validate\+Move)
+\begin{DoxyCompactList}\small\item\em Test helper:\+ capture stdout. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_a4051489bf7f2e860dca05e8699cde0f4}{TEST}} (Board\+Test, Move\+Piece\+\_\+\+Valid\+And\+Invalid)
+\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_a02f076e1163e6820bba4b061f1311761}{TEST}} (Board\+Test, Display\+Board)
+\begin{DoxyCompactList}\small\item\em Test helper:\+ capture stdout. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_ae2a96de273a7f745773b92fb99595124}{TEST}} (Board\+Test, Get\+Piece\+At\+\_\+\+Out\+Of\+Bounds)
+\begin{DoxyCompactList}\small\item\em Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_a59b7a6279b4a3cc4bb59612c07db0bcb}{TEST}} (Pawn\+Test, Can\+Move\+\_\+\+Forward\+One)
+\begin{DoxyCompactList}\small\item\em Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_a0e6aaea7108c7649a91af96f6b91ceeb}{TEST}} (Pawn\+Test, Can\+Move\+\_\+\+Forward\+Two\+From\+Start)
+\begin{DoxyCompactList}\small\item\em Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_a4420bca084cfa017ea36f014b59b1ee2}{TEST}} (Pawn\+Test, Can\+Move\+\_\+\+Forward\+Two\+Not\+From\+Start)
+\begin{DoxyCompactList}\small\item\em Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_a143d231f48ff1183c3a80d00cba3b68b}{TEST}} (Pawn\+Test, Can\+Move\+\_\+\+Capture)
+\begin{DoxyCompactList}\small\item\em Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_aa4259b4147fd8a3b745ccc26922d62e9}{TEST}} (Pawn\+Test, Can\+Move\+\_\+\+Block\+Forward)
+\begin{DoxyCompactList}\small\item\em Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_ae743d09c21ad76bdfa16a9899e5390be}{TEST}} (Pawn\+Test, Can\+Move\+\_\+\+Out\+Of\+Board)
+\begin{DoxyCompactList}\small\item\em Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_ae4a5c16b4e3b9f9fafcbc4069fac1aef}{TEST}} (Rook\+Test, Can\+Move\+\_\+\+Vertical)
+\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_a5f6f2e0fe11281d8e67c771a0d3aadab}{TEST}} (Rook\+Test, Can\+Move\+\_\+\+Horizontal)
+\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_a53d390684bd0ad5c14d9531330915b14}{TEST}} (Rook\+Test, Can\+Move\+\_\+\+Blocked)
+\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_acd755c4c2f8249fc564ba487208eef1b}{TEST}} (Rook\+Test, Can\+Move\+\_\+\+Capture\+Enemy)
+\begin{DoxyCompactList}\small\item\em Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_a37bbbf9d1188c8c069e9b3e4c879732c}{TEST}} (Rook\+Test, Can\+Move\+\_\+\+Cannot\+Capture\+Own)
+\begin{DoxyCompactList}\small\item\em Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_a7f5042ac7f49e8a96e7d03aba3bf5603}{TEST}} (Rook\+Test, Can\+Move\+\_\+\+Out\+Of\+Board)
+\begin{DoxyCompactList}\small\item\em Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{test__pieces_8cpp_abcd2e0a85e132691757eababc2aca0b3}{TEST}} (Rook\+Test, Can\+Move\+\_\+\+No\+Move)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+File implementation for piece tests. 
+
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2026-\/01-\/12
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2026 
+\end{DoxyCopyright}
+
+
+\label{doc-func-members}
+\Hypertarget{test__pieces_8cpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{test__pieces_8cpp_ab58f8273185452ff19a837ba92cac1f4}\index{test\_pieces.cpp@{test\_pieces.cpp}!makeEmptyBoard@{makeEmptyBoard}}
+\index{makeEmptyBoard@{makeEmptyBoard}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{makeEmptyBoard()}{makeEmptyBoard()}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_ab58f8273185452ff19a837ba92cac1f4} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_board}{Board}} $>$ make\+Empty\+Board (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Test helper:\+ make empty board. 
+
+Used by the unit/\+integration test suite. \begin{DoxyReturn}{Returns}
+Result of the operation. 
+\end{DoxyReturn}
+\Hypertarget{test__pieces_8cpp_a02f076e1163e6820bba4b061f1311761}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [1/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_a02f076e1163e6820bba4b061f1311761} 
+TEST (\begin{DoxyParamCaption}\item[{Board\+Test}]{}{, }\item[{Display\+Board}]{}{}\end{DoxyParamCaption})}
+
+
+
+Test helper:\+ capture stdout. 
+
+Used by the unit/\+integration test suite. \begin{DoxyReturn}{Returns}
+Result of the operation. 
+\end{DoxyReturn}
+\Hypertarget{test__pieces_8cpp_ae2a96de273a7f745773b92fb99595124}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [2/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_ae2a96de273a7f745773b92fb99595124} 
+TEST (\begin{DoxyParamCaption}\item[{Board\+Test}]{}{, }\item[{Get\+Piece\+At\+\_\+\+Out\+Of\+Bounds}]{}{}\end{DoxyParamCaption})}
+
+
+
+Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+
+Documentation for {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+\begin{DoxyParams}{Parameters}
+{\em Board\+Test} & Parameter. \\
+\hline
+{\em Get\+Piece\+At\+\_\+\+Out\+Of\+Bounds} & Parameter. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{test__pieces_8cpp_aa525de2e85e10d418e7d9c1fde204d49}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [3/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_aa525de2e85e10d418e7d9c1fde204d49} 
+TEST (\begin{DoxyParamCaption}\item[{Board\+Test}]{}{, }\item[{Is\+Empty}]{}{}\end{DoxyParamCaption})}
+
+Test helper:\+ capture stdout.
+
+Used by the unit/\+integration test suite. \begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+\Hypertarget{test__pieces_8cpp_a4051489bf7f2e860dca05e8699cde0f4}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [4/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_a4051489bf7f2e860dca05e8699cde0f4} 
+TEST (\begin{DoxyParamCaption}\item[{Board\+Test}]{}{, }\item[{Move\+Piece\+\_\+\+Valid\+And\+Invalid}]{}{}\end{DoxyParamCaption})}
+
+Test helper:\+ capture stdout.
+
+Used by the unit/\+integration test suite. \begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+\Hypertarget{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [5/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7} 
+TEST (\begin{DoxyParamCaption}\item[{Board\+Test}]{}{, }\item[{Place\+Piece\+And\+Get\+Piece\+At}]{}{}\end{DoxyParamCaption})}
+
+Test helper:\+ capture stdout.
+
+Used by the unit/\+integration test suite. \begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+\Hypertarget{test__pieces_8cpp_a446f3e0e4e32128a502949f5da1604a5}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [6/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_a446f3e0e4e32128a502949f5da1604a5} 
+TEST (\begin{DoxyParamCaption}\item[{Board\+Test}]{}{, }\item[{Validate\+Move}]{}{}\end{DoxyParamCaption})}
+
+
+
+Test helper:\+ capture stdout. 
+
+Used by the unit/\+integration test suite. \begin{DoxyReturn}{Returns}
+Result of the operation. 
+\end{DoxyReturn}
+Test helper:\+ capture stdout.
+
+Used by the unit/\+integration test suite. \begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+\Hypertarget{test__pieces_8cpp_aa4259b4147fd8a3b745ccc26922d62e9}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [7/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_aa4259b4147fd8a3b745ccc26922d62e9} 
+TEST (\begin{DoxyParamCaption}\item[{Pawn\+Test}]{}{, }\item[{Can\+Move\+\_\+\+Block\+Forward}]{}{}\end{DoxyParamCaption})}
+
+
+
+Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+
+Documentation for {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+\begin{DoxyParams}{Parameters}
+{\em Pawn\+Test} & Parameter. \\
+\hline
+{\em Can\+Move\+\_\+\+Block\+Forward} & Parameter. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{test__pieces_8cpp_a143d231f48ff1183c3a80d00cba3b68b}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [8/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_a143d231f48ff1183c3a80d00cba3b68b} 
+TEST (\begin{DoxyParamCaption}\item[{Pawn\+Test}]{}{, }\item[{Can\+Move\+\_\+\+Capture}]{}{}\end{DoxyParamCaption})}
+
+
+
+Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+
+Documentation for {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+\begin{DoxyParams}{Parameters}
+{\em Pawn\+Test} & Parameter. \\
+\hline
+{\em Can\+Move\+\_\+\+Capture} & Parameter. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{test__pieces_8cpp_a59b7a6279b4a3cc4bb59612c07db0bcb}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [9/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_a59b7a6279b4a3cc4bb59612c07db0bcb} 
+TEST (\begin{DoxyParamCaption}\item[{Pawn\+Test}]{}{, }\item[{Can\+Move\+\_\+\+Forward\+One}]{}{}\end{DoxyParamCaption})}
+
+
+
+Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+
+Documentation for {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+\begin{DoxyParams}{Parameters}
+{\em Pawn\+Test} & Parameter. \\
+\hline
+{\em Can\+Move\+\_\+\+Forward\+One} & Parameter. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{test__pieces_8cpp_a0e6aaea7108c7649a91af96f6b91ceeb}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [10/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_a0e6aaea7108c7649a91af96f6b91ceeb} 
+TEST (\begin{DoxyParamCaption}\item[{Pawn\+Test}]{}{, }\item[{Can\+Move\+\_\+\+Forward\+Two\+From\+Start}]{}{}\end{DoxyParamCaption})}
+
+
+
+Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+
+Documentation for {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+\begin{DoxyParams}{Parameters}
+{\em Pawn\+Test} & Parameter. \\
+\hline
+{\em Can\+Move\+\_\+\+Forward\+Two\+From\+Start} & Parameter. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{test__pieces_8cpp_a4420bca084cfa017ea36f014b59b1ee2}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [11/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_a4420bca084cfa017ea36f014b59b1ee2} 
+TEST (\begin{DoxyParamCaption}\item[{Pawn\+Test}]{}{, }\item[{Can\+Move\+\_\+\+Forward\+Two\+Not\+From\+Start}]{}{}\end{DoxyParamCaption})}
+
+
+
+Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+
+Documentation for {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+\begin{DoxyParams}{Parameters}
+{\em Pawn\+Test} & Parameter. \\
+\hline
+{\em Can\+Move\+\_\+\+Forward\+Two\+Not\+From\+Start} & Parameter. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{test__pieces_8cpp_ae743d09c21ad76bdfa16a9899e5390be}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [12/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_ae743d09c21ad76bdfa16a9899e5390be} 
+TEST (\begin{DoxyParamCaption}\item[{Pawn\+Test}]{}{, }\item[{Can\+Move\+\_\+\+Out\+Of\+Board}]{}{}\end{DoxyParamCaption})}
+
+
+
+Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+
+Documentation for {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+\begin{DoxyParams}{Parameters}
+{\em Pawn\+Test} & Parameter. \\
+\hline
+{\em Can\+Move\+\_\+\+Out\+Of\+Board} & Parameter. \\
+\hline
+\end{DoxyParams}
+Perform {\ttfamily EXPECT\+\_\+\+FALSE}.
+
+Documentation for {\ttfamily EXPECT\+\_\+\+FALSE}. 
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state to operate on.\\
+\hline
+\end{DoxyParams}
+\Hypertarget{test__pieces_8cpp_a53d390684bd0ad5c14d9531330915b14}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [13/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_a53d390684bd0ad5c14d9531330915b14} 
+TEST (\begin{DoxyParamCaption}\item[{Rook\+Test}]{}{, }\item[{Can\+Move\+\_\+\+Blocked}]{}{}\end{DoxyParamCaption})}
+
+Perform {\ttfamily \doxylink{class_rook}{Rook}}.
+
+Documentation for {\ttfamily \doxylink{class_rook}{Rook}}. 
+\begin{DoxyParams}{Parameters}
+{\em R} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+\Hypertarget{test__pieces_8cpp_a37bbbf9d1188c8c069e9b3e4c879732c}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [14/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_a37bbbf9d1188c8c069e9b3e4c879732c} 
+TEST (\begin{DoxyParamCaption}\item[{Rook\+Test}]{}{, }\item[{Can\+Move\+\_\+\+Cannot\+Capture\+Own}]{}{}\end{DoxyParamCaption})}
+
+
+
+Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+
+Documentation for {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+\begin{DoxyParams}{Parameters}
+{\em Rook\+Test} & Parameter. \\
+\hline
+{\em Can\+Move\+\_\+\+Cannot\+Capture\+Own} & Parameter. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{test__pieces_8cpp_acd755c4c2f8249fc564ba487208eef1b}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [15/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_acd755c4c2f8249fc564ba487208eef1b} 
+TEST (\begin{DoxyParamCaption}\item[{Rook\+Test}]{}{, }\item[{Can\+Move\+\_\+\+Capture\+Enemy}]{}{}\end{DoxyParamCaption})}
+
+
+
+Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+
+Documentation for {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+\begin{DoxyParams}{Parameters}
+{\em Rook\+Test} & Parameter. \\
+\hline
+{\em Can\+Move\+\_\+\+Capture\+Enemy} & Parameter. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{test__pieces_8cpp_a5f6f2e0fe11281d8e67c771a0d3aadab}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [16/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_a5f6f2e0fe11281d8e67c771a0d3aadab} 
+TEST (\begin{DoxyParamCaption}\item[{Rook\+Test}]{}{, }\item[{Can\+Move\+\_\+\+Horizontal}]{}{}\end{DoxyParamCaption})}
+
+Perform {\ttfamily \doxylink{class_rook}{Rook}}.
+
+Documentation for {\ttfamily \doxylink{class_rook}{Rook}}. 
+\begin{DoxyParams}{Parameters}
+{\em R} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+\Hypertarget{test__pieces_8cpp_abcd2e0a85e132691757eababc2aca0b3}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [17/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_abcd2e0a85e132691757eababc2aca0b3} 
+TEST (\begin{DoxyParamCaption}\item[{Rook\+Test}]{}{, }\item[{Can\+Move\+\_\+\+No\+Move}]{}{}\end{DoxyParamCaption})}
+
+Place a piece on the board at its current position.
+
+Documentation for {\ttfamily place\+Piece}. 
+\begin{DoxyParams}{Parameters}
+{\em rook} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+\Hypertarget{test__pieces_8cpp_a7f5042ac7f49e8a96e7d03aba3bf5603}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [18/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_a7f5042ac7f49e8a96e7d03aba3bf5603} 
+TEST (\begin{DoxyParamCaption}\item[{Rook\+Test}]{}{, }\item[{Can\+Move\+\_\+\+Out\+Of\+Board}]{}{}\end{DoxyParamCaption})}
+
+
+
+Perform {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+
+Documentation for {\ttfamily \doxylink{test__pieces_8cpp_ace5c77872807be7c3bdb5635eb4cc5c7}{TEST}}. 
+\begin{DoxyParams}{Parameters}
+{\em Rook\+Test} & Parameter. \\
+\hline
+{\em Can\+Move\+\_\+\+Out\+Of\+Board} & Parameter. \\
+\hline
+\end{DoxyParams}
+Perform {\ttfamily EXPECT\+\_\+\+FALSE}.
+
+Documentation for {\ttfamily EXPECT\+\_\+\+FALSE}. 
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state to operate on.\\
+\hline
+\end{DoxyParams}
+\Hypertarget{test__pieces_8cpp_ae4a5c16b4e3b9f9fafcbc4069fac1aef}\index{test\_pieces.cpp@{test\_pieces.cpp}!TEST@{TEST}}
+\index{TEST@{TEST}!test\_pieces.cpp@{test\_pieces.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST()}{TEST()}\hspace{0.1cm}{\footnotesize\ttfamily [19/19]}}
+{\footnotesize\ttfamily \label{test__pieces_8cpp_ae4a5c16b4e3b9f9fafcbc4069fac1aef} 
+TEST (\begin{DoxyParamCaption}\item[{Rook\+Test}]{}{, }\item[{Can\+Move\+\_\+\+Vertical}]{}{}\end{DoxyParamCaption})}
+
+Perform {\ttfamily \doxylink{class_rook}{Rook}}.
+
+Documentation for {\ttfamily \doxylink{class_rook}{Rook}}. 
+\begin{DoxyParams}{Parameters}
+{\em R} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
