@@ -1,3 +1,12 @@
+/**
+ * @file see.cpp
+ * @brief File implementation for static exchange evaluation.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #include "../Piece.h"
 #include "../Board.h"
 #include "val.h" 

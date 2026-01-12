@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['log_0',['log',['../class_async_logger.html#a98e238eaf56d5e11dfa70c6cb9998cc3',1,'AsyncLogger']]]
+  ['king_0',['King',['../class_king.html#a56477d02fd204b6238e5f24008ac7e90',1,'King']]],
+  ['knight_1',['Knight',['../class_knight.html#a2906700a4f0a20042f156e847960be62',1,'Knight']]]
 ];

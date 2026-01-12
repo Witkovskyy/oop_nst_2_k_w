@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['validatemove_0',['validateMove',['../class_board.html#abebe82a3961f44ec33063b09b6256b0f',1,'Board']]],
-  ['validation_1',['2. Logika i Zasady (Game Logic &amp;amp; Validation)',['../md_requirements.html#autotoc_md17',1,'']]],
-  ['value_2',['value',['../class_piece.html#a0b8fce3f4b7dbd1d46be9004fda383ea',1,'Piece']]]
+  ['undo_0',['Undo',['../struct_undo.html',1,'']]],
+  ['ux_1',['4. Interfejs i UX',['../md_requirements.html#autotoc_md19',1,'']]]
 ];

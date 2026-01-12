@@ -1,4 +1,13 @@
-﻿#include <iostream>
+﻿/**
+ * @file Piece.cpp
+ * @brief File implementation for Piece base class.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
+#include <iostream>
 #include "Piece.h"
 using namespace std;
 

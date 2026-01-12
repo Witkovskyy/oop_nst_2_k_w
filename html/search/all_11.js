@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['operator_3d_0',['operator=',['../class_board.html#ae6c8d66af1bb70e1d34a704321675975',1,'Board']]]
+  ['negamax_0',['negamax',['../engine_8h.html#ada23a560b390521ef097aed78f8d9c07',1,'negamax(Board &amp;board, int depth, int alpha, int beta, int color):&#160;evalpos.cpp'],['../evalpos_8cpp.html#ada23a560b390521ef097aed78f8d9c07',1,'negamax(Board &amp;board, int depth, int alpha, int beta, int color):&#160;evalpos.cpp']]]
 ];

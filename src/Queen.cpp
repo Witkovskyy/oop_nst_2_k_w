@@ -1,3 +1,12 @@
+/**
+ * @file Queen.cpp
+ * @brief File implementation for Queen piece.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #include "Queen.h"
 #include "Board.h"
 #include <cmath>

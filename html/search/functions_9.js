@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['movepiece_0',['movePiece',['../class_board.html#a527ff16994eea039592bd328aa7bc5ec',1,'Board']]]
+  ['log_0',['log',['../class_async_logger.html#a98e238eaf56d5e11dfa70c6cb9998cc3',1,'AsyncLogger']]]
 ];

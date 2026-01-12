@@ -1,4 +1,13 @@
-﻿#include "kNight.h" 
+﻿/**
+ * @file kNight.cpp
+ * @brief File implementation for Knight piece.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
+#include "kNight.h" 
 #include "Board.h"
 #include <cmath>
 

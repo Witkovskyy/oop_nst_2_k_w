@@ -1,3 +1,12 @@
+/**
+ * @file catch2.cpp
+ * @brief File implementation for Catch2 tests.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
 #include <string>

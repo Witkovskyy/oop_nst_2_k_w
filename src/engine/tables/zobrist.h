@@ -1,3 +1,12 @@
+/**
+ * @file zobrist.h
+ * @brief File declaration for Zobrist hashing.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #pragma once
 #include <random>
 #include <vector>

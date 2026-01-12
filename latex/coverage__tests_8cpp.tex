@@ -1,0 +1,297 @@
+\doxysection{src/\+tests/\+coverage\+\_\+tests.cpp File Reference}
+\hypertarget{coverage__tests_8cpp}{}\label{coverage__tests_8cpp}\index{src/tests/coverage\_tests.cpp@{src/tests/coverage\_tests.cpp}}
+
+
+File implementation for coverage tests.  
+
+
+{\ttfamily \+\#include $<$catch2/\+catch\+\_\+test\+\_\+macros.\+hpp$>$}\newline
+{\ttfamily \+\#include "{}../\+\+Board.\+h"{}}\newline
+{\ttfamily \+\#include "{}../\+\+Piece.\+h"{}}\newline
+{\ttfamily \+\#include "{}../\+\+Pawn.\+h"{}}\newline
+{\ttfamily \+\#include "{}../\+\+Rook.\+h"{}}\newline
+{\ttfamily \+\#include "{}../\+k\+Night.\+h"{}}\newline
+{\ttfamily \+\#include "{}../\+\+Bishop.\+h"{}}\newline
+{\ttfamily \+\#include "{}../\+\+Queen.\+h"{}}\newline
+{\ttfamily \+\#include "{}../\+\+King.\+h"{}}\newline
+{\ttfamily \+\#include "{}../\+engine/\+tables/\+\+TT.\+h"{}}\newline
+{\ttfamily \+\#include "{}../\+engine/\+tables/\+zobrist.\+h"{}}\newline
+{\ttfamily \+\#include "{}../\+engine/\+engine.\+h"{}}\newline
+{\ttfamily \+\#include "{}../\+engine/\+val.\+h"{}}\newline
+{\ttfamily \+\#include "{}../\+engine/\+logger/\+logger.\+h"{}}\newline
+{\ttfamily \+\#include $<$thread$>$}\newline
+{\ttfamily \+\#include $<$chrono$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{coverage__tests_8cpp_ad28887f6f397eb8528549e03b585210e}{clear\+Board}} (\doxymbox{\hyperlink{class_board}{Board}} \&board)
+\begin{DoxyCompactList}\small\item\em Test helper:\+ clear board. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{coverage__tests_8cpp_a04eb06a3887d87830f257ea7492aa004}{TEST\+\_\+\+CASE}} ("{}Async\+Logger coverage"{}, "{}\+[Logger]\+"{})
+\begin{DoxyCompactList}\small\item\em Test helper:\+ l o g. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{coverage__tests_8cpp_a8c604733afd8225290a8367fe861af9c}{TEST\+\_\+\+CASE}} ("{}Transposition Table Coverage"{}, "{}\+[TT]\+"{})
+\begin{DoxyCompactList}\small\item\em Test helper:\+ s e c t i o n. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{coverage__tests_8cpp_aaab0e66575a1ac48866e218e287c332e}{TEST\+\_\+\+CASE}} ("{}Zobrist Init"{}, "{}\+[Zobrist]\+"{})
+\begin{DoxyCompactList}\small\item\em Test helper:\+ init zobrist. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{coverage__tests_8cpp_aa11efb965a611bd3946b3e581b9c0c1c}{TEST\+\_\+\+CASE}} ("{}Piece Coverage"{}, "{}\+[Piece]\+"{})
+\begin{DoxyCompactList}\small\item\em Test helper:\+ s e c t i o n. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{coverage__tests_8cpp_a903695e43577c9aba56c40957a352e15}{TEST\+\_\+\+CASE}} ("{}Board Internals Coverage"{}, "{}\+[Board]\+"{})
+\begin{DoxyCompactList}\small\item\em Test helper:\+ s e c t i o n. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{coverage__tests_8cpp_a52595a73bd20fd7c4aa6adbd87f74963}{TEST\+\_\+\+CASE}} ("{}Engine Logic Coverage"{}, "{}\+[Engine]\+"{})
+\begin{DoxyCompactList}\small\item\em Test helper:\+ s e c t i o n. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+File implementation for coverage tests. 
+
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2026-\/01-\/12
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2026 
+\end{DoxyCopyright}
+
+
+\label{doc-func-members}
+\Hypertarget{coverage__tests_8cpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{coverage__tests_8cpp_ad28887f6f397eb8528549e03b585210e}\index{coverage\_tests.cpp@{coverage\_tests.cpp}!clearBoard@{clearBoard}}
+\index{clearBoard@{clearBoard}!coverage\_tests.cpp@{coverage\_tests.cpp}}
+\doxysubsubsection{\texorpdfstring{clearBoard()}{clearBoard()}}
+{\footnotesize\ttfamily \label{coverage__tests_8cpp_ad28887f6f397eb8528549e03b585210e} 
+void clear\+Board (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{}\end{DoxyParamCaption})}
+
+
+
+Test helper:\+ clear board. 
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state to operate on. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{coverage__tests_8cpp_a04eb06a3887d87830f257ea7492aa004}\index{coverage\_tests.cpp@{coverage\_tests.cpp}!TEST\_CASE@{TEST\_CASE}}
+\index{TEST\_CASE@{TEST\_CASE}!coverage\_tests.cpp@{coverage\_tests.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST\_CASE()}{TEST\_CASE()}\hspace{0.1cm}{\footnotesize\ttfamily [1/6]}}
+{\footnotesize\ttfamily \label{coverage__tests_8cpp_a04eb06a3887d87830f257ea7492aa004} 
+TEST\+\_\+\+CASE (\begin{DoxyParamCaption}\item[{"{}Async\+Logger coverage"{}}]{}{, }\item[{"{}"{}}]{}{\+[\+Logger]\+}\end{DoxyParamCaption})}
+
+
+
+Test helper:\+ l o g. 
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em Test} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation. 
+\end{DoxyReturn}
+\Hypertarget{coverage__tests_8cpp_a903695e43577c9aba56c40957a352e15}\index{coverage\_tests.cpp@{coverage\_tests.cpp}!TEST\_CASE@{TEST\_CASE}}
+\index{TEST\_CASE@{TEST\_CASE}!coverage\_tests.cpp@{coverage\_tests.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST\_CASE()}{TEST\_CASE()}\hspace{0.1cm}{\footnotesize\ttfamily [2/6]}}
+{\footnotesize\ttfamily \label{coverage__tests_8cpp_a903695e43577c9aba56c40957a352e15} 
+TEST\+\_\+\+CASE (\begin{DoxyParamCaption}\item[{"{}Board Internals Coverage"{}}]{}{, }\item[{"{}"{}}]{}{\+[\+Board]\+}\end{DoxyParamCaption})}
+
+
+
+Test helper:\+ s e c t i o n. 
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em Constructor} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation. 
+\end{DoxyReturn}
+Test helper:\+ s e c t i o n.
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em Coverage} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+Test helper:\+ s e c t i o n.
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em logic} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+Test helper:\+ s e c t i o n.
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em Function} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+\Hypertarget{coverage__tests_8cpp_a52595a73bd20fd7c4aa6adbd87f74963}\index{coverage\_tests.cpp@{coverage\_tests.cpp}!TEST\_CASE@{TEST\_CASE}}
+\index{TEST\_CASE@{TEST\_CASE}!coverage\_tests.cpp@{coverage\_tests.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST\_CASE()}{TEST\_CASE()}\hspace{0.1cm}{\footnotesize\ttfamily [3/6]}}
+{\footnotesize\ttfamily \label{coverage__tests_8cpp_a52595a73bd20fd7c4aa6adbd87f74963} 
+TEST\+\_\+\+CASE (\begin{DoxyParamCaption}\item[{"{}Engine Logic Coverage"{}}]{}{, }\item[{"{}"{}}]{}{\+[\+Engine]\+}\end{DoxyParamCaption})}
+
+
+
+Test helper:\+ s e c t i o n. 
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em Function} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation. 
+\end{DoxyReturn}
+Test helper:\+ c h e c k.
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em score\+Center} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+Test helper:\+ c h e c k.
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em score\+Center} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+Test helper:\+ s e c t i o n.
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em Negamax} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+Test helper:\+ r e q u i r e.
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em score} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+Test helper:\+ r e q u i r e.
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em score} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+Test helper:\+ r e q u i r e.
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em score} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+\Hypertarget{coverage__tests_8cpp_aa11efb965a611bd3946b3e581b9c0c1c}\index{coverage\_tests.cpp@{coverage\_tests.cpp}!TEST\_CASE@{TEST\_CASE}}
+\index{TEST\_CASE@{TEST\_CASE}!coverage\_tests.cpp@{coverage\_tests.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST\_CASE()}{TEST\_CASE()}\hspace{0.1cm}{\footnotesize\ttfamily [4/6]}}
+{\footnotesize\ttfamily \label{coverage__tests_8cpp_aa11efb965a611bd3946b3e581b9c0c1c} 
+TEST\+\_\+\+CASE (\begin{DoxyParamCaption}\item[{"{}Piece Coverage"{}}]{}{, }\item[{"{}"{}}]{}{\+[\+Piece]\+}\end{DoxyParamCaption})}
+
+
+
+Test helper:\+ s e c t i o n. 
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em Setters} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation. 
+\end{DoxyReturn}
+Test helper:\+ s e c t i o n.
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em Coverage} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+Test helper:\+ s e c t i o n.
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em Constructor} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+\Hypertarget{coverage__tests_8cpp_a8c604733afd8225290a8367fe861af9c}\index{coverage\_tests.cpp@{coverage\_tests.cpp}!TEST\_CASE@{TEST\_CASE}}
+\index{TEST\_CASE@{TEST\_CASE}!coverage\_tests.cpp@{coverage\_tests.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST\_CASE()}{TEST\_CASE()}\hspace{0.1cm}{\footnotesize\ttfamily [5/6]}}
+{\footnotesize\ttfamily \label{coverage__tests_8cpp_a8c604733afd8225290a8367fe861af9c} 
+TEST\+\_\+\+CASE (\begin{DoxyParamCaption}\item[{"{}Transposition Table Coverage"{}}]{}{, }\item[{"{}"{}}]{}{\+[\+TT]\+}\end{DoxyParamCaption})}
+
+
+
+Test helper:\+ s e c t i o n. 
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em Logic} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation. 
+\end{DoxyReturn}
+Test helper:\+ r e q u i r e.
+
+Used by the unit/\+integration test suite. 
+\begin{DoxyParams}{Parameters}
+{\em score} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+\Hypertarget{coverage__tests_8cpp_aaab0e66575a1ac48866e218e287c332e}\index{coverage\_tests.cpp@{coverage\_tests.cpp}!TEST\_CASE@{TEST\_CASE}}
+\index{TEST\_CASE@{TEST\_CASE}!coverage\_tests.cpp@{coverage\_tests.cpp}}
+\doxysubsubsection{\texorpdfstring{TEST\_CASE()}{TEST\_CASE()}\hspace{0.1cm}{\footnotesize\ttfamily [6/6]}}
+{\footnotesize\ttfamily \label{coverage__tests_8cpp_aaab0e66575a1ac48866e218e287c332e} 
+TEST\+\_\+\+CASE (\begin{DoxyParamCaption}\item[{"{}Zobrist Init"{}}]{}{, }\item[{"{}"{}}]{}{\+[\+Zobrist]\+}\end{DoxyParamCaption})}
+
+
+
+Test helper:\+ init zobrist. 
+
+Used by the unit/\+integration test suite. \begin{DoxyReturn}{Returns}
+Result of the operation. 
+\end{DoxyReturn}

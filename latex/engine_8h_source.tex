@@ -1,16 +1,17 @@
 \doxysection{engine.\+h}
 \hypertarget{engine_8h_source}{}\label{engine_8h_source}\index{src/engine/engine.h@{src/engine/engine.h}}
-
+\doxymbox{\hyperlink{engine_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
-\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ "{}../Board.h"{}}}
-\DoxyCodeLine{00003\ }
-\DoxyCodeLine{00004\ \textcolor{comment}{//\ Engine\ API}}
-\DoxyCodeLine{00014\ \textcolor{keywordtype}{int}\ see(\doxymbox{\hyperlink{class_board}{Board}}\ \&start,\ \doxymbox{\hyperlink{struct_position}{Position}}\ target,\ \textcolor{keywordtype}{int}\ sideToMove);}
-\DoxyCodeLine{00015\ \textcolor{keywordtype}{int}\ negamax(\doxymbox{\hyperlink{class_board}{Board}}\ \&board,\ \textcolor{keywordtype}{int}\ depth,\ \textcolor{keywordtype}{int}\ alpha,\ \textcolor{keywordtype}{int}\ beta,\ \textcolor{keywordtype}{int}\ color);}
-\DoxyCodeLine{00016\ \textcolor{keywordtype}{int}\ eval(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_board}{Board}}\ \&board,\ \textcolor{keywordtype}{int}\ color);}
-\DoxyCodeLine{00017\ \textcolor{keywordtype}{long}\ get\_nodes\_visited();}
-\DoxyCodeLine{00018\ \textcolor{keywordtype}{int}\ quiescence(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ alpha,\ \textcolor{keywordtype}{int}\ beta,\ \textcolor{keywordtype}{int}\ color);}
-\DoxyCodeLine{00019\ \textcolor{keywordtype}{bool}\ isInCheck(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ color);}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_board_8h}{../Board.h}}"{}}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ Engine\ API}}
+\DoxyCodeLine{00023\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{engine_8h_a22caa7587b96aae6d34b6d38b5842d65}{see}}(\doxymbox{\hyperlink{class_board}{Board}}\ \&start,\ \doxymbox{\hyperlink{struct_position}{Position}}\ target,\ \textcolor{keywordtype}{int}\ sideToMove);}
+\DoxyCodeLine{00034\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{engine_8h_ada23a560b390521ef097aed78f8d9c07}{negamax}}(\doxymbox{\hyperlink{class_board}{Board}}\ \&board,\ \textcolor{keywordtype}{int}\ depth,\ \textcolor{keywordtype}{int}\ alpha,\ \textcolor{keywordtype}{int}\ beta,\ \textcolor{keywordtype}{int}\ color);}
+\DoxyCodeLine{00042\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{engine_8h_a84c565d83e6349abf15245a36084e6be}{eval}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_board}{Board}}\ \&board,\ \textcolor{keywordtype}{int}\ color);}
+\DoxyCodeLine{00048\ \textcolor{keywordtype}{long}\ \doxymbox{\hyperlink{engine_8h_a2d3eaaf6d4887ec01c547e98669003ed}{get\_nodes\_visited}}();}
+\DoxyCodeLine{00058\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{engine_8h_a91c63961112b3633045b79af292f87e0}{quiescence}}(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ alpha,\ \textcolor{keywordtype}{int}\ beta,\ \textcolor{keywordtype}{int}\ color);}
+\DoxyCodeLine{00067\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{engine_8h_acee68596d1e221265e5eb2bbc8466654}{isInCheck}}(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ color);}
 
 \end{DoxyCode}

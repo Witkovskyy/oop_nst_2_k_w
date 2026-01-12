@@ -1,5 +1,18 @@
 var searchData=
 [
-  ['quality_20assurance_0',['5. Zapewnienie Jakoœci (Quality Assurance)',['../md_requirements.html#autotoc_md20',1,'']]],
-  ['queen_1',['Queen',['../class_queen.html',1,'Queen'],['../class_queen.html#a871193f6eed26d03430cd1c7382a706a',1,'Queen::Queen()']]]
+  ['pawn_0',['Pawn',['../class_pawn.html',1,'Pawn'],['../class_pawn.html#a4924b36ac73aae85f9ccc13b1a7701c4',1,'Pawn::Pawn()']]],
+  ['pawn_2ecpp_1',['Pawn.cpp',['../_pawn_8cpp.html',1,'']]],
+  ['pawn_2eh_2',['Pawn.h',['../_pawn_8h.html',1,'']]],
+  ['piece_3',['Piece',['../class_piece.html',1,'Piece'],['../class_piece.html#a3228963526aa8741f9b709667a1b031a',1,'Piece::Piece()']]],
+  ['piece_20to_20a_20target_20square_4',['* &lt;b&gt;Mouse Drag &amp;amp; Drop:&lt;/b&gt; Move a piece to a target square.',['../md__r_e_a_d_m_e.html#autotoc_md13',1,'']]],
+  ['piece_2ecpp_5',['Piece.cpp',['../_piece_8cpp.html',1,'']]],
+  ['piece_2eh_6',['Piece.h',['../_piece_8h.html',1,'']]],
+  ['placepiece_7',['placePiece',['../class_board.html#a13d161d221daab2aa38ea6e97c4180f7',1,'Board']]],
+  ['position_8',['Position',['../struct_position.html',1,'']]],
+  ['positionhistory_9',['positionHistory',['../class_board.html#a526135b855df86c47ed8f145dacd5b68',1,'Board']]],
+  ['prerequisites_10',['Prerequisites',['../md__r_e_a_d_m_e.html#autotoc_md8',1,'']]],
+  ['probe_11',['probe',['../class_transposition_table.html#a282290f874e3ddc1afb67edcfb1d7b4a',1,'TranspositionTable']]],
+  ['project_12',['Chess Game Project',['../md__r_e_a_d_m_e.html',1,'']]],
+  ['project_20structure_13',['Project Structure',['../md__r_e_a_d_m_e.html#autotoc_md14',1,'']]],
+  ['promotepawn_14',['promotePawn',['../class_board.html#a14698ff863c063da0d11066fd1a34063',1,'Board']]]
 ];

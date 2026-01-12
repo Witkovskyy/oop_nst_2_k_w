@@ -1,3 +1,12 @@
+/**
+ * @file main.cpp
+ * @brief Main application file for the chess program.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>

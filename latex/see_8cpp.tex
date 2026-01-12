@@ -1,0 +1,81 @@
+\doxysection{src/\+engine/\+see.cpp File Reference}
+\hypertarget{see_8cpp}{}\label{see_8cpp}\index{src/engine/see.cpp@{src/engine/see.cpp}}
+
+
+File implementation for static exchange evaluation.  
+
+
+{\ttfamily \+\#include "{}../\+\+Piece.\+h"{}}\newline
+{\ttfamily \+\#include "{}../\+\+Board.\+h"{}}\newline
+{\ttfamily \+\#include "{}val.\+h"{}}\newline
+{\ttfamily \+\#include $<$algorithm$>$}\newline
+{\ttfamily \+\#include $<$vector$>$}\newline
+{\ttfamily \+\#include $<$cmath$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{see_8cpp_add01c0c69c619de2ddd1aa2875d4ec45}{is\+Valid}} (int r, int c)
+\begin{DoxyCompactList}\small\item\em Check whether valid. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{see_8cpp_af2dd0218cfc01452e1edb09078703c9e}{see}} (\doxymbox{\hyperlink{class_board}{Board}} \&board, \doxymbox{\hyperlink{struct_position}{Position}} target, int side\+To\+Move)
+\begin{DoxyCompactList}\small\item\em Perform see. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+File implementation for static exchange evaluation. 
+
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2026-\/01-\/12
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2026 
+\end{DoxyCopyright}
+
+
+\label{doc-func-members}
+\Hypertarget{see_8cpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{see_8cpp_add01c0c69c619de2ddd1aa2875d4ec45}\index{see.cpp@{see.cpp}!isValid@{isValid}}
+\index{isValid@{isValid}!see.cpp@{see.cpp}}
+\doxysubsubsection{\texorpdfstring{isValid()}{isValid()}}
+{\footnotesize\ttfamily \label{see_8cpp_add01c0c69c619de2ddd1aa2875d4ec45} 
+bool is\+Valid (\begin{DoxyParamCaption}\item[{int}]{r}{, }\item[{int}]{c}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Check whether valid. 
+
+Returns a boolean condition derived from current state/\+arguments. 
+\begin{DoxyParams}{Parameters}
+{\em r} & Parameter. \\
+\hline
+{\em c} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the condition holds; otherwise false. 
+\end{DoxyReturn}
+\Hypertarget{see_8cpp_af2dd0218cfc01452e1edb09078703c9e}\index{see.cpp@{see.cpp}!see@{see}}
+\index{see@{see}!see.cpp@{see.cpp}}
+\doxysubsubsection{\texorpdfstring{see()}{see()}}
+{\footnotesize\ttfamily \label{see_8cpp_af2dd0218cfc01452e1edb09078703c9e} 
+int see (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{\doxymbox{\hyperlink{struct_position}{Position}}}]{target}{, }\item[{int}]{side\+To\+Move}{}\end{DoxyParamCaption})}
+
+
+
+Perform see. 
+
+Implements the behavior implied by the function name. 
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state to operate on. \\
+\hline
+{\em target} & Parameter. \\
+\hline
+{\em side\+To\+Move} & \doxylink{struct_move}{Move} data/\+descriptor. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Integer result. 
+\end{DoxyReturn}

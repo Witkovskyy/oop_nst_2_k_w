@@ -1,9 +1,25 @@
-﻿#pragma once
+﻿/**
+ * @file Piece.h
+ * @brief File declaration for Piece base class.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
+#pragma once
 #include <iostream>
 using namespace std;
-
+/**
+ * @brief Structure to represent a position on the chess board.
+ * 
+ */
 class Board;
 
+/**
+ * @brief Structure to represent a position on the chess board.
+ * 
+ */
 struct Position {
     int row;
     int col;
@@ -11,6 +27,10 @@ struct Position {
 
 class Board;
 
+/**
+ * @brief Base class for all chess pieces.
+ * 
+ */
 class Piece
 {
     public:

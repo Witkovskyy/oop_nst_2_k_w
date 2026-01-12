@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['setcolor_0',['setColor',['../class_piece.html#af2c287ec576a41e3233eee71498fd088',1,'Piece']]],
-  ['setposition_1',['setPosition',['../class_piece.html#abc3df3d8bf0cc172cab42663ee50dc66',1,'Piece']]],
-  ['setsymbol_2',['setSymbol',['../class_piece.html#aa0da1ce9030714897518bb18a653b198',1,'Piece']]],
-  ['store_3',['store',['../class_transposition_table.html#a1712398fea56846c3a7709efc91cc68a',1,'TranspositionTable']]]
+  ['queen_0',['Queen',['../class_queen.html#a871193f6eed26d03430cd1c7382a706a',1,'Queen']]],
+  ['quiescence_1',['quiescence',['../engine_8h.html#a91c63961112b3633045b79af292f87e0',1,'quiescence(Board &amp;board, int alpha, int beta, int color):&#160;evalpos.cpp'],['../evalpos_8cpp.html#a91c63961112b3633045b79af292f87e0',1,'quiescence(Board &amp;board, int alpha, int beta, int color):&#160;evalpos.cpp']]]
 ];

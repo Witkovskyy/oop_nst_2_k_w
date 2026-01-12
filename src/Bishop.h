@@ -1,9 +1,22 @@
-﻿#pragma once
+﻿/**
+ * @file Bishop.h
+ * @brief F
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
+#pragma once
 #include <iostream>
 #include "Bishop.h"
 #include "Board.h"
 using namespace std;
 
+/**
+ * @brief Class for Bishop piece.
+ * 
+ */
 class Bishop : public Piece {
 private:
 	int direction;

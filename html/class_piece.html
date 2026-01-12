@@ -91,31 +91,36 @@ $(function(){initNavTree('class_piece.html','','class_piece-members'); });
   <div class="headertitle"><div class="title">Piece Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Base class for all chess pieces.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_piece_8h_source.html">Piece.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Piece:</div>
 <div class="dyncontent">
  <div class="center">
   <img src="class_piece.png" usemap="#Piece_map" alt=""/>
   <map id="Piece_map" name="Piece_map">
-<area href="class_bishop.html" alt="Bishop" shape="rect" coords="0,56,50,80"/>
-<area href="class_king.html" alt="King" shape="rect" coords="60,56,110,80"/>
-<area href="class_knight.html" alt="Knight" shape="rect" coords="120,56,170,80"/>
-<area href="class_pawn.html" alt="Pawn" shape="rect" coords="180,56,230,80"/>
-<area href="class_queen.html" alt="Queen" shape="rect" coords="240,56,290,80"/>
-<area href="class_rook.html" alt="Rook" shape="rect" coords="300,56,350,80"/>
+<area href="class_bishop.html" title="Class for Bishop piece." alt="Bishop" shape="rect" coords="0,56,50,80"/>
+<area href="class_king.html" title="Class for King piece." alt="King" shape="rect" coords="60,56,110,80"/>
+<area href="class_knight.html" title="Class for Knight piece." alt="Knight" shape="rect" coords="120,56,170,80"/>
+<area href="class_pawn.html" title="Class for Pawn piece." alt="Pawn" shape="rect" coords="180,56,230,80"/>
+<area href="class_queen.html" title="Class for Queen piece." alt="Queen" shape="rect" coords="240,56,290,80"/>
+<area href="class_rook.html" title="Class for Rook piece." alt="Rook" shape="rect" coords="300,56,350,80"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a3228963526aa8741f9b709667a1b031a" id="r_a3228963526aa8741f9b709667a1b031a"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a3228963526aa8741f9b709667a1b031a">Piece</a> (int, char, <a class="el" href="struct_position.html">Position</a>)</td></tr>
-<tr class="memdesc:a3228963526aa8741f9b709667a1b031a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_piece.html">Piece</a> method: piece.  <br /></td></tr>
+<tr class="memdesc:a3228963526aa8741f9b709667a1b031a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_piece.html" title="Base class for all chess pieces.">Piece</a> method: piece.  <br /></td></tr>
 <tr class="memitem:aea7551fe5db16dbe6e4580863f918321" id="r_aea7551fe5db16dbe6e4580863f918321"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#aea7551fe5db16dbe6e4580863f918321">getColor</a> ()</td></tr>
 <tr class="memdesc:aea7551fe5db16dbe6e4580863f918321"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get color.  <br /></td></tr>
 <tr class="memitem:abced8ed2c10f60fe904ed839296cc102" id="r_abced8ed2c10f60fe904ed839296cc102"><td class="memItemLeft">char&#160;</td><td class="memItemRight"><a class="el" href="#abced8ed2c10f60fe904ed839296cc102">getSymbol</a> ()</td></tr>
 <tr class="memdesc:abced8ed2c10f60fe904ed839296cc102"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the Symbol object.  <br /></td></tr>
 <tr class="memitem:a2dee0ebeffdb733e17574471c441e06d" id="r_a2dee0ebeffdb733e17574471c441e06d"><td class="memItemLeft"><a class="el" href="struct_position.html">Position</a>&#160;</td><td class="memItemRight"><a class="el" href="#a2dee0ebeffdb733e17574471c441e06d">getPosition</a> ()</td></tr>
-<tr class="memdesc:a2dee0ebeffdb733e17574471c441e06d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="struct_position.html">Position</a> object.  <br /></td></tr>
+<tr class="memdesc:a2dee0ebeffdb733e17574471c441e06d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="struct_position.html" title="Structure to represent a position on the chess board.">Position</a> object.  <br /></td></tr>
 <tr class="memitem:af2c287ec576a41e3233eee71498fd088" id="r_af2c287ec576a41e3233eee71498fd088"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#af2c287ec576a41e3233eee71498fd088">setColor</a> (int c)</td></tr>
 <tr class="memdesc:af2c287ec576a41e3233eee71498fd088"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set color.  <br /></td></tr>
 <tr class="memitem:aa0da1ce9030714897518bb18a653b198" id="r_aa0da1ce9030714897518bb18a653b198"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aa0da1ce9030714897518bb18a653b198">setSymbol</a> (char s)</td></tr>
@@ -140,7 +145,9 @@ char&#160;</td><td class="memItemRight"><b>symbol</b></td></tr>
 int&#160;</td><td class="memItemRight"><b>value</b></td></tr>
 <tr class="memdesc:a0b8fce3f4b7dbd1d46be9004fda383ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Value of the piece. <br /></td></tr>
 </table>
-<a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Base class for all chess pieces. </p>
+</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a3228963526aa8741f9b709667a1b031a" name="a3228963526aa8741f9b709667a1b031a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3228963526aa8741f9b709667a1b031a">&#9670;&#160;</a></span>Piece()</h2>
 
@@ -165,11 +172,11 @@ int&#160;</td><td class="memItemRight"><b>value</b></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p><a class="el" href="class_piece.html">Piece</a> method: piece. </p>
+<p><a class="el" href="class_piece.html" title="Base class for all chess pieces.">Piece</a> method: piece. </p>
 <p>Get color.</p>
 <p>Applies to a single chess piece instance. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname"><a class="el" href="struct_position.html">Position</a></td><td><a class="el" href="class_board.html">Board</a> position/index. </td></tr>
+    <tr><td class="paramname"><a class="el" href="struct_position.html" title="Structure to represent a position on the chess board.">Position</a></td><td><a class="el" href="class_board.html" title="Class for Board.">Board</a> position/index. </td></tr>
   </table>
   </dd>
 </dl>
@@ -228,8 +235,8 @@ int&#160;</td><td class="memItemRight"><b>value</b></td></tr>
 false If the move is not valid.</dd></dl>
 <p>Validates movement pattern for the specific piece type. Additional game rules (e.g., leaving king in check) are handled elsewhere. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">newPos</td><td><a class="el" href="class_board.html">Board</a> position/index. </td></tr>
-    <tr><td class="paramname">board</td><td><a class="el" href="class_board.html">Board</a> state to operate on. </td></tr>
+    <tr><td class="paramname">newPos</td><td><a class="el" href="class_board.html" title="Class for Board.">Board</a> position/index. </td></tr>
+    <tr><td class="paramname">board</td><td><a class="el" href="class_board.html" title="Class for Board.">Board</a> state to operate on. </td></tr>
   </table>
   </dd>
 </dl>
@@ -274,9 +281,9 @@ false If the move is not valid.</dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p>Get the <a class="el" href="struct_position.html">Position</a> object. </p>
+<p>Get the <a class="el" href="struct_position.html" title="Structure to represent a position on the chess board.">Position</a> object. </p>
 <p>Get position.</p>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="struct_position.html">Position</a></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="struct_position.html" title="Structure to represent a position on the chess board.">Position</a></dd></dl>
 <p>Applies to a single chess piece instance. </p><dl class="section return"><dt>Returns</dt><dd>Requested value. </dd></dl>
 
 </div>
@@ -344,7 +351,7 @@ false If the move is not valid.</dd></dl>
 <p>Set position. </p>
 <p>Applies to a single chess piece instance. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">setPos</td><td><a class="el" href="class_board.html">Board</a> position/index. </td></tr>
+    <tr><td class="paramname">setPos</td><td><a class="el" href="class_board.html" title="Class for Board.">Board</a> position/index. </td></tr>
   </table>
   </dd>
 </dl>
@@ -385,7 +392,7 @@ false If the move is not valid.</dd></dl>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/<a class="el" href="_piece_8h_source.html">Piece.h</a></li>
-<li>src/<b>Piece.cpp</b></li>
+<li>src/<a class="el" href="_piece_8cpp.html">Piece.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

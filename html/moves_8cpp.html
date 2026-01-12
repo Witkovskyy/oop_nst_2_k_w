@@ -94,18 +94,18 @@ $(function(){initNavTree('moves_8cpp.html','',''); });
 
 <p>Pseudo-legal move generation (quiet moves and captures).  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;../Board.h&quot;</code><br />
-<code>#include &quot;moves.h&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="_board_8h_source.html">../Board.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="moves_8h_source.html">moves.h</a>&quot;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;cctype&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
-<code>#include &quot;../Piece.h&quot;</code><br />
-<code>#include &quot;../Pawn.h&quot;</code><br />
-<code>#include &quot;../kNight.h&quot;</code><br />
-<code>#include &quot;../Bishop.h&quot;</code><br />
-<code>#include &quot;../Rook.h&quot;</code><br />
-<code>#include &quot;../Queen.h&quot;</code><br />
-<code>#include &quot;../King.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="_piece_8h_source.html">../Piece.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_pawn_8h_source.html">../Pawn.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="k_night_8h_source.html">../kNight.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_bishop_8h_source.html">../Bishop.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_rook_8h_source.html">../Rook.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_queen_8h_source.html">../Queen.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_king_8h_source.html">../King.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -119,7 +119,7 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Pseudo-legal move generation (quiet moves and captures). </p>
 <p>This file generates pseudo-legal moves for each piece type. "Pseudo-legal" means: the moves follow piece movement rules, but may still leave the moving side in check.</p>
-<p>The legality filtering is performed in <a class="el" href="evalpos_8cpp_source.html">evalpos.cpp</a> (legalMoves()), which applies a move and rejects it if the king is left in check.</p>
+<p>The legality filtering is performed in <a class="el" href="evalpos_8cpp.html" title="File implementation for position evaluation.">evalpos.cpp</a> (legalMoves()), which applies a move and rejects it if the king is left in check.</p>
 <p>Current limitations:</p><ul>
 <li>No castling rights / castling moves are generated.</li>
 <li>No en-passant capture is generated.</li>
@@ -149,7 +149,7 @@ Functions</h2></td></tr>
 <p>Perform generate capture moves.</p>
 <p>Implements the behavior implied by the function name. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">board</td><td><a class="el" href="class_board.html">Board</a> state to operate on. </td></tr>
+    <tr><td class="paramname">board</td><td><a class="el" href="class_board.html" title="Class for Board.">Board</a> state to operate on. </td></tr>
     <tr><td class="paramname">color</td><td>Side/color parameter. </td></tr>
   </table>
   </dd>
@@ -180,7 +180,7 @@ Functions</h2></td></tr>
 <p>Perform generate quiet moves. </p>
 <p>Implements the behavior implied by the function name. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">board</td><td><a class="el" href="class_board.html">Board</a> state to operate on. </td></tr>
+    <tr><td class="paramname">board</td><td><a class="el" href="class_board.html" title="Class for Board.">Board</a> state to operate on. </td></tr>
     <tr><td class="paramname">color</td><td>Side/color parameter. </td></tr>
   </table>
   </dd>

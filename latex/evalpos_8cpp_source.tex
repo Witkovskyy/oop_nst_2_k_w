@@ -1,535 +1,536 @@
 \doxysection{evalpos.\+cpp}
 \hypertarget{evalpos_8cpp_source}{}\label{evalpos_8cpp_source}\index{src/engine/evalpos.cpp@{src/engine/evalpos.cpp}}
-
+\doxymbox{\hyperlink{evalpos_8cpp}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ "{}../Board.h"{}}}
-\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ "{}val.h"{}}}
-\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}moves.h"{}}}
-\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <algorithm>}}
-\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <vector>}}
-\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <limits>}}
-\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}logger/logger.h"{}}}
-\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <string>}}
-\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}tables/zobrist.h"{}}}
-\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}tables/TT.h"{}}}
-\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}engine.h"{}}}
-\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <cctype>}\ \textcolor{comment}{//\ Necessary\ for\ toupper}}
-\DoxyCodeLine{00013\ }
-\DoxyCodeLine{00014\ \textcolor{comment}{//\ count\ nodes\ visited\ by\ negamax}}
-\DoxyCodeLine{00015\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{long}\ nodesVisited\ =\ 0;}
-\DoxyCodeLine{00022\ \textcolor{keywordtype}{long}\ get\_nodes\_visited()\ \{\ \textcolor{keywordflow}{return}\ nodesVisited;\ \}}
-\DoxyCodeLine{00023\ }
-\DoxyCodeLine{00031\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ to01(\textcolor{keywordtype}{int}\ sign)\ \{\ \textcolor{keywordflow}{return}\ sign\ >\ 0\ ?\ 0\ :\ 1;\ \}}
-\DoxyCodeLine{00032\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ toSign(\textcolor{keywordtype}{int}\ color01)\ \{\ \textcolor{keywordflow}{return}\ color01\ ==\ 0\ ?\ +1\ :\ -\/1;\ \}}
-\DoxyCodeLine{00033\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ isValidPos(\textcolor{keywordtype}{int}\ r,\ \textcolor{keywordtype}{int}\ c)\ \{\ \textcolor{keywordflow}{return}\ r\ >=\ 0\ \&\&\ r\ <\ 8\ \&\&\ c\ >=\ 0\ \&\&\ c\ <\ 8;\ \}}
-\DoxyCodeLine{00043\ \textcolor{keywordtype}{int}\ getPstValue(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ table[8][8],\ \textcolor{keywordtype}{int}\ row,\ \textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ color)}
-\DoxyCodeLine{00044\ \{}
-\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordflow}{if}\ (color\ ==\ 0)\ \textcolor{comment}{//\ WHITE}}
-\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ table[7\ -\/\ row][col];}
-\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{comment}{//\ BLACK}}
-\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ table[row][col];}
-\DoxyCodeLine{00049\ \}}
-\DoxyCodeLine{00054\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_undo}{Undo}}}
-\DoxyCodeLine{00055\ \{}
-\DoxyCodeLine{00056\ \ \ \ \ \doxymbox{\hyperlink{struct_position}{Position}}\ from;}
-\DoxyCodeLine{00057\ \ \ \ \ \doxymbox{\hyperlink{struct_position}{Position}}\ to;}
-\DoxyCodeLine{00058\ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ pieceMoved;}
-\DoxyCodeLine{00059\ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ pieceCaptured;}
-\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{char}\ promotion;}
-\DoxyCodeLine{00061\ \};}
-\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_board_8h}{../Board.h}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{val_8h}{val.h}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{moves_8h}{moves.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{logger_8h}{logger/logger.h}}"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{zobrist_8h}{tables/zobrist.h}}"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_t_t_8h}{tables/TT.h}}"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{engine_8h}{engine.h}}"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <cctype>}\ \textcolor{comment}{//\ Necessary\ for\ toupper}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ count\ nodes\ visited\ by\ negamax}}
+\DoxyCodeLine{00024\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{long}\ nodesVisited\ =\ 0;}
+\DoxyCodeLine{00031\ \textcolor{keywordtype}{long}\ \doxymbox{\hyperlink{evalpos_8cpp_a2d3eaaf6d4887ec01c547e98669003ed}{get\_nodes\_visited}}()\ \{\ \textcolor{keywordflow}{return}\ nodesVisited;\ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{evalpos_8cpp_a2b6878db0622c13b834d01fd28a7e2bd}{to01}}(\textcolor{keywordtype}{int}\ sign)\ \{\ \textcolor{keywordflow}{return}\ sign\ >\ 0\ ?\ 0\ :\ 1;\ \}}
+\DoxyCodeLine{00041\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ toSign(\textcolor{keywordtype}{int}\ color01)\ \{\ \textcolor{keywordflow}{return}\ color01\ ==\ 0\ ?\ +1\ :\ -\/1;\ \}}
+\DoxyCodeLine{00042\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ isValidPos(\textcolor{keywordtype}{int}\ r,\ \textcolor{keywordtype}{int}\ c)\ \{\ \textcolor{keywordflow}{return}\ r\ >=\ 0\ \&\&\ r\ <\ 8\ \&\&\ c\ >=\ 0\ \&\&\ c\ <\ 8;\ \}}
+\DoxyCodeLine{00052\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{evalpos_8cpp_a2c613b4f2172fac4bad217a0735a3db2}{getPstValue}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ table[8][8],\ \textcolor{keywordtype}{int}\ row,\ \textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ color)}
+\DoxyCodeLine{00053\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordflow}{if}\ (color\ ==\ 0)\ \textcolor{comment}{//\ WHITE}}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ table[7\ -\/\ row][col];}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{comment}{//\ BLACK}}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ table[row][col];}
+\DoxyCodeLine{00058\ \}}
+\DoxyCodeLine{00063\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_undo}{Undo}}}
+\DoxyCodeLine{00064\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \doxymbox{\hyperlink{struct_position}{Position}}\ from;}
+\DoxyCodeLine{00066\ \ \ \ \ \doxymbox{\hyperlink{struct_position}{Position}}\ to;}
+\DoxyCodeLine{00067\ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ pieceMoved;}
+\DoxyCodeLine{00068\ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ pieceCaptured;}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{char}\ promotion;}
+\DoxyCodeLine{00070\ \};}
 \DoxyCodeLine{00071\ }
-\DoxyCodeLine{00072\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ undoMove(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_move}{Move}}\&\ move,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_undo}{Undo}}\&\ undo)}
-\DoxyCodeLine{00073\ \{}
-\DoxyCodeLine{00074\ \ \ \ \ board.squares[move.from.row][move.from.col]\ =\ undo.pieceMoved;}
-\DoxyCodeLine{00075\ \ \ \ \ board.squares[move.to.row][move.to.col]\ =\ undo.pieceCaptured;}
-\DoxyCodeLine{00076\ }
-\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordflow}{if}\ (undo.pieceMoved)\ \{}
-\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ undo.pieceMoved-\/>\doxymbox{\hyperlink{class_piece_abc3df3d8bf0cc172cab42663ee50dc66}{setPosition}}(move.from);}
-\DoxyCodeLine{00079\ \ \ \ \ \}}
-\DoxyCodeLine{00080\ \ \ \ \ \textcolor{comment}{//\ Double\ check\ for\ captured\ piece}}
-\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordflow}{if}\ (undo.pieceCaptured)\ \{}
-\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ undo.pieceCaptured-\/>\doxymbox{\hyperlink{class_piece_abc3df3d8bf0cc172cab42663ee50dc66}{setPosition}}(move.to);}
-\DoxyCodeLine{00083\ \ \ \ \ \}}
-\DoxyCodeLine{00084\ \ \ \ \ \textcolor{comment}{//\ Handle\ promotion\ revert}}
-\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordflow}{if}\ (move.promotion\ !=\ 0)\ \{}
-\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ undo.pieceMoved-\/>\doxymbox{\hyperlink{class_piece_aa0da1ce9030714897518bb18a653b198}{setSymbol}}(\textcolor{charliteral}{'P'});}
-\DoxyCodeLine{00087\ \ \ \ \ \}}
-\DoxyCodeLine{00088\ }
-\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{int}\ fromSq\ =\ move.from.row\ *\ 8\ +\ move.from.col;}
-\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{int}\ toSq\ =\ move.to.row\ *\ 8\ +\ move.to.col;}
-\DoxyCodeLine{00091\ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ undo.pieceMoved;\ \textcolor{comment}{//\ Piece\ that\ moved}}
-\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordtype}{int}\ pIdx\ =\ getPieceIndex(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}(),\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}());}
-\DoxyCodeLine{00093\ }
-\DoxyCodeLine{00094\ \ \ \ \ \textcolor{comment}{//\ Revert\ side}}
-\DoxyCodeLine{00095\ \ \ \ \ board.zobristKey\ \string^=\ sideKey;}
-\DoxyCodeLine{00096\ }
-\DoxyCodeLine{00097\ \ \ \ \ \textcolor{comment}{//\ Bring\ back\ the\ Zobrist\ key}}
-\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordflow}{if}\ (move.promotion\ !=\ 0)\ \{}
-\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ promoIdx\ =\ getPieceIndex(move.promotion,\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}());}
-\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ board.zobristKey\ \string^=\ pieceKeys[promoIdx][toSq];}
-\DoxyCodeLine{00101\ \ \ \ \ \}}
-\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ board.zobristKey\ \string^=\ pieceKeys[pIdx][toSq];}
-\DoxyCodeLine{00104\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ undoMove(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_move}{Move}}\&\ move,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_undo}{Undo}}\&\ undo)}
+\DoxyCodeLine{00082\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ board.squares[move.from.row][move.from.col]\ =\ undo.pieceMoved;}
+\DoxyCodeLine{00084\ \ \ \ \ board.squares[move.to.row][move.to.col]\ =\ undo.pieceCaptured;}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordflow}{if}\ (undo.pieceMoved)\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ undo.pieceMoved-\/>\doxymbox{\hyperlink{class_piece_abc3df3d8bf0cc172cab42663ee50dc66}{setPosition}}(move.from);}
+\DoxyCodeLine{00088\ \ \ \ \ \}}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{comment}{//\ Double\ check\ for\ captured\ piece}}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordflow}{if}\ (undo.pieceCaptured)\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ undo.pieceCaptured-\/>\doxymbox{\hyperlink{class_piece_abc3df3d8bf0cc172cab42663ee50dc66}{setPosition}}(move.to);}
+\DoxyCodeLine{00092\ \ \ \ \ \}}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{comment}{//\ Handle\ promotion\ revert}}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordflow}{if}\ (move.promotion\ !=\ 0)\ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ undo.pieceMoved-\/>\doxymbox{\hyperlink{class_piece_aa0da1ce9030714897518bb18a653b198}{setSymbol}}(\textcolor{charliteral}{'P'});}
+\DoxyCodeLine{00096\ \ \ \ \ \}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordtype}{int}\ fromSq\ =\ move.from.row\ *\ 8\ +\ move.from.col;}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{int}\ toSq\ =\ move.to.row\ *\ 8\ +\ move.to.col;}
+\DoxyCodeLine{00100\ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ undo.pieceMoved;\ \textcolor{comment}{//\ Piece\ that\ moved}}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordtype}{int}\ pIdx\ =\ \doxymbox{\hyperlink{zobrist_8h_aaeb6c6faaa8a9ac32280044ce72ecd06}{getPieceIndex}}(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}(),\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}());}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{comment}{//\ Revert\ side}}
+\DoxyCodeLine{00104\ \ \ \ \ board.zobristKey\ \string^=\ sideKey;}
 \DoxyCodeLine{00105\ }
-\DoxyCodeLine{00106\ \ \ \ \ \textcolor{comment}{//\ Revert\ captured}}
-\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordflow}{if}\ (undo.pieceCaptured)\ \{}
-\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ capIdx\ =\ getPieceIndex(undo.pieceCaptured-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}(),\ undo.pieceCaptured-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}());}
-\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ board.zobristKey\ \string^=\ pieceKeys[capIdx][toSq];}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{comment}{//\ Bring\ back\ the\ Zobrist\ key}}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordflow}{if}\ (move.promotion\ !=\ 0)\ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ promoIdx\ =\ \doxymbox{\hyperlink{zobrist_8h_aaeb6c6faaa8a9ac32280044ce72ecd06}{getPieceIndex}}(move.promotion,\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}());}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ board.zobristKey\ \string^=\ pieceKeys[promoIdx][toSq];}
 \DoxyCodeLine{00110\ \ \ \ \ \}}
-\DoxyCodeLine{00111\ }
-\DoxyCodeLine{00112\ \ \ \ \ \textcolor{comment}{//\ Insert\ piece\ back}}
-\DoxyCodeLine{00113\ \ \ \ \ board.zobristKey\ \string^=\ pieceKeys[pIdx][fromSq];}
-\DoxyCodeLine{00114\ \}}
-\DoxyCodeLine{00115\ }
-\DoxyCodeLine{00134\ }
-\DoxyCodeLine{00135\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ applyMove(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_move}{Move}}\&\ move,\ \doxymbox{\hyperlink{struct_undo}{Undo}}\&\ undo)}
-\DoxyCodeLine{00136\ \{}
-\DoxyCodeLine{00137\ \ \ \ \ undo.from\ =\ move.from;}
-\DoxyCodeLine{00138\ \ \ \ \ undo.to\ =\ move.to;}
-\DoxyCodeLine{00139\ \ \ \ \ undo.pieceMoved\ =\ board.\doxymbox{\hyperlink{class_board_a23f7eb70ef7d46d63b5c4c77f1f6cd2b}{getPieceAt}}(move.from);}
-\DoxyCodeLine{00140\ \ \ \ \ undo.pieceCaptured\ =\ board.\doxymbox{\hyperlink{class_board_a23f7eb70ef7d46d63b5c4c77f1f6cd2b}{getPieceAt}}(move.to);\ \textcolor{comment}{//\ Might\ be\ nullptr}}
-\DoxyCodeLine{00141\ \ \ \ \ undo.promotion\ =\ move.promotion;}
-\DoxyCodeLine{00142\ }
-\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordtype}{int}\ fromSq\ =\ move.from.row\ *\ 8\ +\ move.from.col;}
-\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordtype}{int}\ toSq\ =\ move.to.row\ *\ 8\ +\ move.to.col;}
-\DoxyCodeLine{00145\ }
-\DoxyCodeLine{00146\ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.\doxymbox{\hyperlink{class_board_a23f7eb70ef7d46d63b5c4c77f1f6cd2b}{getPieceAt}}(move.from);}
-\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordtype}{int}\ pIdx\ =\ getPieceIndex(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}(),\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}());}
-\DoxyCodeLine{00148\ }
-\DoxyCodeLine{00149\ \ \ \ \ \textcolor{comment}{//\ Zobrist\ remove\ piece}}
-\DoxyCodeLine{00150\ \ \ \ \ board.zobristKey\ \string^=\ pieceKeys[pIdx][fromSq];}
-\DoxyCodeLine{00151\ \ \ \ \ \textcolor{comment}{//\ Zobrist\ If\ captured,\ remove\ captured\ piece\ }}
-\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordflow}{if}\ (undo.pieceCaptured)\ \{}
-\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ capIdx\ =\ getPieceIndex(undo.pieceCaptured-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}(),\ undo.pieceCaptured-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}());}
-\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ board.zobristKey\ \string^=\ pieceKeys[capIdx][toSq];}
-\DoxyCodeLine{00155\ \ \ \ \ \}}
-\DoxyCodeLine{00156\ }
-\DoxyCodeLine{00157\ \ \ \ \ \textcolor{comment}{//\ Zobrist\ insert\ piece}}
-\DoxyCodeLine{00158\ \ \ \ \ \textcolor{comment}{//\ If\ promoted\ put\ new\ figure}}
-\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keywordflow}{if}\ (move.promotion\ !=\ 0)\ \{}
-\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ promoIdx\ =\ getPieceIndex(move.promotion,\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}());}
-\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ board.zobristKey\ \string^=\ pieceKeys[promoIdx][toSq];}
-\DoxyCodeLine{00162\ \ \ \ \ \}}
-\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ board.zobristKey\ \string^=\ pieceKeys[pIdx][toSq];}
-\DoxyCodeLine{00165\ \ \ \ \ \}}
-\DoxyCodeLine{00166\ }
-\DoxyCodeLine{00167\ \ \ \ \ \textcolor{comment}{//\ Switch\ side}}
-\DoxyCodeLine{00168\ \ \ \ \ board.zobristKey\ \string^=\ sideKey;}
-\DoxyCodeLine{00169\ }
-\DoxyCodeLine{00170\ \ \ \ \ \textcolor{comment}{//\ Raw\ move\ application}}
-\DoxyCodeLine{00171\ \ \ \ \ \textcolor{comment}{//\ Delete\ piece}}
-\DoxyCodeLine{00172\ \ \ \ \ board.squares[move.from.row][move.from.col]\ =\ \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{00173\ \ \ \ \ \textcolor{comment}{//\ Place\ piece}}
-\DoxyCodeLine{00174\ \ \ \ \ board.squares[move.to.row][move.to.col]\ =\ undo.pieceMoved;}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ board.zobristKey\ \string^=\ pieceKeys[pIdx][toSq];}
+\DoxyCodeLine{00113\ \ \ \ \ \}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{comment}{//\ Revert\ captured}}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordflow}{if}\ (undo.pieceCaptured)\ \{}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ capIdx\ =\ \doxymbox{\hyperlink{zobrist_8h_aaeb6c6faaa8a9ac32280044ce72ecd06}{getPieceIndex}}(undo.pieceCaptured-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}(),\ undo.pieceCaptured-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}());}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ board.zobristKey\ \string^=\ pieceKeys[capIdx][toSq];}
+\DoxyCodeLine{00119\ \ \ \ \ \}}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{comment}{//\ Insert\ piece\ back}}
+\DoxyCodeLine{00122\ \ \ \ \ board.zobristKey\ \string^=\ pieceKeys[pIdx][fromSq];}
+\DoxyCodeLine{00123\ \}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ applyMove(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_move}{Move}}\&\ move,\ \doxymbox{\hyperlink{struct_undo}{Undo}}\&\ undo)}
+\DoxyCodeLine{00145\ \{}
+\DoxyCodeLine{00146\ \ \ \ \ undo.from\ =\ move.from;}
+\DoxyCodeLine{00147\ \ \ \ \ undo.to\ =\ move.to;}
+\DoxyCodeLine{00148\ \ \ \ \ undo.pieceMoved\ =\ board.\doxymbox{\hyperlink{class_board_a23f7eb70ef7d46d63b5c4c77f1f6cd2b}{getPieceAt}}(move.from);}
+\DoxyCodeLine{00149\ \ \ \ \ undo.pieceCaptured\ =\ board.\doxymbox{\hyperlink{class_board_a23f7eb70ef7d46d63b5c4c77f1f6cd2b}{getPieceAt}}(move.to);\ \textcolor{comment}{//\ Might\ be\ nullptr}}
+\DoxyCodeLine{00150\ \ \ \ \ undo.promotion\ =\ move.promotion;}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordtype}{int}\ fromSq\ =\ move.from.row\ *\ 8\ +\ move.from.col;}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordtype}{int}\ toSq\ =\ move.to.row\ *\ 8\ +\ move.to.col;}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.\doxymbox{\hyperlink{class_board_a23f7eb70ef7d46d63b5c4c77f1f6cd2b}{getPieceAt}}(move.from);}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keywordtype}{int}\ pIdx\ =\ \doxymbox{\hyperlink{zobrist_8h_aaeb6c6faaa8a9ac32280044ce72ecd06}{getPieceIndex}}(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}(),\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}());}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{comment}{//\ Zobrist\ remove\ piece}}
+\DoxyCodeLine{00159\ \ \ \ \ board.zobristKey\ \string^=\ pieceKeys[pIdx][fromSq];}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{comment}{//\ Zobrist\ If\ captured,\ remove\ captured\ piece\ }}
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keywordflow}{if}\ (undo.pieceCaptured)\ \{}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ capIdx\ =\ \doxymbox{\hyperlink{zobrist_8h_aaeb6c6faaa8a9ac32280044ce72ecd06}{getPieceIndex}}(undo.pieceCaptured-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}(),\ undo.pieceCaptured-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}());}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ board.zobristKey\ \string^=\ pieceKeys[capIdx][toSq];}
+\DoxyCodeLine{00164\ \ \ \ \ \}}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{comment}{//\ Zobrist\ insert\ piece}}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{comment}{//\ If\ promoted\ put\ new\ figure}}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keywordflow}{if}\ (move.promotion\ !=\ 0)\ \{}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ promoIdx\ =\ \doxymbox{\hyperlink{zobrist_8h_aaeb6c6faaa8a9ac32280044ce72ecd06}{getPieceIndex}}(move.promotion,\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}());}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ board.zobristKey\ \string^=\ pieceKeys[promoIdx][toSq];}
+\DoxyCodeLine{00171\ \ \ \ \ \}}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ board.zobristKey\ \string^=\ pieceKeys[pIdx][toSq];}
+\DoxyCodeLine{00174\ \ \ \ \ \}}
 \DoxyCodeLine{00175\ }
-\DoxyCodeLine{00176\ \ \ \ \ \textcolor{comment}{//\ Update\ piece\ position}}
-\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keywordflow}{if}\ (undo.pieceMoved)\ \{}
-\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ undo.pieceMoved-\/>\doxymbox{\hyperlink{class_piece_abc3df3d8bf0cc172cab42663ee50dc66}{setPosition}}(move.to);}
-\DoxyCodeLine{00179\ \ \ \ \ \}}
-\DoxyCodeLine{00180\ \ \ \ \ \textcolor{comment}{//\ Handle\ promotion}}
-\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keywordflow}{if}\ (move.promotion\ !=\ 0)\ \{}
-\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ undo.pieceMoved-\/>\doxymbox{\hyperlink{class_piece_aa0da1ce9030714897518bb18a653b198}{setSymbol}}(move.promotion);}
-\DoxyCodeLine{00183\ \ \ \ \ \}}
-\DoxyCodeLine{00184\ \}}
-\DoxyCodeLine{00185\ }
-\DoxyCodeLine{00195\ }
-\DoxyCodeLine{00196\ \textcolor{comment}{//\ ROBUST\ implementation\ of\ isSquareAttacked\ (with\ explicit\ loops\ for\ safety)}}
-\DoxyCodeLine{00197\ \textcolor{keywordtype}{bool}\ isSquareAttacked(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \doxymbox{\hyperlink{struct_position}{Position}}\ pos,\ \textcolor{keywordtype}{int}\ attackerColor)}
-\DoxyCodeLine{00198\ \{}
-\DoxyCodeLine{00199\ \ \ \ \ \textcolor{comment}{//\ 1.\ Pawn\ attacks}}
-\DoxyCodeLine{00200\ \ \ \ \ \textcolor{comment}{//\ If\ attacker\ is\ White\ (0),\ pawn\ must\ be\ 'below'\ (row-\/1)\ attacking\ up.}}
-\DoxyCodeLine{00201\ \ \ \ \ \textcolor{comment}{//\ If\ attacker\ is\ Black\ (1),\ pawn\ must\ be\ 'above'\ (row+1)\ attacking\ down.}}
-\DoxyCodeLine{00202\ \ \ \ \ \textcolor{keywordtype}{int}\ pawnRow\ =\ (attackerColor\ ==\ 0)\ ?\ pos.row\ -\/\ 1\ :\ pos.row\ +\ 1;}
-\DoxyCodeLine{00203\ }
-\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keywordflow}{if}\ (pawnRow\ >=\ 0\ \&\&\ pawnRow\ <\ 8)\ \{}
-\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Attack\ from\ left\ diagonal}}
-\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pos.col\ -\/\ 1\ >=\ 0)\ \{}
-\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[pawnRow][pos.col\ -\/\ 1];}
-\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ \&\&\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor\ \&\&\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}())\ ==\ \textcolor{charliteral}{'P'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Attack\ from\ right\ diagonal}}
-\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pos.col\ +\ 1\ <\ 8)\ \{}
-\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[pawnRow][pos.col\ +\ 1];}
-\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ \&\&\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor\ \&\&\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}())\ ==\ \textcolor{charliteral}{'P'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00215\ \ \ \ \ \}}
-\DoxyCodeLine{00216\ }
-\DoxyCodeLine{00217\ \ \ \ \ \textcolor{comment}{//\ 2.\ Knight\ attacks}}
-\DoxyCodeLine{00218\ \ \ \ \ \textcolor{comment}{//\ Manual\ unroll\ for\ safety\ to\ avoid\ vector\ overhead\ or\ index\ mistakes}}
-\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ kDr[]\ =\ \{\ 2,\ 1,\ -\/1,\ -\/2,\ -\/2,\ -\/1,\ 1,\ 2\ \};}
-\DoxyCodeLine{00220\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ kDc[]\ =\ \{\ 1,\ 2,\ 2,\ 1,\ -\/1,\ -\/2,\ -\/2,\ -\/1\ \};}
-\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 8;\ ++i)\ \{}
-\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ pos.row\ +\ kDr[i];}
-\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ c\ =\ pos.col\ +\ kDc[i];}
-\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isValidPos(r,\ c))\ \{}
-\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][c];}
-\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ \&\&\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor\ \&\&\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}())\ ==\ \textcolor{charliteral}{'N'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00228\ \ \ \ \ \}}
-\DoxyCodeLine{00229\ }
-\DoxyCodeLine{00230\ \ \ \ \ \textcolor{comment}{//\ 3.\ Sliding\ attacks\ (ROOK\ /\ QUEEN)\ -\/\ Explicit\ Loops}}
-\DoxyCodeLine{00231\ \ \ \ \ \textcolor{comment}{//\ UP}}
-\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ r\ =\ pos.row\ +\ 1;\ r\ <\ 8;\ ++r)\ \{}
-\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][pos.col];}
-\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p)\ \{}
-\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor)\ \{}
-\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ s\ =\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
-\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (s\ ==\ \textcolor{charliteral}{'R'}\ ||\ s\ ==\ \textcolor{charliteral}{'Q'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \textcolor{comment}{//\ Blocked}}
-\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00241\ \ \ \ \ \}}
-\DoxyCodeLine{00242\ \ \ \ \ \textcolor{comment}{//\ DOWN}}
-\DoxyCodeLine{00243\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ r\ =\ pos.row\ -\/\ 1;\ r\ >=\ 0;\ -\/-\/r)\ \{}
-\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][pos.col];}
-\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p)\ \{}
-\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor)\ \{}
-\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ s\ =\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
-\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (s\ ==\ \textcolor{charliteral}{'R'}\ ||\ s\ ==\ \textcolor{charliteral}{'Q'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \textcolor{comment}{//\ Blocked}}
-\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00252\ \ \ \ \ \}}
-\DoxyCodeLine{00253\ \ \ \ \ \textcolor{comment}{//\ RIGHT}}
-\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ c\ =\ pos.col\ +\ 1;\ c\ <\ 8;\ ++c)\ \{}
-\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[pos.row][c];}
-\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p)\ \{}
-\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor)\ \{}
-\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ s\ =\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
-\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (s\ ==\ \textcolor{charliteral}{'R'}\ ||\ s\ ==\ \textcolor{charliteral}{'Q'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \textcolor{comment}{//\ Blocked}}
-\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00263\ \ \ \ \ \}}
-\DoxyCodeLine{00264\ \ \ \ \ \textcolor{comment}{//\ LEFT}}
-\DoxyCodeLine{00265\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ c\ =\ pos.col\ -\/\ 1;\ c\ >=\ 0;\ -\/-\/c)\ \{}
-\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[pos.row][c];}
-\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p)\ \{}
-\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor)\ \{}
-\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ s\ =\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
-\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (s\ ==\ \textcolor{charliteral}{'R'}\ ||\ s\ ==\ \textcolor{charliteral}{'Q'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \textcolor{comment}{//\ Blocked}}
-\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00274\ \ \ \ \ \}}
-\DoxyCodeLine{00275\ }
-\DoxyCodeLine{00276\ \ \ \ \ \textcolor{comment}{//\ 4.\ Sliding\ attacks\ (BISHOP\ /\ QUEEN)\ -\/\ Explicit\ Loops}}
-\DoxyCodeLine{00277\ \ \ \ \ \textcolor{comment}{//\ UP-\/RIGHT}}
-\DoxyCodeLine{00278\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ ;\ ++i)\ \{}
-\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ pos.row\ +\ i;\ \textcolor{keywordtype}{int}\ c\ =\ pos.col\ +\ i;}
-\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!isValidPos(r,\ c))\ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][c];}
-\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p)\ \{}
-\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor)\ \{}
-\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ s\ =\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
-\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (s\ ==\ \textcolor{charliteral}{'B'}\ ||\ s\ ==\ \textcolor{charliteral}{'Q'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \textcolor{comment}{//\ Blocked}}
-\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00289\ \ \ \ \ \}}
-\DoxyCodeLine{00290\ \ \ \ \ \textcolor{comment}{//\ UP-\/LEFT}}
-\DoxyCodeLine{00291\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ ;\ ++i)\ \{}
-\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ pos.row\ +\ i;\ \textcolor{keywordtype}{int}\ c\ =\ pos.col\ -\/\ i;}
-\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!isValidPos(r,\ c))\ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][c];}
-\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p)\ \{}
-\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor)\ \{}
-\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ s\ =\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
-\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (s\ ==\ \textcolor{charliteral}{'B'}\ ||\ s\ ==\ \textcolor{charliteral}{'Q'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \textcolor{comment}{//\ Blocked}}
-\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00302\ \ \ \ \ \}}
-\DoxyCodeLine{00303\ \ \ \ \ \textcolor{comment}{//\ DOWN-\/RIGHT}}
-\DoxyCodeLine{00304\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ ;\ ++i)\ \{}
-\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ pos.row\ -\/\ i;\ \textcolor{keywordtype}{int}\ c\ =\ pos.col\ +\ i;}
-\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!isValidPos(r,\ c))\ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][c];}
-\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p)\ \{}
-\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor)\ \{}
-\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ s\ =\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
-\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (s\ ==\ \textcolor{charliteral}{'B'}\ ||\ s\ ==\ \textcolor{charliteral}{'Q'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \textcolor{comment}{//\ Blocked}}
-\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00315\ \ \ \ \ \}}
-\DoxyCodeLine{00316\ \ \ \ \ \textcolor{comment}{//\ DOWN-\/LEFT}}
-\DoxyCodeLine{00317\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ ;\ ++i)\ \{}
-\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ pos.row\ -\/\ i;\ \textcolor{keywordtype}{int}\ c\ =\ pos.col\ -\/\ i;}
-\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!isValidPos(r,\ c))\ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][c];}
-\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p)\ \{}
-\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor)\ \{}
-\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ s\ =\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
-\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (s\ ==\ \textcolor{charliteral}{'B'}\ ||\ s\ ==\ \textcolor{charliteral}{'Q'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \textcolor{comment}{//\ Blocked}}
-\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00328\ \ \ \ \ \}}
-\DoxyCodeLine{00329\ }
-\DoxyCodeLine{00330\ \ \ \ \ \textcolor{comment}{//\ 5.\ King\ attacks}}
-\DoxyCodeLine{00331\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ kDrK[]\ =\ \{\ 1,\ 1,\ 0,\ -\/1,\ -\/1,\ -\/1,\ 0,\ 1\ \};}
-\DoxyCodeLine{00332\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ kDcK[]\ =\ \{\ 0,\ 1,\ 1,\ 1,\ 0,\ -\/1,\ -\/1,\ -\/1\ \};}
-\DoxyCodeLine{00333\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 8;\ ++i)\ \{}
-\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ pos.row\ +\ kDrK[i];}
-\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ c\ =\ pos.col\ +\ kDcK[i];}
-\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isValidPos(r,\ c))\ \{}
-\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][c];}
-\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ \&\&\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor\ \&\&\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}())\ ==\ \textcolor{charliteral}{'K'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00340\ \ \ \ \ \}}
-\DoxyCodeLine{00341\ }
-\DoxyCodeLine{00342\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00343\ \}}
-\DoxyCodeLine{00344\ }
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{comment}{//\ Switch\ side}}
+\DoxyCodeLine{00177\ \ \ \ \ board.zobristKey\ \string^=\ sideKey;}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{comment}{//\ Raw\ move\ application}}
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{comment}{//\ Delete\ piece}}
+\DoxyCodeLine{00181\ \ \ \ \ board.squares[move.from.row][move.from.col]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{comment}{//\ Place\ piece}}
+\DoxyCodeLine{00183\ \ \ \ \ board.squares[move.to.row][move.to.col]\ =\ undo.pieceMoved;}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{comment}{//\ Update\ piece\ position}}
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keywordflow}{if}\ (undo.pieceMoved)\ \{}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ undo.pieceMoved-\/>\doxymbox{\hyperlink{class_piece_abc3df3d8bf0cc172cab42663ee50dc66}{setPosition}}(move.to);}
+\DoxyCodeLine{00188\ \ \ \ \ \}}
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{comment}{//\ Handle\ promotion}}
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{keywordflow}{if}\ (move.promotion\ !=\ 0)\ \{}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ undo.pieceMoved-\/>\doxymbox{\hyperlink{class_piece_aa0da1ce9030714897518bb18a653b198}{setSymbol}}(move.promotion);}
+\DoxyCodeLine{00192\ \ \ \ \ \}}
+\DoxyCodeLine{00193\ \}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \textcolor{comment}{//\ ROBUST\ implementation\ of\ isSquareAttacked\ (with\ explicit\ loops\ for\ safety)}}
+\DoxyCodeLine{00206\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{evalpos_8cpp_a5f2b3499c4d29d3309fec883746e0605}{isSquareAttacked}}(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \doxymbox{\hyperlink{struct_position}{Position}}\ pos,\ \textcolor{keywordtype}{int}\ attackerColor)}
+\DoxyCodeLine{00207\ \{}
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{comment}{//\ 1.\ Pawn\ attacks}}
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{comment}{//\ If\ attacker\ is\ White\ (0),\ pawn\ must\ be\ 'below'\ (row-\/1)\ attacking\ up.}}
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{comment}{//\ If\ attacker\ is\ Black\ (1),\ pawn\ must\ be\ 'above'\ (row+1)\ attacking\ down.}}
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keywordtype}{int}\ pawnRow\ =\ (attackerColor\ ==\ 0)\ ?\ pos.row\ -\/\ 1\ :\ pos.row\ +\ 1;}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keywordflow}{if}\ (pawnRow\ >=\ 0\ \&\&\ pawnRow\ <\ 8)\ \{}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Attack\ from\ left\ diagonal}}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pos.col\ -\/\ 1\ >=\ 0)\ \{}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[pawnRow][pos.col\ -\/\ 1];}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ \&\&\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor\ \&\&\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}())\ ==\ \textcolor{charliteral}{'P'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Attack\ from\ right\ diagonal}}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pos.col\ +\ 1\ <\ 8)\ \{}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[pawnRow][pos.col\ +\ 1];}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ \&\&\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor\ \&\&\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}())\ ==\ \textcolor{charliteral}{'P'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00224\ \ \ \ \ \}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{comment}{//\ 2.\ Knight\ attacks}}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{comment}{//\ Manual\ unroll\ for\ safety\ to\ avoid\ vector\ overhead\ or\ index\ mistakes}}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ kDr[]\ =\ \{\ 2,\ 1,\ -\/1,\ -\/2,\ -\/2,\ -\/1,\ 1,\ 2\ \};}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ kDc[]\ =\ \{\ 1,\ 2,\ 2,\ 1,\ -\/1,\ -\/2,\ -\/2,\ -\/1\ \};}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 8;\ ++i)\ \{}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ pos.row\ +\ kDr[i];}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ c\ =\ pos.col\ +\ kDc[i];}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isValidPos(r,\ c))\ \{}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][c];}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ \&\&\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor\ \&\&\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}())\ ==\ \textcolor{charliteral}{'N'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00237\ \ \ \ \ \}}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{comment}{//\ 3.\ Sliding\ attacks\ (ROOK\ /\ QUEEN)\ -\/\ Explicit\ Loops}}
+\DoxyCodeLine{00240\ \ \ \ \ \textcolor{comment}{//\ UP}}
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ r\ =\ pos.row\ +\ 1;\ r\ <\ 8;\ ++r)\ \{}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][pos.col];}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p)\ \{}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor)\ \{}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ s\ =\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (s\ ==\ \textcolor{charliteral}{'R'}\ ||\ s\ ==\ \textcolor{charliteral}{'Q'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \textcolor{comment}{//\ Blocked}}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00250\ \ \ \ \ \}}
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{comment}{//\ DOWN}}
+\DoxyCodeLine{00252\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ r\ =\ pos.row\ -\/\ 1;\ r\ >=\ 0;\ -\/-\/r)\ \{}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][pos.col];}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p)\ \{}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor)\ \{}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ s\ =\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (s\ ==\ \textcolor{charliteral}{'R'}\ ||\ s\ ==\ \textcolor{charliteral}{'Q'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \textcolor{comment}{//\ Blocked}}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00261\ \ \ \ \ \}}
+\DoxyCodeLine{00262\ \ \ \ \ \textcolor{comment}{//\ RIGHT}}
+\DoxyCodeLine{00263\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ c\ =\ pos.col\ +\ 1;\ c\ <\ 8;\ ++c)\ \{}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[pos.row][c];}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p)\ \{}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor)\ \{}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ s\ =\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (s\ ==\ \textcolor{charliteral}{'R'}\ ||\ s\ ==\ \textcolor{charliteral}{'Q'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \textcolor{comment}{//\ Blocked}}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00272\ \ \ \ \ \}}
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{comment}{//\ LEFT}}
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ c\ =\ pos.col\ -\/\ 1;\ c\ >=\ 0;\ -\/-\/c)\ \{}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[pos.row][c];}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p)\ \{}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor)\ \{}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ s\ =\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (s\ ==\ \textcolor{charliteral}{'R'}\ ||\ s\ ==\ \textcolor{charliteral}{'Q'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \textcolor{comment}{//\ Blocked}}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00283\ \ \ \ \ \}}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00285\ \ \ \ \ \textcolor{comment}{//\ 4.\ Sliding\ attacks\ (BISHOP\ /\ QUEEN)\ -\/\ Explicit\ Loops}}
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{comment}{//\ UP-\/RIGHT}}
+\DoxyCodeLine{00287\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ ;\ ++i)\ \{}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ pos.row\ +\ i;\ \textcolor{keywordtype}{int}\ c\ =\ pos.col\ +\ i;}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!isValidPos(r,\ c))\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][c];}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p)\ \{}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor)\ \{}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ s\ =\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (s\ ==\ \textcolor{charliteral}{'B'}\ ||\ s\ ==\ \textcolor{charliteral}{'Q'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \textcolor{comment}{//\ Blocked}}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00298\ \ \ \ \ \}}
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{comment}{//\ UP-\/LEFT}}
+\DoxyCodeLine{00300\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ ;\ ++i)\ \{}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ pos.row\ +\ i;\ \textcolor{keywordtype}{int}\ c\ =\ pos.col\ -\/\ i;}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!isValidPos(r,\ c))\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][c];}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p)\ \{}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor)\ \{}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ s\ =\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (s\ ==\ \textcolor{charliteral}{'B'}\ ||\ s\ ==\ \textcolor{charliteral}{'Q'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \textcolor{comment}{//\ Blocked}}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00311\ \ \ \ \ \}}
+\DoxyCodeLine{00312\ \ \ \ \ \textcolor{comment}{//\ DOWN-\/RIGHT}}
+\DoxyCodeLine{00313\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ ;\ ++i)\ \{}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ pos.row\ -\/\ i;\ \textcolor{keywordtype}{int}\ c\ =\ pos.col\ +\ i;}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!isValidPos(r,\ c))\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][c];}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p)\ \{}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor)\ \{}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ s\ =\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (s\ ==\ \textcolor{charliteral}{'B'}\ ||\ s\ ==\ \textcolor{charliteral}{'Q'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \textcolor{comment}{//\ Blocked}}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00324\ \ \ \ \ \}}
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{comment}{//\ DOWN-\/LEFT}}
+\DoxyCodeLine{00326\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ ;\ ++i)\ \{}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ pos.row\ -\/\ i;\ \textcolor{keywordtype}{int}\ c\ =\ pos.col\ -\/\ i;}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!isValidPos(r,\ c))\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][c];}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p)\ \{}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor)\ \{}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ s\ =\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (s\ ==\ \textcolor{charliteral}{'B'}\ ||\ s\ ==\ \textcolor{charliteral}{'Q'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \textcolor{comment}{//\ Blocked}}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00337\ \ \ \ \ \}}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \ \ \ \ \textcolor{comment}{//\ 5.\ King\ attacks}}
+\DoxyCodeLine{00340\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ kDrK[]\ =\ \{\ 1,\ 1,\ 0,\ -\/1,\ -\/1,\ -\/1,\ 0,\ 1\ \};}
+\DoxyCodeLine{00341\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ kDcK[]\ =\ \{\ 0,\ 1,\ 1,\ 1,\ 0,\ -\/1,\ -\/1,\ -\/1\ \};}
+\DoxyCodeLine{00342\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 8;\ ++i)\ \{}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ pos.row\ +\ kDrK[i];}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ c\ =\ pos.col\ +\ kDcK[i];}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isValidPos(r,\ c))\ \{}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][c];}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ \&\&\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ attackerColor\ \&\&\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}())\ ==\ \textcolor{charliteral}{'K'})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00349\ \ \ \ \ \}}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00352\ \}}
 \DoxyCodeLine{00353\ }
-\DoxyCodeLine{00354\ \textcolor{keywordtype}{bool}\ isInCheck(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ color)}
-\DoxyCodeLine{00355\ \{}
-\DoxyCodeLine{00356\ \ \ \ \ \textcolor{comment}{//\ Find\ king\ position\ -\/\ robust\ search}}
-\DoxyCodeLine{00357\ \ \ \ \ \doxymbox{\hyperlink{struct_position}{Position}}\ kingPos\ =\ \{\ -\/1,\ -\/1\ \};}
-\DoxyCodeLine{00358\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ r\ =\ 0;\ r\ <\ 8;\ ++r)\ \{}
-\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ c\ =\ 0;\ c\ <\ 8;\ ++c)\ \{}
-\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][c];}
-\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ \&\&\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ color\ \&\&\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}())\ ==\ \textcolor{charliteral}{'K'})\ \{}
-\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ kingPos\ =\ \{\ r,\ c\ \};}
-\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ found\_king;}
-\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00366\ \ \ \ \ \}}
-\DoxyCodeLine{00367\ found\_king:;}
-\DoxyCodeLine{00368\ }
-\DoxyCodeLine{00369\ \ \ \ \ \textcolor{comment}{//\ No\ king\ found,\ we\ treat\ as\ game\ over\ (or\ checkmate\ in\ specific\ context)}}
-\DoxyCodeLine{00370\ \ \ \ \ \textcolor{keywordflow}{if}\ (kingPos.row\ ==\ -\/1)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00371\ }
-\DoxyCodeLine{00372\ \ \ \ \ \textcolor{comment}{//\ Check\ king\ square}}
-\DoxyCodeLine{00373\ \ \ \ \ \textcolor{keywordtype}{int}\ enemyColor\ =\ (color\ ==\ 0)\ ?\ 1\ :\ 0;}
-\DoxyCodeLine{00374\ \ \ \ \ \textcolor{keywordflow}{return}\ isSquareAttacked(board,\ kingPos,\ enemyColor);}
-\DoxyCodeLine{00375\ \}}
-\DoxyCodeLine{00376\ }
+\DoxyCodeLine{00362\ }
+\DoxyCodeLine{00363\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{evalpos_8cpp_acee68596d1e221265e5eb2bbc8466654}{isInCheck}}(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ color)}
+\DoxyCodeLine{00364\ \{}
+\DoxyCodeLine{00365\ \ \ \ \ \textcolor{comment}{//\ Find\ king\ position\ -\/\ robust\ search}}
+\DoxyCodeLine{00366\ \ \ \ \ \doxymbox{\hyperlink{struct_position}{Position}}\ kingPos\ =\ \{\ -\/1,\ -\/1\ \};}
+\DoxyCodeLine{00367\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ r\ =\ 0;\ r\ <\ 8;\ ++r)\ \{}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ c\ =\ 0;\ c\ <\ 8;\ ++c)\ \{}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ p\ =\ board.squares[r][c];}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ \&\&\ p-\/>\doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{getColor}}()\ ==\ color\ \&\&\ toupper(p-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}())\ ==\ \textcolor{charliteral}{'K'})\ \{}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ kingPos\ =\ \{\ r,\ c\ \};}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ found\_king;}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00375\ \ \ \ \ \}}
+\DoxyCodeLine{00376\ found\_king:;}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \ \ \ \ \textcolor{comment}{//\ No\ king\ found,\ we\ treat\ as\ game\ over\ (or\ checkmate\ in\ specific\ context)}}
+\DoxyCodeLine{00379\ \ \ \ \ \textcolor{keywordflow}{if}\ (kingPos.row\ ==\ -\/1)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00380\ }
+\DoxyCodeLine{00381\ \ \ \ \ \textcolor{comment}{//\ Check\ king\ square}}
+\DoxyCodeLine{00382\ \ \ \ \ \textcolor{keywordtype}{int}\ enemyColor\ =\ (color\ ==\ 0)\ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00383\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{evalpos_8cpp_a5f2b3499c4d29d3309fec883746e0605}{isSquareAttacked}}(board,\ kingPos,\ enemyColor);}
+\DoxyCodeLine{00384\ \}}
 \DoxyCodeLine{00385\ }
-\DoxyCodeLine{00386\ \textcolor{keywordtype}{int}\ eval(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ color)}
-\DoxyCodeLine{00387\ \{}
-\DoxyCodeLine{00388\ \ \ \ \ \textcolor{keywordtype}{int}\ whiteScore\ =\ 0;}
-\DoxyCodeLine{00389\ \ \ \ \ \textcolor{keywordtype}{int}\ blackScore\ =\ 0;}
-\DoxyCodeLine{00390\ }
-\DoxyCodeLine{00391\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ row\ =\ 0;\ row\ <\ 8;\ ++row)}
-\DoxyCodeLine{00392\ \ \ \ \ \{}
-\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ col\ =\ 0;\ col\ <\ 8;\ ++col)}
-\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_piece}{Piece}}*\ cell\ =\ board.squares[row][col];}
-\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!cell\ ||\ cell-\/>\doxymbox{\hyperlink{class_piece_a00143ae55b69981ae484cc7521b6d81a}{symbol}}\ ==\ \textcolor{charliteral}{'E'})\ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00397\ }
-\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ material\ =\ pieceValFromSymbol(cell-\/>\doxymbox{\hyperlink{class_piece_a00143ae55b69981ae484cc7521b6d81a}{symbol}});}
-\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ PST\ (Piece\ Square\ Table)}}
-\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ positional\ =\ 0;}
-\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ sym\ =\ toupper(cell-\/>\doxymbox{\hyperlink{class_piece_a00143ae55b69981ae484cc7521b6d81a}{symbol}});}
-\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (sym)\ \{}
-\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'P'}:\ positional\ =\ getPstValue(pawnPST,\ row,\ col,\ cell-\/>\doxymbox{\hyperlink{class_piece_a4268f3b047e1ad284882708b85332ef1}{color}});\ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'N'}:\ positional\ =\ getPstValue(knightPST,\ row,\ col,\ cell-\/>\doxymbox{\hyperlink{class_piece_a4268f3b047e1ad284882708b85332ef1}{color}});\ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'B'}:\ positional\ =\ getPstValue(bishopPST,\ row,\ col,\ cell-\/>\doxymbox{\hyperlink{class_piece_a4268f3b047e1ad284882708b85332ef1}{color}});\ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'R'}:\ positional\ =\ getPstValue(rookPST,\ row,\ col,\ cell-\/>\doxymbox{\hyperlink{class_piece_a4268f3b047e1ad284882708b85332ef1}{color}});\ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'Q'}:\ positional\ =\ getPstValue(queenPST,\ row,\ col,\ cell-\/>\doxymbox{\hyperlink{class_piece_a4268f3b047e1ad284882708b85332ef1}{color}});\ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'K'}:\ positional\ =\ getPstValue(kingPST,\ row,\ col,\ cell-\/>\doxymbox{\hyperlink{class_piece_a4268f3b047e1ad284882708b85332ef1}{color}});\ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00410\ }
-\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ total\ =\ material\ +\ positional;}
-\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cell-\/>\doxymbox{\hyperlink{class_piece_a4268f3b047e1ad284882708b85332ef1}{color}}\ ==\ 0)\ \textcolor{comment}{//\ White}}
-\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ whiteScore\ +=\ total;}
-\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{comment}{//\ Black}}
-\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ blackScore\ +=\ total;}
-\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00417\ \ \ \ \ \}}
-\DoxyCodeLine{00418\ }
-\DoxyCodeLine{00419\ \ \ \ \ \textcolor{keywordtype}{int}\ finalScore\ =\ whiteScore\ -\/\ blackScore;}
-\DoxyCodeLine{00420\ \ \ \ \ \textcolor{keywordflow}{return}\ finalScore\ *\ color;}
-\DoxyCodeLine{00421\ \}}
-\DoxyCodeLine{00422\ }
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{evalpos_8cpp_a84c565d83e6349abf15245a36084e6be}{eval}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ color)}
+\DoxyCodeLine{00396\ \{}
+\DoxyCodeLine{00397\ \ \ \ \ \textcolor{keywordtype}{int}\ whiteScore\ =\ 0;}
+\DoxyCodeLine{00398\ \ \ \ \ \textcolor{keywordtype}{int}\ blackScore\ =\ 0;}
+\DoxyCodeLine{00399\ }
+\DoxyCodeLine{00400\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ row\ =\ 0;\ row\ <\ 8;\ ++row)}
+\DoxyCodeLine{00401\ \ \ \ \ \{}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ col\ =\ 0;\ col\ <\ 8;\ ++col)}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_piece}{Piece}}*\ cell\ =\ board.squares[row][col];}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!cell\ ||\ cell-\/>\doxymbox{\hyperlink{class_piece_a00143ae55b69981ae484cc7521b6d81a}{symbol}}\ ==\ \textcolor{charliteral}{'E'})\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ material\ =\ pieceValFromSymbol(cell-\/>\doxymbox{\hyperlink{class_piece_a00143ae55b69981ae484cc7521b6d81a}{symbol}});}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ PST\ (Piece\ Square\ Table)}}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ positional\ =\ 0;}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ sym\ =\ toupper(cell-\/>\doxymbox{\hyperlink{class_piece_a00143ae55b69981ae484cc7521b6d81a}{symbol}});}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (sym)\ \{}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'P'}:\ positional\ =\ \doxymbox{\hyperlink{evalpos_8cpp_a2c613b4f2172fac4bad217a0735a3db2}{getPstValue}}(pawnPST,\ row,\ col,\ cell-\/>\doxymbox{\hyperlink{class_piece_a4268f3b047e1ad284882708b85332ef1}{color}});\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'N'}:\ positional\ =\ \doxymbox{\hyperlink{evalpos_8cpp_a2c613b4f2172fac4bad217a0735a3db2}{getPstValue}}(knightPST,\ row,\ col,\ cell-\/>\doxymbox{\hyperlink{class_piece_a4268f3b047e1ad284882708b85332ef1}{color}});\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'B'}:\ positional\ =\ \doxymbox{\hyperlink{evalpos_8cpp_a2c613b4f2172fac4bad217a0735a3db2}{getPstValue}}(bishopPST,\ row,\ col,\ cell-\/>\doxymbox{\hyperlink{class_piece_a4268f3b047e1ad284882708b85332ef1}{color}});\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'R'}:\ positional\ =\ \doxymbox{\hyperlink{evalpos_8cpp_a2c613b4f2172fac4bad217a0735a3db2}{getPstValue}}(rookPST,\ row,\ col,\ cell-\/>\doxymbox{\hyperlink{class_piece_a4268f3b047e1ad284882708b85332ef1}{color}});\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'Q'}:\ positional\ =\ \doxymbox{\hyperlink{evalpos_8cpp_a2c613b4f2172fac4bad217a0735a3db2}{getPstValue}}(queenPST,\ row,\ col,\ cell-\/>\doxymbox{\hyperlink{class_piece_a4268f3b047e1ad284882708b85332ef1}{color}});\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'K'}:\ positional\ =\ \doxymbox{\hyperlink{evalpos_8cpp_a2c613b4f2172fac4bad217a0735a3db2}{getPstValue}}(kingPST,\ row,\ col,\ cell-\/>\doxymbox{\hyperlink{class_piece_a4268f3b047e1ad284882708b85332ef1}{color}});\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00419\ }
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ total\ =\ material\ +\ positional;}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cell-\/>\doxymbox{\hyperlink{class_piece_a4268f3b047e1ad284882708b85332ef1}{color}}\ ==\ 0)\ \textcolor{comment}{//\ White}}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ whiteScore\ +=\ total;}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{comment}{//\ Black}}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ blackScore\ +=\ total;}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00426\ \ \ \ \ \}}
+\DoxyCodeLine{00427\ }
+\DoxyCodeLine{00428\ \ \ \ \ \textcolor{keywordtype}{int}\ finalScore\ =\ whiteScore\ -\/\ blackScore;}
+\DoxyCodeLine{00429\ \ \ \ \ \textcolor{keywordflow}{return}\ finalScore\ *\ color;}
+\DoxyCodeLine{00430\ \}}
 \DoxyCodeLine{00431\ }
-\DoxyCodeLine{00432\ \textcolor{keyword}{static}\ std::vector<Move>\ legalMoves(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ color)\ \{}
-\DoxyCodeLine{00433\ \ \ \ \ \textcolor{comment}{//\ Generate\ pseudo-\/legal\ moves}}
-\DoxyCodeLine{00434\ \ \ \ \ \textcolor{keyword}{auto}\ quiet\ =\ \doxymbox{\hyperlink{moves_8cpp_ac7bd6a3f7dcafd4832a00ce5ed103058}{generateQuietMoves}}(board,\ color);}
-\DoxyCodeLine{00435\ \ \ \ \ \textcolor{keyword}{auto}\ caps\ =\ \doxymbox{\hyperlink{moves_8cpp_a89c28d1f0b1c5466438f80f803cd8dba}{generateAllCaptures}}(board,\ color);}
-\DoxyCodeLine{00436\ \ \ \ \ quiet.insert(quiet.end(),\ caps.begin(),\ caps.end());\ \textcolor{comment}{//\ Merge\ moves}}
-\DoxyCodeLine{00437\ }
-\DoxyCodeLine{00438\ \ \ \ \ std::vector<Move>\ realLegalMoves;}
-\DoxyCodeLine{00439\ \ \ \ \ realLegalMoves.reserve(quiet.size());}
 \DoxyCodeLine{00440\ }
-\DoxyCodeLine{00441\ \ \ \ \ \textcolor{comment}{//\ Check\ if\ moves\ leave\ king\ in\ check}}
-\DoxyCodeLine{00442\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ move\ :\ quiet)\ \{}
-\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_undo}{Undo}}\ undo;}
-\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ applyMove(board,\ move,\ undo);\ \textcolor{comment}{//\ Try\ move}}
-\DoxyCodeLine{00445\ }
-\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Is\ king\ in\ check\ after\ move?}}
-\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!isInCheck(board,\ color))\ \{}
-\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ \ \ \ \ realLegalMoves.push\_back(move);}
-\DoxyCodeLine{00449\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Legal\ if\ no\ check}}
-\DoxyCodeLine{00450\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00451\ }
-\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ undoMove(board,\ move,\ undo);}
-\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Undo}}
-\DoxyCodeLine{00454\ \ \ \ \ \}}
-\DoxyCodeLine{00455\ }
-\DoxyCodeLine{00456\ \ \ \ \ \textcolor{keywordflow}{return}\ realLegalMoves;}
-\DoxyCodeLine{00457\ \}}
-\DoxyCodeLine{00466\ \textcolor{keyword}{static}\ std::vector<Move>\ generateCaptures(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ color)}
-\DoxyCodeLine{00467\ \{}
-\DoxyCodeLine{00468\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{moves_8cpp_a89c28d1f0b1c5466438f80f803cd8dba}{generateAllCaptures}}(board,\ color);}
-\DoxyCodeLine{00469\ \}}
-\DoxyCodeLine{00476\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ scoreMove(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_move}{Move}}\&\ move)\ \{}
-\DoxyCodeLine{00477\ \ \ \ \ \textcolor{comment}{//\ CAPTURES\ (MVV-\/LVA)}}
-\DoxyCodeLine{00478\ \ \ \ \ \textcolor{keywordflow}{if}\ (move.pieceCaptured\ !=\ \textcolor{keyword}{nullptr})\ \{}
-\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ victimVal\ =\ pieceValFromSymbol(move.pieceCaptured-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
-\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ attackerVal\ =\ pieceValFromSymbol(move.pieceMoved-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
-\DoxyCodeLine{00481\ }
-\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Equation:\ Victim\ *\ 10\ -\/\ Attacker.}}
-\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 10000\ +\ (victimVal\ *\ 10)\ -\/\ attackerVal;}
-\DoxyCodeLine{00484\ \ \ \ \ \}}
-\DoxyCodeLine{00485\ }
-\DoxyCodeLine{00486\ \ \ \ \ \textcolor{comment}{//\ PROMOTION\ BONUS}}
-\DoxyCodeLine{00487\ \ \ \ \ \textcolor{keywordtype}{char}\ sym\ =\ toupper(move.pieceMoved-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
-\DoxyCodeLine{00488\ \ \ \ \ \textcolor{keywordflow}{if}\ (sym\ ==\ \textcolor{charliteral}{'P'})\ \{}
-\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ move.to.row;}
-\DoxyCodeLine{00490\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ IF\ PAWN\ LAST\ RANK}}
-\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (r\ ==\ 0\ ||\ r\ ==\ 7)\ \{}
-\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 9000;}
-\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00494\ \ \ \ \ \}}
-\DoxyCodeLine{00495\ }
-\DoxyCodeLine{00496\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
-\DoxyCodeLine{00497\ \}}
-\DoxyCodeLine{00498\ }
-\DoxyCodeLine{00505\ }
-\DoxyCodeLine{00506\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ orderMoves(std::vector<Move>\&\ moves)}
-\DoxyCodeLine{00507\ \{}
-\DoxyCodeLine{00508\ \ \ \ \ \textcolor{comment}{//\ Sort\ descending\ by\ score}}
-\DoxyCodeLine{00509\ \ \ \ \ std::sort(moves.begin(),\ moves.end(),\ [](\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_move}{Move}}\&\ a,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_move}{Move}}\&\ b)\ \{}
-\DoxyCodeLine{00510\ \ \ \ \ \ \ \ \ return\ scoreMove(a)\ >\ scoreMove(b);}
-\DoxyCodeLine{00511\ \ \ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00512\ \}}
-\DoxyCodeLine{00513\ }
-\DoxyCodeLine{00514\ \textcolor{comment}{//\ game\ over\ if\ one\ king\ is\ missing}}
-\DoxyCodeLine{00522\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ gameOver(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_board}{Board}}\&\ board)}
-\DoxyCodeLine{00523\ \{}
-\DoxyCodeLine{00524\ \ \ \ \ \textcolor{keywordtype}{bool}\ whiteKing\ =\ \textcolor{keyword}{false},\ blackKing\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00525\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ row\ =\ 0;\ row\ <\ 8;\ ++row)}
-\DoxyCodeLine{00526\ \ \ \ \ \{}
-\DoxyCodeLine{00527\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ col\ =\ 0;\ col\ <\ 8;\ ++col)}
-\DoxyCodeLine{00528\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_piece}{Piece}}*\ cell\ =\ board.squares[row][col];}
-\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cell\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00531\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cell-\/>\doxymbox{\hyperlink{class_piece_a00143ae55b69981ae484cc7521b6d81a}{symbol}}\ ==\ \textcolor{charliteral}{'K'})}
-\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00533\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cell-\/>\doxymbox{\hyperlink{class_piece_a4268f3b047e1ad284882708b85332ef1}{color}}\ ==\ 0)\ \textcolor{comment}{//\ WHITE}}
-\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ whiteKing\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00535\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ blackKing\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00539\ \ \ \ \ \}}
-\DoxyCodeLine{00540\ \ \ \ \ \textcolor{keywordflow}{return}\ !(whiteKing\ \&\&\ blackKing);}
-\DoxyCodeLine{00541\ \}}
-\DoxyCodeLine{00542\ }
-\DoxyCodeLine{00543\ \textcolor{comment}{//\ Quiescence\ search\ to\ avoid\ horizon\ effect}}
-\DoxyCodeLine{00561\ }
-\DoxyCodeLine{00562\ \textcolor{keywordtype}{int}\ quiescence(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ alpha,\ \textcolor{keywordtype}{int}\ beta,\ \textcolor{keywordtype}{int}\ color)}
-\DoxyCodeLine{00563\ \{}
-\DoxyCodeLine{00564\ \ \ \ \ \textcolor{keywordtype}{int}\ stand\ =\ eval(board,\ color);}
-\DoxyCodeLine{00565\ \ \ \ \ \textcolor{keywordflow}{if}\ (stand\ >=\ beta)}
-\DoxyCodeLine{00566\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ beta;}
-\DoxyCodeLine{00567\ \ \ \ \ \textcolor{keywordflow}{if}\ (stand\ >\ alpha)}
-\DoxyCodeLine{00568\ \ \ \ \ \ \ \ \ alpha\ =\ stand;}
-\DoxyCodeLine{00569\ }
-\DoxyCodeLine{00570\ \ \ \ \ \textcolor{keyword}{auto}\ caps\ =\ generateCaptures(board,\ to01(color));}
-\DoxyCodeLine{00571\ \ \ \ \ \textcolor{comment}{//\ Only\ consider\ capture\ moves}}
-\DoxyCodeLine{00572\ \ \ \ \ orderMoves(caps);}
-\DoxyCodeLine{00573\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ move\ :\ caps)}
-\DoxyCodeLine{00574\ \ \ \ \ \{}
-\DoxyCodeLine{00575\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_undo}{Undo}}\ undo;}
-\DoxyCodeLine{00576\ \ \ \ \ \ \ \ \ applyMove(board,\ move,\ undo);}
-\DoxyCodeLine{00577\ }
-\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ score\ =\ -\/quiescence(board,\ -\/beta,\ -\/alpha,\ -\/color);}
-\DoxyCodeLine{00579\ \ \ \ \ \ \ \ \ undoMove(board,\ move,\ undo);}
-\DoxyCodeLine{00580\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (score\ >=\ beta)}
-\DoxyCodeLine{00581\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ beta;}
-\DoxyCodeLine{00582\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (score\ >\ alpha)}
-\DoxyCodeLine{00583\ \ \ \ \ \ \ \ \ \ \ \ \ alpha\ =\ score;}
-\DoxyCodeLine{00584\ \ \ \ \ \}}
-\DoxyCodeLine{00585\ \ \ \ \ \textcolor{keywordflow}{return}\ alpha;}
-\DoxyCodeLine{00586\ \}}
-\DoxyCodeLine{00587\ }
-\DoxyCodeLine{00595\ \textcolor{keywordtype}{bool}\ isRepetition(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_board}{Board}}\&\ board)\ \{}
-\DoxyCodeLine{00596\ \ \ \ \ \textcolor{comment}{//\ Move\ is\ a\ repetition\ if\ current\ zobristKey\ appeared\ before\ in\ positionHistory}}
-\DoxyCodeLine{00597\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ board.\doxymbox{\hyperlink{class_board_a526135b855df86c47ed8f145dacd5b68}{positionHistory}}.size()\ -\/\ 1;\ i\ >=\ 0;\ -\/-\/i)\ \{}
-\DoxyCodeLine{00598\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (board.\doxymbox{\hyperlink{class_board_a526135b855df86c47ed8f145dacd5b68}{positionHistory}}[i]\ ==\ board.zobristKey)\ \{}
-\DoxyCodeLine{00599\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00600\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Repetition\ found}}
-\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00602\ \ \ \ \ \}}
-\DoxyCodeLine{00603\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00604\ \}}
-\DoxyCodeLine{00605\ }
-\DoxyCodeLine{00606\ \textcolor{comment}{//\ Negamax\ algorithm\ with\ alpha-\/beta\ pruning}}
-\DoxyCodeLine{00629\ }
-\DoxyCodeLine{00630\ \textcolor{keywordtype}{int}\ negamax(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ depth,\ \textcolor{keywordtype}{int}\ alpha,\ \textcolor{keywordtype}{int}\ beta,\ \textcolor{keywordtype}{int}\ color)}
-\DoxyCodeLine{00631\ \{}
-\DoxyCodeLine{00632\ \ \ \ \ \textcolor{keywordflow}{if}\ (isRepetition(board))\ \{}
-\DoxyCodeLine{00633\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0\ is\ equal\ position,\ slight\ minus\ for\ engine\ to\ avoid\ repetition}}
-\DoxyCodeLine{00634\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/35;}
-\DoxyCodeLine{00635\ \ \ \ \ \}}
-\DoxyCodeLine{00636\ }
-\DoxyCodeLine{00637\ \ \ \ \ ++nodesVisited;}
-\DoxyCodeLine{00638\ \ \ \ \ \textcolor{keywordtype}{int}\ ttScore;}
-\DoxyCodeLine{00639\ \ \ \ \ \doxymbox{\hyperlink{struct_move}{Move}}\ ttMove;}
-\DoxyCodeLine{00640\ \ \ \ \ \textcolor{comment}{//\ Read\ hash}}
-\DoxyCodeLine{00641\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ key\ =\ board.zobristKey;}
-\DoxyCodeLine{00642\ \ \ \ \ \textcolor{keywordflow}{if}\ (TT.probe(key,\ depth,\ alpha,\ beta,\ ttScore,\ ttMove))\ \{}
-\DoxyCodeLine{00643\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ttScore;}
-\DoxyCodeLine{00644\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Score\ found\ in\ TT,\ immediately\ return}}
-\DoxyCodeLine{00645\ \ \ \ \ \}}
-\DoxyCodeLine{00646\ }
-\DoxyCodeLine{00647\ \ \ \ \ \textcolor{keywordflow}{if}\ (depth\ ==\ 0\ ||\ gameOver(board))}
-\DoxyCodeLine{00648\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ quiescence(board,\ alpha,\ beta,\ color);}
-\DoxyCodeLine{00649\ }
-\DoxyCodeLine{00650\ \ \ \ \ \textcolor{keyword}{auto}\ moves\ =\ legalMoves(board,\ to01(color));}
-\DoxyCodeLine{00651\ }
-\DoxyCodeLine{00652\ \ \ \ \ \textcolor{keywordflow}{if}\ (moves.empty())\ \{}
-\DoxyCodeLine{00653\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ No\ legal\ moves,\ check\ for\ checkmate\ or\ stalemate}}
-\DoxyCodeLine{00654\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isInCheck(board,\ to01(color)))\ \textcolor{keywordflow}{return}\ -\/100000\ +\ depth;\ \textcolor{comment}{//\ CHECKMATE}}
-\DoxyCodeLine{00655\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;\ \textcolor{comment}{//\ STALEMATE}}
-\DoxyCodeLine{00656\ \ \ \ \ \}}
-\DoxyCodeLine{00657\ }
-\DoxyCodeLine{00658\ \ \ \ \ orderMoves(moves);}
-\DoxyCodeLine{00659\ }
-\DoxyCodeLine{00660\ \ \ \ \ \textcolor{keywordtype}{int}\ best\ =\ -\/INF;}
-\DoxyCodeLine{00661\ \ \ \ \ \doxymbox{\hyperlink{struct_move}{Move}}\ bestMove;}
-\DoxyCodeLine{00662\ \ \ \ \ \textcolor{comment}{//\ For\ TT\ storage}}
-\DoxyCodeLine{00663\ \ \ \ \ \textcolor{keywordtype}{int}\ oldAlpha\ =\ alpha;}
-\DoxyCodeLine{00664\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ move\ :\ moves)}
-\DoxyCodeLine{00665\ \ \ \ \ \{}
-\DoxyCodeLine{00666\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_undo}{Undo}}\ undo;}
-\DoxyCodeLine{00667\ \ \ \ \ \ \ \ \ applyMove(board,\ move,\ undo);}
-\DoxyCodeLine{00668\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ score\ =\ -\/negamax(board,\ depth\ -\/\ 1,\ -\/beta,\ -\/alpha,\ -\/color);}
-\DoxyCodeLine{00669\ \ \ \ \ \ \ \ \ undoMove(board,\ move,\ undo);}
-\DoxyCodeLine{00670\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (score\ >\ best)}
-\DoxyCodeLine{00671\ \ \ \ \ \ \ \ \ \ \ \ \ best\ =\ score;}
-\DoxyCodeLine{00672\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (score\ >\ alpha)}
-\DoxyCodeLine{00673\ \ \ \ \ \ \ \ \ \ \ \ \ alpha\ =\ score;}
-\DoxyCodeLine{00674\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (alpha\ >=\ beta)}
-\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00676\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ beta\ cutoff}}
-\DoxyCodeLine{00677\ \ \ \ \ \}}
-\DoxyCodeLine{00678\ }
-\DoxyCodeLine{00679\ \ \ \ \ TTFlag\ flag\ =\ TT\_EXACT;}
-\DoxyCodeLine{00680\ \ \ \ \ \textcolor{keywordflow}{if}\ (best\ <=\ oldAlpha)\ flag\ =\ TT\_ALPHA;\ \textcolor{comment}{//\ Not\ better\ than\ alpha}}
-\DoxyCodeLine{00681\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (best\ >=\ beta)\ flag\ =\ TT\_BETA;}
-\DoxyCodeLine{00682\ \ \ \ \ \textcolor{comment}{//\ Cutoff}}
-\DoxyCodeLine{00683\ }
-\DoxyCodeLine{00684\ \ \ \ \ TT.store(key,\ best,\ depth,\ flag,\ bestMove);}
-\DoxyCodeLine{00685\ }
-\DoxyCodeLine{00686\ \ \ \ \ \textcolor{keywordflow}{return}\ best;}
-\DoxyCodeLine{00687\ \}}
+\DoxyCodeLine{00441\ \textcolor{keyword}{static}\ std::vector<Move>\ legalMoves(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ color)\ \{}
+\DoxyCodeLine{00442\ \ \ \ \ \textcolor{comment}{//\ Generate\ pseudo-\/legal\ moves}}
+\DoxyCodeLine{00443\ \ \ \ \ \textcolor{keyword}{auto}\ quiet\ =\ \doxymbox{\hyperlink{moves_8cpp_ac7bd6a3f7dcafd4832a00ce5ed103058}{generateQuietMoves}}(board,\ color);}
+\DoxyCodeLine{00444\ \ \ \ \ \textcolor{keyword}{auto}\ caps\ =\ \doxymbox{\hyperlink{moves_8cpp_a89c28d1f0b1c5466438f80f803cd8dba}{generateAllCaptures}}(board,\ color);}
+\DoxyCodeLine{00445\ \ \ \ \ quiet.insert(quiet.end(),\ caps.begin(),\ caps.end());\ \textcolor{comment}{//\ Merge\ moves}}
+\DoxyCodeLine{00446\ }
+\DoxyCodeLine{00447\ \ \ \ \ std::vector<Move>\ realLegalMoves;}
+\DoxyCodeLine{00448\ \ \ \ \ realLegalMoves.reserve(quiet.size());}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ \ \ \ \ \textcolor{comment}{//\ Check\ if\ moves\ leave\ king\ in\ check}}
+\DoxyCodeLine{00451\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ move\ :\ quiet)\ \{}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_undo}{Undo}}\ undo;}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ applyMove(board,\ move,\ undo);\ \textcolor{comment}{//\ Try\ move}}
+\DoxyCodeLine{00454\ }
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Is\ king\ in\ check\ after\ move?}}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{evalpos_8cpp_acee68596d1e221265e5eb2bbc8466654}{isInCheck}}(board,\ color))\ \{}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \ \ \ \ realLegalMoves.push\_back(move);}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Legal\ if\ no\ check}}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00460\ }
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ undoMove(board,\ move,\ undo);}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Undo}}
+\DoxyCodeLine{00463\ \ \ \ \ \}}
+\DoxyCodeLine{00464\ }
+\DoxyCodeLine{00465\ \ \ \ \ \textcolor{keywordflow}{return}\ realLegalMoves;}
+\DoxyCodeLine{00466\ \}}
+\DoxyCodeLine{00475\ \textcolor{keyword}{static}\ std::vector<Move>\ generateCaptures(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ color)}
+\DoxyCodeLine{00476\ \{}
+\DoxyCodeLine{00477\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{moves_8cpp_a89c28d1f0b1c5466438f80f803cd8dba}{generateAllCaptures}}(board,\ color);}
+\DoxyCodeLine{00478\ \}}
+\DoxyCodeLine{00485\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ scoreMove(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_move}{Move}}\&\ move)\ \{}
+\DoxyCodeLine{00486\ \ \ \ \ \textcolor{comment}{//\ CAPTURES\ (MVV-\/LVA)}}
+\DoxyCodeLine{00487\ \ \ \ \ \textcolor{keywordflow}{if}\ (move.pieceCaptured\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00488\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ victimVal\ =\ pieceValFromSymbol(move.pieceCaptured-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ attackerVal\ =\ pieceValFromSymbol(move.pieceMoved-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
+\DoxyCodeLine{00490\ }
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Equation:\ Victim\ *\ 10\ -\/\ Attacker.}}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 10000\ +\ (victimVal\ *\ 10)\ -\/\ attackerVal;}
+\DoxyCodeLine{00493\ \ \ \ \ \}}
+\DoxyCodeLine{00494\ }
+\DoxyCodeLine{00495\ \ \ \ \ \textcolor{comment}{//\ PROMOTION\ BONUS}}
+\DoxyCodeLine{00496\ \ \ \ \ \textcolor{keywordtype}{char}\ sym\ =\ toupper(move.pieceMoved-\/>\doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{getSymbol}}());}
+\DoxyCodeLine{00497\ \ \ \ \ \textcolor{keywordflow}{if}\ (sym\ ==\ \textcolor{charliteral}{'P'})\ \{}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ move.to.row;}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ IF\ PAWN\ LAST\ RANK}}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (r\ ==\ 0\ ||\ r\ ==\ 7)\ \{}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 9000;}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00503\ \ \ \ \ \}}
+\DoxyCodeLine{00504\ }
+\DoxyCodeLine{00505\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00506\ \}}
+\DoxyCodeLine{00507\ }
+\DoxyCodeLine{00514\ }
+\DoxyCodeLine{00515\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ orderMoves(std::vector<Move>\&\ moves)}
+\DoxyCodeLine{00516\ \{}
+\DoxyCodeLine{00517\ \ \ \ \ \textcolor{comment}{//\ Sort\ descending\ by\ score}}
+\DoxyCodeLine{00518\ \ \ \ \ std::sort(moves.begin(),\ moves.end(),\ [](\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_move}{Move}}\&\ a,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_move}{Move}}\&\ b)\ \{}
+\DoxyCodeLine{00519\ \ \ \ \ \ \ \ \ return\ scoreMove(a)\ >\ scoreMove(b);}
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00521\ \}}
+\DoxyCodeLine{00522\ }
+\DoxyCodeLine{00523\ \textcolor{comment}{//\ game\ over\ if\ one\ king\ is\ missing}}
+\DoxyCodeLine{00531\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ gameOver(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_board}{Board}}\&\ board)}
+\DoxyCodeLine{00532\ \{}
+\DoxyCodeLine{00533\ \ \ \ \ \textcolor{keywordtype}{bool}\ whiteKing\ =\ \textcolor{keyword}{false},\ blackKing\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00534\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ row\ =\ 0;\ row\ <\ 8;\ ++row)}
+\DoxyCodeLine{00535\ \ \ \ \ \{}
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ col\ =\ 0;\ col\ <\ 8;\ ++col)}
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_piece}{Piece}}*\ cell\ =\ board.squares[row][col];}
+\DoxyCodeLine{00539\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cell\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cell-\/>\doxymbox{\hyperlink{class_piece_a00143ae55b69981ae484cc7521b6d81a}{symbol}}\ ==\ \textcolor{charliteral}{'K'})}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cell-\/>\doxymbox{\hyperlink{class_piece_a4268f3b047e1ad284882708b85332ef1}{color}}\ ==\ 0)\ \textcolor{comment}{//\ WHITE}}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ whiteKing\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00545\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ blackKing\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00546\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00548\ \ \ \ \ \}}
+\DoxyCodeLine{00549\ \ \ \ \ \textcolor{keywordflow}{return}\ !(whiteKing\ \&\&\ blackKing);}
+\DoxyCodeLine{00550\ \}}
+\DoxyCodeLine{00551\ }
+\DoxyCodeLine{00552\ \textcolor{comment}{//\ Quiescence\ search\ to\ avoid\ horizon\ effect}}
+\DoxyCodeLine{00570\ }
+\DoxyCodeLine{00571\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{evalpos_8cpp_a91c63961112b3633045b79af292f87e0}{quiescence}}(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ alpha,\ \textcolor{keywordtype}{int}\ beta,\ \textcolor{keywordtype}{int}\ color)}
+\DoxyCodeLine{00572\ \{}
+\DoxyCodeLine{00573\ \ \ \ \ \textcolor{keywordtype}{int}\ stand\ =\ \doxymbox{\hyperlink{evalpos_8cpp_a84c565d83e6349abf15245a36084e6be}{eval}}(board,\ color);}
+\DoxyCodeLine{00574\ \ \ \ \ \textcolor{keywordflow}{if}\ (stand\ >=\ beta)}
+\DoxyCodeLine{00575\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ beta;}
+\DoxyCodeLine{00576\ \ \ \ \ \textcolor{keywordflow}{if}\ (stand\ >\ alpha)}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ alpha\ =\ stand;}
+\DoxyCodeLine{00578\ }
+\DoxyCodeLine{00579\ \ \ \ \ \textcolor{keyword}{auto}\ caps\ =\ generateCaptures(board,\ \doxymbox{\hyperlink{evalpos_8cpp_a2b6878db0622c13b834d01fd28a7e2bd}{to01}}(color));}
+\DoxyCodeLine{00580\ \ \ \ \ \textcolor{comment}{//\ Only\ consider\ capture\ moves}}
+\DoxyCodeLine{00581\ \ \ \ \ orderMoves(caps);}
+\DoxyCodeLine{00582\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ move\ :\ caps)}
+\DoxyCodeLine{00583\ \ \ \ \ \{}
+\DoxyCodeLine{00584\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_undo}{Undo}}\ undo;}
+\DoxyCodeLine{00585\ \ \ \ \ \ \ \ \ applyMove(board,\ move,\ undo);}
+\DoxyCodeLine{00586\ }
+\DoxyCodeLine{00587\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ score\ =\ -\/\doxymbox{\hyperlink{evalpos_8cpp_a91c63961112b3633045b79af292f87e0}{quiescence}}(board,\ -\/beta,\ -\/alpha,\ -\/color);}
+\DoxyCodeLine{00588\ \ \ \ \ \ \ \ \ undoMove(board,\ move,\ undo);}
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (score\ >=\ beta)}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ beta;}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (score\ >\ alpha)}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \ \ \ \ alpha\ =\ score;}
+\DoxyCodeLine{00593\ \ \ \ \ \}}
+\DoxyCodeLine{00594\ \ \ \ \ \textcolor{keywordflow}{return}\ alpha;}
+\DoxyCodeLine{00595\ \}}
+\DoxyCodeLine{00596\ }
+\DoxyCodeLine{00604\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{evalpos_8cpp_a19c8e4d8636c4059bbc9d5bd3514e1c6}{isRepetition}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_board}{Board}}\&\ board)\ \{}
+\DoxyCodeLine{00605\ \ \ \ \ \textcolor{comment}{//\ Move\ is\ a\ repetition\ if\ current\ zobristKey\ appeared\ before\ in\ positionHistory}}
+\DoxyCodeLine{00606\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ board.\doxymbox{\hyperlink{class_board_a526135b855df86c47ed8f145dacd5b68}{positionHistory}}.size()\ -\/\ 1;\ i\ >=\ 0;\ -\/-\/i)\ \{}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (board.\doxymbox{\hyperlink{class_board_a526135b855df86c47ed8f145dacd5b68}{positionHistory}}[i]\ ==\ board.zobristKey)\ \{}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Repetition\ found}}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00611\ \ \ \ \ \}}
+\DoxyCodeLine{00612\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00613\ \}}
+\DoxyCodeLine{00614\ }
+\DoxyCodeLine{00615\ \textcolor{comment}{//\ Negamax\ algorithm\ with\ alpha-\/beta\ pruning}}
+\DoxyCodeLine{00638\ }
+\DoxyCodeLine{00639\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{evalpos_8cpp_ada23a560b390521ef097aed78f8d9c07}{negamax}}(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ depth,\ \textcolor{keywordtype}{int}\ alpha,\ \textcolor{keywordtype}{int}\ beta,\ \textcolor{keywordtype}{int}\ color)}
+\DoxyCodeLine{00640\ \{}
+\DoxyCodeLine{00641\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{evalpos_8cpp_a19c8e4d8636c4059bbc9d5bd3514e1c6}{isRepetition}}(board))\ \{}
+\DoxyCodeLine{00642\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0\ is\ equal\ position,\ slight\ minus\ for\ engine\ to\ avoid\ repetition}}
+\DoxyCodeLine{00643\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/35;}
+\DoxyCodeLine{00644\ \ \ \ \ \}}
+\DoxyCodeLine{00645\ }
+\DoxyCodeLine{00646\ \ \ \ \ ++nodesVisited;}
+\DoxyCodeLine{00647\ \ \ \ \ \textcolor{keywordtype}{int}\ ttScore;}
+\DoxyCodeLine{00648\ \ \ \ \ \doxymbox{\hyperlink{struct_move}{Move}}\ ttMove;}
+\DoxyCodeLine{00649\ \ \ \ \ \textcolor{comment}{//\ Read\ hash}}
+\DoxyCodeLine{00650\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ key\ =\ board.zobristKey;}
+\DoxyCodeLine{00651\ \ \ \ \ \textcolor{keywordflow}{if}\ (TT.probe(key,\ depth,\ alpha,\ beta,\ ttScore,\ ttMove))\ \{}
+\DoxyCodeLine{00652\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ttScore;}
+\DoxyCodeLine{00653\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Score\ found\ in\ TT,\ immediately\ return}}
+\DoxyCodeLine{00654\ \ \ \ \ \}}
+\DoxyCodeLine{00655\ }
+\DoxyCodeLine{00656\ \ \ \ \ \textcolor{keywordflow}{if}\ (depth\ ==\ 0\ ||\ gameOver(board))}
+\DoxyCodeLine{00657\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{evalpos_8cpp_a91c63961112b3633045b79af292f87e0}{quiescence}}(board,\ alpha,\ beta,\ color);}
+\DoxyCodeLine{00658\ }
+\DoxyCodeLine{00659\ \ \ \ \ \textcolor{keyword}{auto}\ moves\ =\ legalMoves(board,\ \doxymbox{\hyperlink{evalpos_8cpp_a2b6878db0622c13b834d01fd28a7e2bd}{to01}}(color));}
+\DoxyCodeLine{00660\ }
+\DoxyCodeLine{00661\ \ \ \ \ \textcolor{keywordflow}{if}\ (moves.empty())\ \{}
+\DoxyCodeLine{00662\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ No\ legal\ moves,\ check\ for\ checkmate\ or\ stalemate}}
+\DoxyCodeLine{00663\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{evalpos_8cpp_acee68596d1e221265e5eb2bbc8466654}{isInCheck}}(board,\ \doxymbox{\hyperlink{evalpos_8cpp_a2b6878db0622c13b834d01fd28a7e2bd}{to01}}(color)))\ \textcolor{keywordflow}{return}\ -\/100000\ +\ depth;\ \textcolor{comment}{//\ CHECKMATE}}
+\DoxyCodeLine{00664\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;\ \textcolor{comment}{//\ STALEMATE}}
+\DoxyCodeLine{00665\ \ \ \ \ \}}
+\DoxyCodeLine{00666\ }
+\DoxyCodeLine{00667\ \ \ \ \ orderMoves(moves);}
+\DoxyCodeLine{00668\ }
+\DoxyCodeLine{00669\ \ \ \ \ \textcolor{keywordtype}{int}\ best\ =\ -\/INF;}
+\DoxyCodeLine{00670\ \ \ \ \ \doxymbox{\hyperlink{struct_move}{Move}}\ bestMove;}
+\DoxyCodeLine{00671\ \ \ \ \ \textcolor{comment}{//\ For\ TT\ storage}}
+\DoxyCodeLine{00672\ \ \ \ \ \textcolor{keywordtype}{int}\ oldAlpha\ =\ alpha;}
+\DoxyCodeLine{00673\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ move\ :\ moves)}
+\DoxyCodeLine{00674\ \ \ \ \ \{}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_undo}{Undo}}\ undo;}
+\DoxyCodeLine{00676\ \ \ \ \ \ \ \ \ applyMove(board,\ move,\ undo);}
+\DoxyCodeLine{00677\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ score\ =\ -\/\doxymbox{\hyperlink{evalpos_8cpp_ada23a560b390521ef097aed78f8d9c07}{negamax}}(board,\ depth\ -\/\ 1,\ -\/beta,\ -\/alpha,\ -\/color);}
+\DoxyCodeLine{00678\ \ \ \ \ \ \ \ \ undoMove(board,\ move,\ undo);}
+\DoxyCodeLine{00679\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (score\ >\ best)}
+\DoxyCodeLine{00680\ \ \ \ \ \ \ \ \ \ \ \ \ best\ =\ score;}
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (score\ >\ alpha)}
+\DoxyCodeLine{00682\ \ \ \ \ \ \ \ \ \ \ \ \ alpha\ =\ score;}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (alpha\ >=\ beta)}
+\DoxyCodeLine{00684\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00685\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ beta\ cutoff}}
+\DoxyCodeLine{00686\ \ \ \ \ \}}
+\DoxyCodeLine{00687\ }
+\DoxyCodeLine{00688\ \ \ \ \ \doxymbox{\hyperlink{_t_t_8h_a2add7e9edf4c9305f372b0e50897ce99}{TTFlag}}\ flag\ =\ TT\_EXACT;}
+\DoxyCodeLine{00689\ \ \ \ \ \textcolor{keywordflow}{if}\ (best\ <=\ oldAlpha)\ flag\ =\ TT\_ALPHA;\ \textcolor{comment}{//\ Not\ better\ than\ alpha}}
+\DoxyCodeLine{00690\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (best\ >=\ beta)\ flag\ =\ TT\_BETA;}
+\DoxyCodeLine{00691\ \ \ \ \ \textcolor{comment}{//\ Cutoff}}
+\DoxyCodeLine{00692\ }
+\DoxyCodeLine{00693\ \ \ \ \ TT.store(key,\ best,\ depth,\ flag,\ bestMove);}
+\DoxyCodeLine{00694\ }
+\DoxyCodeLine{00695\ \ \ \ \ \textcolor{keywordflow}{return}\ best;}
+\DoxyCodeLine{00696\ \}}
 
 \end{DoxyCode}

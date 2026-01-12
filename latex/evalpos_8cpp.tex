@@ -1,0 +1,277 @@
+\doxysection{src/\+engine/\+evalpos.cpp File Reference}
+\hypertarget{evalpos_8cpp}{}\label{evalpos_8cpp}\index{src/engine/evalpos.cpp@{src/engine/evalpos.cpp}}
+
+
+File implementation for position evaluation.  
+
+
+{\ttfamily \+\#include "{}../\+\+Board.\+h"{}}\newline
+{\ttfamily \+\#include "{}val.\+h"{}}\newline
+{\ttfamily \+\#include "{}moves.\+h"{}}\newline
+{\ttfamily \+\#include $<$algorithm$>$}\newline
+{\ttfamily \+\#include $<$vector$>$}\newline
+{\ttfamily \+\#include $<$limits$>$}\newline
+{\ttfamily \+\#include "{}logger/\+logger.\+h"{}}\newline
+{\ttfamily \+\#include $<$string$>$}\newline
+{\ttfamily \+\#include "{}tables/\+zobrist.\+h"{}}\newline
+{\ttfamily \+\#include "{}tables/\+\+TT.\+h"{}}\newline
+{\ttfamily \+\#include "{}engine.\+h"{}}\newline
+{\ttfamily \+\#include $<$cctype$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_undo}{Undo}}
+\begin{DoxyCompactList}\small\item\em Structure to hold undo information. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+long \doxymbox{\hyperlink{evalpos_8cpp_a2d3eaaf6d4887ec01c547e98669003ed}{get\+\_\+nodes\+\_\+visited}} ()
+\begin{DoxyCompactList}\small\item\em Get nodes visited. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{evalpos_8cpp_a2b6878db0622c13b834d01fd28a7e2bd}{to01}} (int sign)
+\begin{DoxyCompactList}\small\item\em Perform to01. \end{DoxyCompactList}\item 
+\Hypertarget{evalpos_8cpp_a14a6348ffb64dd7e75624003230c7213}\label{evalpos_8cpp_a14a6348ffb64dd7e75624003230c7213} 
+int {\bfseries to\+Sign} (int color01)
+\item 
+\Hypertarget{evalpos_8cpp_a7966010ce7ca2cb401e511f241bad987}\label{evalpos_8cpp_a7966010ce7ca2cb401e511f241bad987} 
+bool {\bfseries is\+Valid\+Pos} (int r, int c)
+\item 
+int \doxymbox{\hyperlink{evalpos_8cpp_a2c613b4f2172fac4bad217a0735a3db2}{get\+Pst\+Value}} (const int table\+[8]\+\+[8]\+, int row, int col, int color)
+\begin{DoxyCompactList}\small\item\em Get the Pst Value object. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{evalpos_8cpp_a5f2b3499c4d29d3309fec883746e0605}{is\+Square\+Attacked}} (\doxymbox{\hyperlink{class_board}{Board}} \&board, \doxymbox{\hyperlink{struct_position}{Position}} pos, int attacker\+Color)
+\begin{DoxyCompactList}\small\item\em Check whether square attacked. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{evalpos_8cpp_acee68596d1e221265e5eb2bbc8466654}{is\+In\+Check}} (\doxymbox{\hyperlink{class_board}{Board}} \&board, int color)
+\begin{DoxyCompactList}\small\item\em Check whether in check. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{evalpos_8cpp_a84c565d83e6349abf15245a36084e6be}{eval}} (const \doxymbox{\hyperlink{class_board}{Board}} \&board, int color)
+\begin{DoxyCompactList}\small\item\em Perform eval. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{evalpos_8cpp_a91c63961112b3633045b79af292f87e0}{quiescence}} (\doxymbox{\hyperlink{class_board}{Board}} \&board, int alpha, int beta, int color)
+\begin{DoxyCompactList}\small\item\em Extend the search on tactical positions using capture-\/only quiescence search. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{evalpos_8cpp_a19c8e4d8636c4059bbc9d5bd3514e1c6}{is\+Repetition}} (const \doxymbox{\hyperlink{class_board}{Board}} \&board)
+\begin{DoxyCompactList}\small\item\em Check whether repetition. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{evalpos_8cpp_ada23a560b390521ef097aed78f8d9c07}{negamax}} (\doxymbox{\hyperlink{class_board}{Board}} \&board, int depth, int alpha, int beta, int color)
+\begin{DoxyCompactList}\small\item\em Search the game tree using negamax with alpha-\/beta pruning. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+File implementation for position evaluation. 
+
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2026-\/01-\/12
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2026 
+\end{DoxyCopyright}
+
+
+\label{doc-func-members}
+\Hypertarget{evalpos_8cpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{evalpos_8cpp_a84c565d83e6349abf15245a36084e6be}\index{evalpos.cpp@{evalpos.cpp}!eval@{eval}}
+\index{eval@{eval}!evalpos.cpp@{evalpos.cpp}}
+\doxysubsubsection{\texorpdfstring{eval()}{eval()}}
+{\footnotesize\ttfamily \label{evalpos_8cpp_a84c565d83e6349abf15245a36084e6be} 
+int eval (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{int}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Perform eval. 
+
+Implements the behavior implied by the function name. 
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state to operate on. \\
+\hline
+{\em color} & Side/\+color parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Integer result. 
+\end{DoxyReturn}
+\Hypertarget{evalpos_8cpp_a2d3eaaf6d4887ec01c547e98669003ed}\index{evalpos.cpp@{evalpos.cpp}!get\_nodes\_visited@{get\_nodes\_visited}}
+\index{get\_nodes\_visited@{get\_nodes\_visited}!evalpos.cpp@{evalpos.cpp}}
+\doxysubsubsection{\texorpdfstring{get\_nodes\_visited()}{get\_nodes\_visited()}}
+{\footnotesize\ttfamily \label{evalpos_8cpp_a2d3eaaf6d4887ec01c547e98669003ed} 
+long get\+\_\+nodes\+\_\+visited (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Get nodes visited. 
+
+Get the nodes visited object.
+
+Returns a value derived from current state. \begin{DoxyReturn}{Returns}
+Requested value. 
+\end{DoxyReturn}
+\Hypertarget{evalpos_8cpp_a2c613b4f2172fac4bad217a0735a3db2}\index{evalpos.cpp@{evalpos.cpp}!getPstValue@{getPstValue}}
+\index{getPstValue@{getPstValue}!evalpos.cpp@{evalpos.cpp}}
+\doxysubsubsection{\texorpdfstring{getPstValue()}{getPstValue()}}
+{\footnotesize\ttfamily \label{evalpos_8cpp_a2c613b4f2172fac4bad217a0735a3db2} 
+int get\+Pst\+Value (\begin{DoxyParamCaption}\item[{const int}]{table}{\+[8]\+\+[8]\+, }\item[{int}]{row}{, }\item[{int}]{col}{, }\item[{int}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Get the Pst Value object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em table} & \\
+\hline
+{\em row} & \\
+\hline
+{\em col} & \\
+\hline
+{\em color} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+\Hypertarget{evalpos_8cpp_acee68596d1e221265e5eb2bbc8466654}\index{evalpos.cpp@{evalpos.cpp}!isInCheck@{isInCheck}}
+\index{isInCheck@{isInCheck}!evalpos.cpp@{evalpos.cpp}}
+\doxysubsubsection{\texorpdfstring{isInCheck()}{isInCheck()}}
+{\footnotesize\ttfamily \label{evalpos_8cpp_acee68596d1e221265e5eb2bbc8466654} 
+bool is\+In\+Check (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{int}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Check whether in check. 
+
+Perform is\+In\+Check.
+
+Returns a boolean condition derived from current state/\+arguments. 
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state to operate on. \\
+\hline
+{\em color} & Side/\+color parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the condition holds; otherwise false. 
+\end{DoxyReturn}
+\Hypertarget{evalpos_8cpp_a19c8e4d8636c4059bbc9d5bd3514e1c6}\index{evalpos.cpp@{evalpos.cpp}!isRepetition@{isRepetition}}
+\index{isRepetition@{isRepetition}!evalpos.cpp@{evalpos.cpp}}
+\doxysubsubsection{\texorpdfstring{isRepetition()}{isRepetition()}}
+{\footnotesize\ttfamily \label{evalpos_8cpp_a19c8e4d8636c4059bbc9d5bd3514e1c6} 
+bool is\+Repetition (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{}\end{DoxyParamCaption})}
+
+
+
+Check whether repetition. 
+
+Returns a boolean condition derived from current state/\+arguments. 
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state to operate on. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the condition holds; otherwise false. 
+\end{DoxyReturn}
+\Hypertarget{evalpos_8cpp_a5f2b3499c4d29d3309fec883746e0605}\index{evalpos.cpp@{evalpos.cpp}!isSquareAttacked@{isSquareAttacked}}
+\index{isSquareAttacked@{isSquareAttacked}!evalpos.cpp@{evalpos.cpp}}
+\doxysubsubsection{\texorpdfstring{isSquareAttacked()}{isSquareAttacked()}}
+{\footnotesize\ttfamily \label{evalpos_8cpp_a5f2b3499c4d29d3309fec883746e0605} 
+bool is\+Square\+Attacked (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{\doxymbox{\hyperlink{struct_position}{Position}}}]{pos}{, }\item[{int}]{attacker\+Color}{}\end{DoxyParamCaption})}
+
+
+
+Check whether square attacked. 
+
+Returns a boolean condition derived from current state/\+arguments. 
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state to operate on. \\
+\hline
+{\em pos} & \doxylink{class_board}{Board} position/\+index. \\
+\hline
+{\em attacker\+Color} & Side/\+color parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the condition holds; otherwise false. 
+\end{DoxyReturn}
+\Hypertarget{evalpos_8cpp_ada23a560b390521ef097aed78f8d9c07}\index{evalpos.cpp@{evalpos.cpp}!negamax@{negamax}}
+\index{negamax@{negamax}!evalpos.cpp@{evalpos.cpp}}
+\doxysubsubsection{\texorpdfstring{negamax()}{negamax()}}
+{\footnotesize\ttfamily \label{evalpos_8cpp_ada23a560b390521ef097aed78f8d9c07} 
+int negamax (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{int}]{depth}{, }\item[{int}]{alpha}{, }\item[{int}]{beta}{, }\item[{int}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Search the game tree using negamax with alpha-\/beta pruning. 
+
+Perform negamax.
+
+High-\/level flow:\+ 1) Optional repetition detection using a Zobrist-\/key history (to avoid loops). 2) Probe the transposition table (TT) to reuse cached bounds/\+scores. 3) If depth is 0 (or terminal), evaluate via quiescence search. 4) Generate legal moves and order them (captures/\+promotions first). 5) Recurse with negamax:\+ score = -\/negamax(child, depth-\/1, -\/beta, -\/alpha, -\/color) 6) Update alpha/\+best score and cut off when alpha \texorpdfstring{$>$}{>}= beta. 7) Store the resulting bound/\+score in TT for future probes.
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state (modified via apply/\+undo during recursion). \\
+\hline
+{\em depth} & Remaining search depth in plies. \\
+\hline
+{\em alpha} & Lower bound for the best achievable score. \\
+\hline
+{\em beta} & Upper bound for the best achievable score. \\
+\hline
+{\em color} & Perspective/\+sign (+1 for white, -\/1 for black in this engine layer). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Best score found from the perspective of {\ttfamily color}.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+This engine uses a simple material+\+PST evaluation and simplified rules (no castling/\+en-\/passant). 
+\end{DoxyNote}
+\Hypertarget{evalpos_8cpp_a91c63961112b3633045b79af292f87e0}\index{evalpos.cpp@{evalpos.cpp}!quiescence@{quiescence}}
+\index{quiescence@{quiescence}!evalpos.cpp@{evalpos.cpp}}
+\doxysubsubsection{\texorpdfstring{quiescence()}{quiescence()}}
+{\footnotesize\ttfamily \label{evalpos_8cpp_a91c63961112b3633045b79af292f87e0} 
+int quiescence (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{int}]{alpha}{, }\item[{int}]{beta}{, }\item[{int}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Extend the search on tactical positions using capture-\/only quiescence search. 
+
+Perform quiescence search.
+
+Quiescence search reduces "{}horizon effect"{}:\+ instead of stopping at depth 0 and returning a raw eval, it continues exploring forcing capture sequences until the position becomes "{}quiet"{}.
+
+Algorithm:\+
+\begin{DoxyItemize}
+\item Compute a stand-\/pat score (\doxylink{engine_8h_a84c565d83e6349abf15245a36084e6be}{eval()}).
+\item If stand-\/pat already exceeds beta:\+ fail-\/high cutoff.
+\item Otherwise, try all captures (\doxylink{moves_8cpp_a89c28d1f0b1c5466438f80f803cd8dba}{generate\+All\+Captures()}), recursively calling quiescence with negamax sign flip.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & Current board state (modified via apply/\+undo). \\
+\hline
+{\em alpha} & Lower bound. \\
+\hline
+{\em beta} & Upper bound. \\
+\hline
+{\em color} & Perspective/\+sign (+1/\+-\/1). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Best tactical score within \+[alpha, beta]\+. 
+\end{DoxyReturn}
+\Hypertarget{evalpos_8cpp_a2b6878db0622c13b834d01fd28a7e2bd}\index{evalpos.cpp@{evalpos.cpp}!to01@{to01}}
+\index{to01@{to01}!evalpos.cpp@{evalpos.cpp}}
+\doxysubsubsection{\texorpdfstring{to01()}{to01()}}
+{\footnotesize\ttfamily \label{evalpos_8cpp_a2b6878db0622c13b834d01fd28a7e2bd} 
+int to01 (\begin{DoxyParamCaption}\item[{int}]{sign}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Perform to01. 
+
+Implements the behavior implied by the function name. 
+\begin{DoxyParams}{Parameters}
+{\em sign} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Integer result. 
+\end{DoxyReturn}

@@ -1,9 +1,22 @@
-﻿#pragma once
+﻿/**
+ * @file kNight.h
+ * @brief File declaration for Knight piece.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
+#pragma once
 #include <iostream>
 #include "Piece.h"
 #include "Board.h"
 using namespace std;
 
+/**
+ * @brief Class for Knight piece.
+ * 
+ */
 class Knight : public Piece {
 private:
 	int direction;

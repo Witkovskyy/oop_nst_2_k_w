@@ -91,35 +91,38 @@ $(function(){initNavTree('moves_8h_source.html','',''); });
   <div class="headertitle"><div class="title">moves.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &quot;../Board.h&quot;</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;../Piece.h&quot;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="foldopen" id="foldopen00015" data-start="{" data-end="};">
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="struct_move.html">   15</a></span><span class="keyword">struct </span><a class="code hl_struct" href="struct_move.html">Move</a> {</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <a class="code hl_struct" href="struct_position.html">Position</a> from;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <a class="code hl_struct" href="struct_position.html">Position</a> to;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <a class="code hl_class" href="class_piece.html">Piece</a>* pieceMoved;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <a class="code hl_class" href="class_piece.html">Piece</a>* pieceCaptured;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keywordtype">char</span> promotion = 0; <span class="comment">// 0 = no promotion, otherwise char code of promoted piece</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>};</div>
+<a href="moves_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="_board_8h.html">../Board.h</a>&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="_piece_8h.html">../Piece.h</a>&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="foldopen" id="foldopen00024" data-start="{" data-end="};">
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="struct_move.html">   24</a></span><span class="keyword">struct </span><a class="code hl_struct" href="struct_move.html">Move</a> {</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <a class="code hl_struct" href="struct_position.html">Position</a> from;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <a class="code hl_struct" href="struct_position.html">Position</a> to;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <a class="code hl_class" href="class_piece.html">Piece</a>* pieceMoved;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <a class="code hl_class" href="class_piece.html">Piece</a>* pieceCaptured;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keywordtype">char</span> promotion = 0; <span class="comment">// 0 = no promotion, otherwise char code of promoted piece</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>};</div>
 </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>std::vector&lt;Move&gt; <a class="code hl_function" href="moves_8cpp.html#ac7bd6a3f7dcafd4832a00ce5ed103058">generateQuietMoves</a>(<a class="code hl_class" href="class_board.html">Board</a>&amp; board, <span class="keywordtype">int</span> color);</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>std::vector&lt;Move&gt; <a class="code hl_function" href="moves_8cpp.html#a89c28d1f0b1c5466438f80f803cd8dba">generateAllCaptures</a>(<a class="code hl_class" href="class_board.html">Board</a>&amp; board, <span class="keywordtype">int</span> color);</div>
-<div class="ttc" id="aclass_board_html"><div class="ttname"><a href="class_board.html">Board</a></div><div class="ttdef"><b>Definition</b> Board.h:8</div></div>
-<div class="ttc" id="aclass_piece_html"><div class="ttname"><a href="class_piece.html">Piece</a></div><div class="ttdef"><b>Definition</b> Piece.h:15</div></div>
-<div class="ttc" id="amoves_8cpp_html_a89c28d1f0b1c5466438f80f803cd8dba"><div class="ttname"><a href="moves_8cpp.html#a89c28d1f0b1c5466438f80f803cd8dba">generateAllCaptures</a></div><div class="ttdeci">std::vector&lt; Move &gt; generateAllCaptures(Board &amp;board, int color)</div><div class="ttdoc">Perform generate all captures.</div><div class="ttdef"><b>Definition</b> moves.cpp:290</div></div>
-<div class="ttc" id="amoves_8cpp_html_ac7bd6a3f7dcafd4832a00ce5ed103058"><div class="ttname"><a href="moves_8cpp.html#ac7bd6a3f7dcafd4832a00ce5ed103058">generateQuietMoves</a></div><div class="ttdeci">std::vector&lt; Move &gt; generateQuietMoves(Board &amp;board, int color)</div><div class="ttdoc">Perform generate quiet moves.</div><div class="ttdef"><b>Definition</b> moves.cpp:241</div></div>
-<div class="ttc" id="astruct_move_html"><div class="ttname"><a href="struct_move.html">Move</a></div><div class="ttdoc">Move structure.</div><div class="ttdef"><b>Definition</b> moves.h:15</div></div>
-<div class="ttc" id="astruct_position_html"><div class="ttname"><a href="struct_position.html">Position</a></div><div class="ttdef"><b>Definition</b> Piece.h:7</div></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>std::vector&lt;Move&gt; <a class="code hl_function" href="moves_8h.html#ac7bd6a3f7dcafd4832a00ce5ed103058">generateQuietMoves</a>(<a class="code hl_class" href="class_board.html">Board</a>&amp; board, <span class="keywordtype">int</span> color);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>std::vector&lt;Move&gt; <a class="code hl_function" href="moves_8h.html#a89c28d1f0b1c5466438f80f803cd8dba">generateAllCaptures</a>(<a class="code hl_class" href="class_board.html">Board</a>&amp; board, <span class="keywordtype">int</span> color);</div>
+<div class="ttc" id="a_board_8h_html"><div class="ttname"><a href="_board_8h.html">Board.h</a></div><div class="ttdoc">File declaration for Board class.</div></div>
+<div class="ttc" id="a_piece_8h_html"><div class="ttname"><a href="_piece_8h.html">Piece.h</a></div><div class="ttdoc">File declaration for Piece base class.</div></div>
+<div class="ttc" id="aclass_board_html"><div class="ttname"><a href="class_board.html">Board</a></div><div class="ttdoc">Class for Board.</div><div class="ttdef"><b>Definition</b> Board.h:21</div></div>
+<div class="ttc" id="aclass_piece_html"><div class="ttname"><a href="class_piece.html">Piece</a></div><div class="ttdoc">Base class for all chess pieces.</div><div class="ttdef"><b>Definition</b> Piece.h:35</div></div>
+<div class="ttc" id="amoves_8h_html_a89c28d1f0b1c5466438f80f803cd8dba"><div class="ttname"><a href="moves_8h.html#a89c28d1f0b1c5466438f80f803cd8dba">generateAllCaptures</a></div><div class="ttdeci">std::vector&lt; Move &gt; generateAllCaptures(Board &amp;board, int color)</div><div class="ttdoc">Perform generate capture moves.</div><div class="ttdef"><b>Definition</b> moves.cpp:290</div></div>
+<div class="ttc" id="amoves_8h_html_ac7bd6a3f7dcafd4832a00ce5ed103058"><div class="ttname"><a href="moves_8h.html#ac7bd6a3f7dcafd4832a00ce5ed103058">generateQuietMoves</a></div><div class="ttdeci">std::vector&lt; Move &gt; generateQuietMoves(Board &amp;board, int color)</div><div class="ttdoc">Perform generate quiet moves.</div><div class="ttdef"><b>Definition</b> moves.cpp:241</div></div>
+<div class="ttc" id="astruct_move_html"><div class="ttname"><a href="struct_move.html">Move</a></div><div class="ttdoc">Move structure.</div><div class="ttdef"><b>Definition</b> moves.h:24</div></div>
+<div class="ttc" id="astruct_position_html"><div class="ttname"><a href="struct_position.html">Position</a></div><div class="ttdoc">Structure to represent a position on the chess board.</div><div class="ttdef"><b>Definition</b> Piece.h:23</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>src</b></li><li class="navelem"><b>engine</b></li><li class="navelem"><b>moves.h</b></li>
+    <li class="navelem"><b>src</b></li><li class="navelem"><b>engine</b></li><li class="navelem"><a href="moves_8h.html">moves.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>

@@ -1,3 +1,12 @@
+/**
+ * @file val.h
+ * @brief File declaration for piece values and positional score tables.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #pragma once
 #include <limits>
 

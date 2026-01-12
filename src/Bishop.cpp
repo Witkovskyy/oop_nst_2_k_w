@@ -1,4 +1,13 @@
-﻿#include <iostream>
+﻿/**
+ * @file Bishop.cpp
+ * @brief File implementation for Bishop piece.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
+#include <iostream>
 #include "Piece.h"
 #include "Board.h"
 #include "Bishop.h"

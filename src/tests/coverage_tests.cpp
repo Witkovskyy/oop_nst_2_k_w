@@ -1,3 +1,12 @@
+/**
+ * @file coverage_tests.cpp
+ * @brief File implementation for coverage tests.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch_test_macros.hpp>
 #include "../Board.h"

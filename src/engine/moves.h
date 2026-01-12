@@ -1,3 +1,12 @@
+/**
+ * @file moves.h
+ * @brief File declaration for move generation.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #pragma once
 #include "../Board.h"
 #include "../Piece.h"

@@ -1,3 +1,12 @@
+/**
+ * @file evalpos.cpp
+ * @brief File implementation for position evaluation.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #include "../Board.h"
 #include "val.h"
 #include "moves.h"

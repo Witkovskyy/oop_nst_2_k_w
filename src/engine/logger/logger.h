@@ -1,3 +1,12 @@
+/**
+ * @file logger.h
+ * @brief File declaration for asynchronous logging utility.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
 #pragma once
 #include <string>
 #include <queue>
@@ -5,7 +14,10 @@
 #include <thread>
 #include <condition_variable>
 #include <iostream>
-
+/**
+ * @brief Class for asynchronous logging.
+ * 
+ */
 class AsyncLogger {
 public:
 	// Singleton instance, so we can log from anywhere

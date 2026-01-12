@@ -1,10 +1,23 @@
-﻿#pragma once
+﻿/**
+ * @file Board.h
+ * @brief File declaration for Board class.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
+#pragma once
 #include <iostream>
 #include <vector>
 #include "Piece.h"
 
 const int sizeboard = 8;
 
+/**
+ * @brief Class for Board.
+ * 
+ */
 class Board {
 public:
     Piece* squares[sizeboard][sizeboard];

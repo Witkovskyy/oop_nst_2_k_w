@@ -1,4 +1,13 @@
-﻿#include <iostream>
+﻿/**
+ * @file Pawn.cpp
+ * @brief File implementation for Pawn piece.
+ * @version 0.1
+ * @date 2026-01-12
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
+#include <iostream>
 #include <cmath> 
 #include "Piece.h"
 #include "Pawn.h"
