@@ -1,0 +1,44 @@
+\doxysection{zobrist.\+h}
+\hypertarget{zobrist_8h_source}{}\label{zobrist_8h_source}\index{src/engine/tables/zobrist.h@{src/engine/tables/zobrist.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <random>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ 12\ Pieces\ =\ 6\ white,\ 6\ black\ *\ 64\ pola}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ White:\ P=0,\ N=1,\ B=2,\ R=3,\ Q=4,\ K=5}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ Black:\ P=6,\ N=7,\ B=8,\ R=9,\ Q=10,\ K=11}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Index\ =\ pieceType\ +\ (color\ *\ 6)}}
+\DoxyCodeLine{00009\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ pieceKeys[12][64];}
+\DoxyCodeLine{00010\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ sideKey;\ \textcolor{comment}{//\ Key\ for\ each\ side\ to\ move}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ Initialize\ Zobrist\ keys}}
+\DoxyCodeLine{00018\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ initZobrist()\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ std::mt19937\_64\ rng(12345);\ \textcolor{comment}{//\ Static\ seed\ for\ reproducibility}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ p\ =\ 0;\ p\ <\ 12;\ ++p)\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ s\ =\ 0;\ s\ <\ 64;\ ++s)\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ pieceKeys[p][s]\ =\ rng();}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00025\ \ \ \ \ \}}
+\DoxyCodeLine{00026\ \ \ \ \ sideKey\ =\ rng();}
+\DoxyCodeLine{00027\ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ Mapping\ helper}}
+\DoxyCodeLine{00038\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ getPieceIndex(\textcolor{keywordtype}{char}\ symbol,\ \textcolor{keywordtype}{int}\ color)\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ symbol\ =\ toupper(symbol);}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{int}\ index\ =\ 0;}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordflow}{switch}\ (symbol)\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'P'}:\ index\ =\ 0;\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'N'}:\ index\ =\ 1;\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'B'}:\ index\ =\ 2;\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'R'}:\ index\ =\ 3;\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'Q'}:\ index\ =\ 4;\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'K'}:\ index\ =\ 5;\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordflow}{if}\ (color\ ==\ 1)\ index\ +=\ 6;\ \textcolor{comment}{//\ Move\ black\ +6}}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordflow}{return}\ index;}
+\DoxyCodeLine{00051\ \}}
+
+\end{DoxyCode}

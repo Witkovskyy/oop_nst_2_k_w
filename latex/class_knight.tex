@@ -1,0 +1,112 @@
+\doxysection{Knight Class Reference}
+\hypertarget{class_knight}{}\label{class_knight}\index{Knight@{Knight}}
+Inheritance diagram for Knight:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_knight}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_knight_a2906700a4f0a20042f156e847960be62}{Knight}} (int, char, \doxymbox{\hyperlink{struct_position}{Position}})
+\begin{DoxyCompactList}\small\item\em \doxylink{class_piece}{Piece} method:\+ knight. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_knight_a03b9d7639681b430192fa2a9b8361960}{can\+Move}} (\doxymbox{\hyperlink{struct_position}{Position}} pos, \doxymbox{\hyperlink{class_board}{Board}} \&board)
+\begin{DoxyCompactList}\small\item\em Check whether this piece can move to the given square (piece rules only). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_piece}{Piece}}}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_piece_a3228963526aa8741f9b709667a1b031a}{Piece}} (int, char, \doxymbox{\hyperlink{struct_position}{Position}})
+\begin{DoxyCompactList}\small\item\em \doxylink{class_piece}{Piece} method:\+ piece. \end{DoxyCompactList}\item 
+int {\bfseries get\+Color} ()
+\item 
+char {\bfseries get\+Symbol} ()
+\item 
+\doxymbox{\hyperlink{struct_position}{Position}} \doxymbox{\hyperlink{class_piece_a2dee0ebeffdb733e17574471c441e06d}{get\+Position}} ()
+\begin{DoxyCompactList}\small\item\em Get position. \end{DoxyCompactList}\item 
+void {\bfseries set\+Color} (int c)
+\item 
+void \doxymbox{\hyperlink{class_piece_aa0da1ce9030714897518bb18a653b198}{set\+Symbol}} (char s)
+\begin{DoxyCompactList}\small\item\em Set symbol. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_piece_abc3df3d8bf0cc172cab42663ee50dc66}{set\+Position}} (\doxymbox{\hyperlink{struct_position}{Position}} set\+Pos)
+\begin{DoxyCompactList}\small\item\em Set position. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Attributes inherited from \doxymbox{\hyperlink{class_piece}{Piece}}}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries color}
+\item 
+char {\bfseries symbol}
+\item 
+\doxymbox{\hyperlink{struct_position}{Position}} {\bfseries current\+\_\+position}
+\item 
+int {\bfseries value}
+\end{DoxyCompactItemize}
+
+
+\label{doc-constructors}
+\Hypertarget{class_knight_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_knight_a2906700a4f0a20042f156e847960be62}\index{Knight@{Knight}!Knight@{Knight}}
+\index{Knight@{Knight}!Knight@{Knight}}
+\doxysubsubsection{\texorpdfstring{Knight()}{Knight()}}
+{\footnotesize\ttfamily \label{class_knight_a2906700a4f0a20042f156e847960be62} 
+Knight::\+\+Knight (\begin{DoxyParamCaption}\item[{int}]{c}{, }\item[{char}]{s}{, }\item[{\doxymbox{\hyperlink{struct_position}{Position}}}]{p}{}\end{DoxyParamCaption})}
+
+
+
+\doxylink{class_piece}{Piece} method:\+ knight. 
+
+Applies to a single chess piece instance. 
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{struct_position}{Position}} & \doxylink{class_board}{Board} position/\+index. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation. 
+\end{DoxyReturn}
+
+
+\label{doc-func-members}
+\Hypertarget{class_knight_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_knight_a03b9d7639681b430192fa2a9b8361960}\index{Knight@{Knight}!canMove@{canMove}}
+\index{canMove@{canMove}!Knight@{Knight}}
+\doxysubsubsection{\texorpdfstring{canMove()}{canMove()}}
+{\footnotesize\ttfamily \label{class_knight_a03b9d7639681b430192fa2a9b8361960} 
+bool Knight::\+can\+Move (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_position}{Position}}}]{new\+\_\+pos}{, }\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Check whether this piece can move to the given square (piece rules only). 
+
+Validates movement pattern for the specific piece type. Additional game rules (e.\+g., leaving king in check) are handled elsewhere. 
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+pos} & \doxylink{class_board}{Board} position/\+index. \\
+\hline
+{\em board} & \doxylink{class_board}{Board} state to operate on. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the condition holds; otherwise false. 
+\end{DoxyReturn}
+Perform {\ttfamily abs}.
+
+Documentation for {\ttfamily abs}. 
+\begin{DoxyParams}{Parameters}
+{\em col} & \doxylink{class_board}{Board} column (file). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the operation.
+\end{DoxyReturn}
+
+
+Reimplemented from \doxymbox{\hyperlink{class_piece_a71954d4ddd7bc4b812861369af2dbde1}{Piece}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+src/\+k\+Night.\+h\item 
+src/\+k\+Night.\+cpp\end{DoxyCompactItemize}

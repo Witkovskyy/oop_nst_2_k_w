@@ -1,0 +1,36 @@
+\doxysection{Piece.\+h}
+\hypertarget{_piece_8h_source}{}\label{_piece_8h_source}\index{src/Piece.h@{src/Piece.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00003\ \textcolor{keyword}{using\ namespace\ }std;}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_board}{Board}};}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_position}{Position}}\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{keywordtype}{int}\ row;}
+\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keywordtype}{int}\ col;}
+\DoxyCodeLine{00010\ \};}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_board}{Board}};}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_piece_a3228963526aa8741f9b709667a1b031a}{Piece}}}
+\DoxyCodeLine{00015\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ color;}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ symbol;}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_position}{Position}}\ current\_position;}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ value;}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece_a3228963526aa8741f9b709667a1b031a}{Piece}}(\textcolor{keywordtype}{int},\textcolor{keywordtype}{char},\doxymbox{\hyperlink{struct_position}{Position}});}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ getColor();}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ getSymbol();}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_position}{Position}}\ \doxymbox{\hyperlink{class_piece_a2dee0ebeffdb733e17574471c441e06d}{getPosition}}();}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ setColor(\textcolor{keywordtype}{int}\ c);}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_piece_aa0da1ce9030714897518bb18a653b198}{setSymbol}}(\textcolor{keywordtype}{char}\ s);}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_piece_abc3df3d8bf0cc172cab42663ee50dc66}{setPosition}}(\doxymbox{\hyperlink{struct_position}{Position}}\ setPos);}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_piece_a71954d4ddd7bc4b812861369af2dbde1}{canMove}}(\doxymbox{\hyperlink{struct_position}{Position}}\ newPos,\ \doxymbox{\hyperlink{class_board}{Board}}\ \&board);}
+\DoxyCodeLine{00043\ \};}
+
+\end{DoxyCode}

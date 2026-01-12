@@ -1,0 +1,83 @@
+\doxysection{logger.\+h}
+\hypertarget{logger_8h_source}{}\label{logger_8h_source}\index{src/engine/logger/logger.h@{src/engine/logger/logger.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <queue>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <condition\_variable>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_async_logger_a1ec00e14d6d7bd41638028cb792c4efe}{AsyncLogger}}\ \{}
+\DoxyCodeLine{00010\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{comment}{//\ Singleton\ instance,\ so\ we\ can\ log\ from\ anywhere}}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{class_async_logger_a1ec00e14d6d7bd41638028cb792c4efe}{AsyncLogger}}\&\ \doxymbox{\hyperlink{class_async_logger_a89ac26fe43702d88e0dfa27ca0690f28}{getInstance}}()\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{class_async_logger_a1ec00e14d6d7bd41638028cb792c4efe}{AsyncLogger}}\ instance;}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ instance;}
+\DoxyCodeLine{00021\ \ \ \ \ \}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{comment}{//\ Add\ log\ to\ queue,\ thread-\/safe,\ fast}}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_async_logger_a98e238eaf56d5e11dfa70c6cb9998cc3}{log}}(\textcolor{keyword}{const}\ std::string\&\ message)\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(queueMutex);}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ logQueue.push(message);}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ lock.unlock();}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ cv.notify\_one();\ \textcolor{comment}{//\ Wake\ up\ the\ thread}}
+\DoxyCodeLine{00035\ \ \ \ \ \}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{comment}{//\ Constructor\ deploying\ the\ worker\ thread}}
+\DoxyCodeLine{00043\ \ \ \ \ \doxymbox{\hyperlink{class_async_logger_a1ec00e14d6d7bd41638028cb792c4efe}{AsyncLogger}}()\ :\ running(true)\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ workerThread\ =\ std::thread(\&AsyncLogger::processLogs,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{00045\ \ \ \ \ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//\ Destructor}}
+\DoxyCodeLine{00053\ \ \ \ \ \doxymbox{\hyperlink{class_async_logger_abafc27353d7abc7d6ef51a1e252a0462}{\string~AsyncLogger}}()\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(queueMutex);}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ running\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ cv.notify\_all();}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (workerThread.joinable())\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ workerThread.join();}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00062\ \ \ \ \ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00065\ \ \ \ \ std::queue<std::string>\ logQueue;}
+\DoxyCodeLine{00066\ \ \ \ \ std::mutex\ queueMutex;}
+\DoxyCodeLine{00067\ \ \ \ \ std::condition\_variable\ cv;}
+\DoxyCodeLine{00068\ \ \ \ \ std::thread\ workerThread;}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{bool}\ running;}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{comment}{//\ Open\ new\ thread\ to\ process\ logs}}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{void}\ processLogs()\ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{true})\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(queueMutex);}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Wait\ for\ log\ to\ show\ up\ or\ the\ program\ to\ end}}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ cv.wait(lock,\ [\textcolor{keyword}{this}]\ \{\ \textcolor{keywordflow}{return}\ !logQueue.empty()\ ||\ !running;\ \});}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Break\ if\ empty}}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!running\ \&\&\ logQueue.empty())\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ all\ messages\ from\ the\ queue}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (!logQueue.empty())\ \{}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ msg\ =\ logQueue.front();}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logQueue.pop();}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unlock\ mutex\ for\ output,\ then\ lock\ again}}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lock.unlock();}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ msg\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};\ \textcolor{comment}{//\ Slow\ cout}}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lock.lock();}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00108\ \ \ \ \ \}}
+\DoxyCodeLine{00109\ \};}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{comment}{//\ Makro\ for\ easier\ logging}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ LOG(msg)\ AsyncLogger::getInstance().log(msg)}}
+
+\end{DoxyCode}
