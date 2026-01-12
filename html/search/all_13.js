@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['rook_0',['Rook',['../class_rook.html',1,'Rook'],['../class_rook.html#a55783154025d54d945b70cbc2774da50',1,'Rook::Rook()']]],
-  ['rozgrywk¹_20game_20management_1',['1. Zarz¹dzanie Rozgrywk¹ (Game Management)',['../md_requirements.html#autotoc_md16',1,'']]]
+  ['quality_20assurance_0',['5. Zapewnienie Jakoœci (Quality Assurance)',['../md_requirements.html#autotoc_md20',1,'']]],
+  ['queen_1',['Queen',['../class_queen.html',1,'Queen'],['../class_queen.html#a871193f6eed26d03430cd1c7382a706a',1,'Queen::Queen()']]]
 ];

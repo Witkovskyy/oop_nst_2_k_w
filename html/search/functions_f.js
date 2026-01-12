@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7easynclogger_0',['~AsyncLogger',['../class_async_logger.html#abafc27353d7abc7d6ef51a1e252a0462',1,'AsyncLogger']]]
+  ['transpositiontable_0',['TranspositionTable',['../class_transposition_table.html#a724d9f922515719e2b44ffbb8a6b7ffc',1,'TranspositionTable']]]
 ];

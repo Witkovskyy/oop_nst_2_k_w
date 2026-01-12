@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['queen_0',['Queen',['../class_queen.html#a871193f6eed26d03430cd1c7382a706a',1,'Queen']]]
+  ['operator_3d_0',['operator=',['../class_board.html#ae6c8d66af1bb70e1d34a704321675975',1,'Board']]]
 ];

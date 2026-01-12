@@ -9,6 +9,9 @@ class Board;
  * @brief Get color.
  *
  * @details Applies to a single chess piece instance.
+ * @param c Parameter.
+ * @param s Parameter.
+ * @param pos Parameter.
  * @return Requested value.
  */
 Piece::Piece(int c, char s, Position pos) {

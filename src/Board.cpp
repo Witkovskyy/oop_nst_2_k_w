@@ -33,8 +33,20 @@ Board::Board() {
  * @return Result of the operation.
  */
 Piece* Board::Display() { return squares[0][0]; }
+/**
+ * @brief Check whether empty.
+ * 
+ * @param pos 
+ * @return true 
+ * @return false 
+ */
 bool Board::isEmpty(Position pos) { return getPieceAt(pos) == nullptr; }
-
+/**
+ * @brief Get the Piece at a given position.
+ * 
+ * @param pos Position on the board.
+ * @return Piece* Pointer to the piece at the position, or nullptr if empty.
+ */
 Piece* Board::getPieceAt(Position pos) {
     if (pos.row < 0 || pos.row >= B_SIZE || pos.col < 0 || pos.col >= B_SIZE) return nullptr;
     return squares[pos.row][pos.col];
@@ -67,7 +79,15 @@ bool Board::validateMove(Position old_pos, Position new_pos, Piece* piece) {
         return false;
 	return true;
 }
-
+/**
+ * @brief Move a piece on the board.
+ * 
+ * @param oldpos Original position of the piece.
+ * @param newpos New position to move the piece to.
+ * @param piece Pointer to the piece to move.
+ * @return true If the move was successful.
+ * @return false 
+ */
 bool Board::movePiece(Position oldpos, Position newpos, Piece* piece) {
     if (!piece) return false;
     if (piece->canMove(newpos, *this)) {
@@ -186,7 +206,14 @@ bool Board::isKingInCheck(int color) {
     if (k.row == -1) return false;
     return isSquareAttacked(k, (color == 0) ? 1 : 0);
 }
-
+/**
+ * @brief Check whether is move safe.
+ * 
+ * @param start 
+ * @param end 
+ * @return true 
+ * @return false 
+ */
 bool Board::isMoveSafe(Position start, Position end) {
     Piece* p = getPieceAt(start);
     if (!p) return false;

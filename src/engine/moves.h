@@ -2,6 +2,16 @@
 #include "../Board.h"
 #include "../Piece.h"
 #include <vector>
+/**
+ * @brief Move structure.
+ *
+ * @details Represents a chess move with relevant details.
+ * @args from Starting position of the move.
+ * @args to Ending position of the move.
+ * @args pieceMoved Pointer to the piece being moved.
+ * @args pieceCaptured Pointer to the piece being captured (if any).
+ * @args promotion Character representing the promotion piece (if any).
+ */
 struct Move {
     Position from;
     Position to;

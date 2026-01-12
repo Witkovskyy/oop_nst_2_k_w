@@ -11,38 +11,35 @@ Inheritance diagram for Piece:\+\begin{figure}[H]
 \item 
 \doxymbox{\hyperlink{class_piece_a3228963526aa8741f9b709667a1b031a}{Piece}} (int, char, \doxymbox{\hyperlink{struct_position}{Position}})
 \begin{DoxyCompactList}\small\item\em \doxylink{class_piece}{Piece} method:\+ piece. \end{DoxyCompactList}\item 
-\Hypertarget{class_piece_aea7551fe5db16dbe6e4580863f918321}\label{class_piece_aea7551fe5db16dbe6e4580863f918321} 
-int {\bfseries get\+Color} ()
-\item 
-\Hypertarget{class_piece_abced8ed2c10f60fe904ed839296cc102}\label{class_piece_abced8ed2c10f60fe904ed839296cc102} 
-char {\bfseries get\+Symbol} ()
-\item 
+int \doxymbox{\hyperlink{class_piece_aea7551fe5db16dbe6e4580863f918321}{get\+Color}} ()
+\begin{DoxyCompactList}\small\item\em Get color. \end{DoxyCompactList}\item 
+char \doxymbox{\hyperlink{class_piece_abced8ed2c10f60fe904ed839296cc102}{get\+Symbol}} ()
+\begin{DoxyCompactList}\small\item\em Get the Symbol object. \end{DoxyCompactList}\item 
 \doxymbox{\hyperlink{struct_position}{Position}} \doxymbox{\hyperlink{class_piece_a2dee0ebeffdb733e17574471c441e06d}{get\+Position}} ()
-\begin{DoxyCompactList}\small\item\em Get position. \end{DoxyCompactList}\item 
-\Hypertarget{class_piece_af2c287ec576a41e3233eee71498fd088}\label{class_piece_af2c287ec576a41e3233eee71498fd088} 
-void {\bfseries set\+Color} (int c)
-\item 
+\begin{DoxyCompactList}\small\item\em Get the \doxylink{struct_position}{Position} object. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_piece_af2c287ec576a41e3233eee71498fd088}{set\+Color}} (int c)
+\begin{DoxyCompactList}\small\item\em Set color. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_piece_aa0da1ce9030714897518bb18a653b198}{set\+Symbol}} (char s)
-\begin{DoxyCompactList}\small\item\em Set symbol. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Set the Symbol object. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_piece_abc3df3d8bf0cc172cab42663ee50dc66}{set\+Position}} (\doxymbox{\hyperlink{struct_position}{Position}} set\+Pos)
 \begin{DoxyCompactList}\small\item\em Set position. \end{DoxyCompactList}\item 
 virtual bool \doxymbox{\hyperlink{class_piece_a71954d4ddd7bc4b812861369af2dbde1}{can\+Move}} (\doxymbox{\hyperlink{struct_position}{Position}} new\+Pos, \doxymbox{\hyperlink{class_board}{Board}} \&board)
-\begin{DoxyCompactList}\small\item\em Check whether this piece can move to the given square (piece rules only). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Abstract method to check if a move is valid. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \Hypertarget{class_piece_a4268f3b047e1ad284882708b85332ef1}\label{class_piece_a4268f3b047e1ad284882708b85332ef1} 
 int {\bfseries color}
-\item 
+\begin{DoxyCompactList}\small\item\em Color of the piece. \end{DoxyCompactList}\item 
 \Hypertarget{class_piece_a00143ae55b69981ae484cc7521b6d81a}\label{class_piece_a00143ae55b69981ae484cc7521b6d81a} 
 char {\bfseries symbol}
-\item 
+\begin{DoxyCompactList}\small\item\em Symbol of the piece. \end{DoxyCompactList}\item 
 \Hypertarget{class_piece_a4a6fc15417a7b44197e41cee9ff5e97f}\label{class_piece_a4a6fc15417a7b44197e41cee9ff5e97f} 
 \doxymbox{\hyperlink{struct_position}{Position}} {\bfseries current\+\_\+position}
-\item 
+\begin{DoxyCompactList}\small\item\em Current position of the piece. \end{DoxyCompactList}\item 
 \Hypertarget{class_piece_a0b8fce3f4b7dbd1d46be9004fda383ea}\label{class_piece_a0b8fce3f4b7dbd1d46be9004fda383ea} 
 int {\bfseries value}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Value of the piece. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \label{doc-constructors}
@@ -68,7 +65,16 @@ Applies to a single chess piece instance.
 \begin{DoxyReturn}{Returns}
 Result of the operation.
 \end{DoxyReturn}
-Applies to a single chess piece instance. \begin{DoxyReturn}{Returns}
+Applies to a single chess piece instance. 
+\begin{DoxyParams}{Parameters}
+{\em c} & Parameter. \\
+\hline
+{\em s} & Parameter. \\
+\hline
+{\em pos} & Parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
 Requested value. 
 \end{DoxyReturn}
 
@@ -84,8 +90,22 @@ bool Piece::\+can\+Move (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{str
 
 
 
-Check whether this piece can move to the given square (piece rules only). 
+Abstract method to check if a move is valid. 
 
+Check whether this piece can move to the given square (piece rules only).
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+Pos} & New position to move to. \\
+\hline
+{\em board} & Reference to the board. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true If the move is valid. 
+
+false If the move is not valid.
+\end{DoxyReturn}
 Validates movement pattern for the specific piece type. Additional game rules (e.\+g., leaving king in check) are handled elsewhere. 
 \begin{DoxyParams}{Parameters}
 {\em new\+Pos} & \doxylink{class_board}{Board} position/\+index. \\
@@ -100,6 +120,19 @@ True if the condition holds; otherwise false.
 
 Reimplemented in \doxymbox{\hyperlink{class_bishop_a7769b25671fb168f1291ce8a7e7d6ecf}{Bishop}}, \doxymbox{\hyperlink{class_king_ace3e21a96a90f8a2466f76d627333394}{King}}, \doxymbox{\hyperlink{class_knight_a03b9d7639681b430192fa2a9b8361960}{Knight}}, \doxymbox{\hyperlink{class_pawn_ac45e12645f2152b2da52f7b667884d9c}{Pawn}}, \doxymbox{\hyperlink{class_queen_a927e251249b7edd7c04204a6abc93758}{Queen}}, and \doxymbox{\hyperlink{class_rook_a05c9163ff55dd0364fb3490dd081de2d}{Rook}}.
 
+\Hypertarget{class_piece_aea7551fe5db16dbe6e4580863f918321}\index{Piece@{Piece}!getColor@{getColor}}
+\index{getColor@{getColor}!Piece@{Piece}}
+\doxysubsubsection{\texorpdfstring{getColor()}{getColor()}}
+{\footnotesize\ttfamily \label{class_piece_aea7551fe5db16dbe6e4580863f918321} 
+int Piece::\+get\+Color (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Get color. 
+
+Applies to a single chess piece instance. \begin{DoxyReturn}{Returns}
+Color of the piece. 
+\end{DoxyReturn}
 \Hypertarget{class_piece_a2dee0ebeffdb733e17574471c441e06d}\index{Piece@{Piece}!getPosition@{getPosition}}
 \index{getPosition@{getPosition}!Piece@{Piece}}
 \doxysubsubsection{\texorpdfstring{getPosition()}{getPosition()}}
@@ -108,11 +141,44 @@ Reimplemented in \doxymbox{\hyperlink{class_bishop_a7769b25671fb168f1291ce8a7e7d
 
 
 
-Get position. 
+Get the \doxylink{struct_position}{Position} object. 
 
+Get position.
+
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_position}{Position}
+\end{DoxyReturn}
 Applies to a single chess piece instance. \begin{DoxyReturn}{Returns}
 Requested value. 
 \end{DoxyReturn}
+\Hypertarget{class_piece_abced8ed2c10f60fe904ed839296cc102}\index{Piece@{Piece}!getSymbol@{getSymbol}}
+\index{getSymbol@{getSymbol}!Piece@{Piece}}
+\doxysubsubsection{\texorpdfstring{getSymbol()}{getSymbol()}}
+{\footnotesize\ttfamily \label{class_piece_abced8ed2c10f60fe904ed839296cc102} 
+char Piece::\+get\+Symbol (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Get the Symbol object. 
+
+\begin{DoxyReturn}{Returns}
+char 
+\end{DoxyReturn}
+\Hypertarget{class_piece_af2c287ec576a41e3233eee71498fd088}\index{Piece@{Piece}!setColor@{setColor}}
+\index{setColor@{setColor}!Piece@{Piece}}
+\doxysubsubsection{\texorpdfstring{setColor()}{setColor()}}
+{\footnotesize\ttfamily \label{class_piece_af2c287ec576a41e3233eee71498fd088} 
+void Piece::\+set\+Color (\begin{DoxyParamCaption}\item[{int}]{c}{}\end{DoxyParamCaption})}
+
+
+
+Set color. 
+
+Applies to a single chess piece instance. 
+\begin{DoxyParams}{Parameters}
+{\em c} & Color to set. \\
+\hline
+\end{DoxyParams}
 \Hypertarget{class_piece_abc3df3d8bf0cc172cab42663ee50dc66}\index{Piece@{Piece}!setPosition@{setPosition}}
 \index{setPosition@{setPosition}!Piece@{Piece}}
 \doxysubsubsection{\texorpdfstring{setPosition()}{setPosition()}}
@@ -136,8 +202,15 @@ void Piece::\+set\+Symbol (\begin{DoxyParamCaption}\item[{char}]{s}{}\end{DoxyPa
 
 
 
-Set symbol. 
+Set the Symbol object. 
 
+Set symbol.
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & Symbol to set\\
+\hline
+\end{DoxyParams}
 Applies to a single chess piece instance. 
 \begin{DoxyParams}{Parameters}
 {\em s} & Parameter. \\

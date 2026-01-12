@@ -6,5 +6,6 @@ var searchData=
   ['mouse_20drag_20drop_3a_20move_20a_20piece_20to_20a_20target_20square_3',['* &lt;b&gt;Mouse Drag &amp;amp; Drop:&lt;/b&gt; Move a piece to a target square.',['../md__r_e_a_d_m_e.html#autotoc_md13',1,'']]],
   ['move_4',['Move',['../struct_move.html',1,'']]],
   ['move_20a_20piece_20to_20a_20target_20square_5',['* &lt;b&gt;Mouse Drag &amp;amp; Drop:&lt;/b&gt; Move a piece to a target square.',['../md__r_e_a_d_m_e.html#autotoc_md13',1,'']]],
-  ['moves_2ecpp_6',['moves.cpp',['../moves_8cpp.html',1,'']]]
+  ['movepiece_6',['movePiece',['../class_board.html#a527ff16994eea039592bd328aa7bc5ec',1,'Board']]],
+  ['moves_2ecpp_7',['moves.cpp',['../moves_8cpp.html',1,'']]]
 ];

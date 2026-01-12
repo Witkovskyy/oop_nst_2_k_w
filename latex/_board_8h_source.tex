@@ -15,27 +15,26 @@
 \DoxyCodeLine{00017\ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ \doxymbox{\hyperlink{class_board_a41bb1e9790b207a0f191682b28907e0a}{Display}}();}
 \DoxyCodeLine{00018\ \textcolor{keyword}{public}:}
 \DoxyCodeLine{00019\ \ \ \ \ \doxymbox{\hyperlink{class_board_a9ee491d4fea680cf69b033374a9fdfcb}{Board}}();}
-\DoxyCodeLine{00020\ \ \ \ \ \doxymbox{\hyperlink{class_board_a9ee491d4fea680cf69b033374a9fdfcb}{Board}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_board_a9ee491d4fea680cf69b033374a9fdfcb}{Board}}\&\ other);\ \textcolor{comment}{//\ Copy\ constructor}}
-\DoxyCodeLine{00021\ \ \ \ \ \doxymbox{\hyperlink{class_board_a9ee491d4fea680cf69b033374a9fdfcb}{\string~Board}}();\ \textcolor{comment}{//\ Destructor}}
-\DoxyCodeLine{00022\ \ \ \ \ \doxymbox{\hyperlink{class_board_a9ee491d4fea680cf69b033374a9fdfcb}{Board}}\&\ operator=(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_board_a9ee491d4fea680cf69b033374a9fdfcb}{Board}}\&\ other);\ \textcolor{comment}{//\ Copy\ assignment\ operator}}
-\DoxyCodeLine{00023\ }
-\DoxyCodeLine{00024\ \ \ \ \ \textcolor{comment}{//\ New\ methods\ for\ game\ state\ checks}}
-\DoxyCodeLine{00032\ \ \ \ \ \doxymbox{\hyperlink{struct_position}{Position}}\ \doxymbox{\hyperlink{class_board_afb9f944e7b89d6c53a4e69cd7ea35d03}{findKing}}(\textcolor{keywordtype}{int}\ color);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Find\ king\ position}}
-\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_board_af24b4832beffb77bdd1ce00b273a5254}{isSquareAttacked}}(\doxymbox{\hyperlink{struct_position}{Position}}\ pos,\ \textcolor{keywordtype}{int}\ enemyColor);\ \textcolor{comment}{//\ Is\ the\ square\ attacked?}}
-\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_board_acf402afde5991cd55a54d8ae11db4248}{isKingInCheck}}(\textcolor{keywordtype}{int}\ color);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Is\ king\ in\ check?}}
-\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{bool}\ isMoveSafe(\doxymbox{\hyperlink{struct_position}{Position}}\ start,\ \doxymbox{\hyperlink{struct_position}{Position}}\ end);\ \ \textcolor{comment}{//\ Pins\ }}
-\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_board_aca4ce8464a1290b16df4565bc6d3fbb4}{isCheckMate}}(\textcolor{keywordtype}{int}\ color);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Is\ checkmate?}}
-\DoxyCodeLine{00037\ }
-\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_board_a13d161d221daab2aa38ea6e97c4180f7}{placePiece}}(\doxymbox{\hyperlink{class_piece}{Piece}}*\ piece);}
-\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_board_adc5d17132e727377eecf61d773c70c46}{isEmpty}}(\doxymbox{\hyperlink{struct_position}{Position}}\ pos);}
-\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{bool}\ movePiece(\doxymbox{\hyperlink{struct_position}{Position}}\ oldpos,\ \doxymbox{\hyperlink{struct_position}{Position}}\ newpos,\ \doxymbox{\hyperlink{class_piece}{Piece}}*\ piece);}
-\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_board_a3b52e5de4f7c709cf4de1cc439e77d9c}{DisplayBoard}}();}
-\DoxyCodeLine{00049\ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ getPieceAt(\doxymbox{\hyperlink{struct_position}{Position}}\ pos);}
-\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_board_abebe82a3961f44ec33063b09b6256b0f}{validateMove}}(\doxymbox{\hyperlink{struct_position}{Position}}\ from,\ \doxymbox{\hyperlink{struct_position}{Position}}\ to,\ \doxymbox{\hyperlink{class_piece}{Piece}}*\ piece);}
-\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_board_a14698ff863c063da0d11066fd1a34063}{promotePawn}}(\doxymbox{\hyperlink{class_board_a9ee491d4fea680cf69b033374a9fdfcb}{Board}}\ \&board,\ \doxymbox{\hyperlink{struct_position}{Position}}\ pos,\ \textcolor{keywordtype}{char}\ newSymbol,\ \textcolor{keywordtype}{int}\ color);}
-\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ zobristKey\ =\ 0;}
-\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_board_af6ba10bb3d742838c02e2a385aa9ba01}{computeZobristHash}}();}
-\DoxyCodeLine{00059\ \ \ \ \ std::vector<unsigned\ long\ long>\ positionHistory;}
-\DoxyCodeLine{00060\ \};}
+\DoxyCodeLine{00025\ \ \ \ \ \doxymbox{\hyperlink{class_board_a9ee491d4fea680cf69b033374a9fdfcb}{Board}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_board_a9ee491d4fea680cf69b033374a9fdfcb}{Board}}\&\ other);\ \textcolor{comment}{//\ Copy\ constructor}}
+\DoxyCodeLine{00026\ \ \ \ \ \doxymbox{\hyperlink{class_board_a9ee491d4fea680cf69b033374a9fdfcb}{\string~Board}}();\ \textcolor{comment}{//\ Destructor}}
+\DoxyCodeLine{00033\ \ \ \ \ \doxymbox{\hyperlink{class_board_a9ee491d4fea680cf69b033374a9fdfcb}{Board}}\&\ \doxymbox{\hyperlink{class_board_ae6c8d66af1bb70e1d34a704321675975}{operator=}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_board_a9ee491d4fea680cf69b033374a9fdfcb}{Board}}\&\ other);\ \textcolor{comment}{//\ Copy\ assignment\ operator}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{comment}{//\ New\ methods\ for\ game\ state\ checks}}
+\DoxyCodeLine{00043\ \ \ \ \ \doxymbox{\hyperlink{struct_position}{Position}}\ \doxymbox{\hyperlink{class_board_afb9f944e7b89d6c53a4e69cd7ea35d03}{findKing}}(\textcolor{keywordtype}{int}\ color);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Find\ king\ position}}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_board_af24b4832beffb77bdd1ce00b273a5254}{isSquareAttacked}}(\doxymbox{\hyperlink{struct_position}{Position}}\ pos,\ \textcolor{keywordtype}{int}\ enemyColor);\ \textcolor{comment}{//\ Is\ the\ square\ attacked?}}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_board_acf402afde5991cd55a54d8ae11db4248}{isKingInCheck}}(\textcolor{keywordtype}{int}\ color);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Is\ king\ in\ check?}}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_board_ae86a24a7db2559c3cde50fa8f8e38ea7}{isMoveSafe}}(\doxymbox{\hyperlink{struct_position}{Position}}\ start,\ \doxymbox{\hyperlink{struct_position}{Position}}\ end);\ \ \textcolor{comment}{//\ Pins\ }}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_board_aca4ce8464a1290b16df4565bc6d3fbb4}{isCheckMate}}(\textcolor{keywordtype}{int}\ color);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Is\ checkmate?}}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_board_a13d161d221daab2aa38ea6e97c4180f7}{placePiece}}(\doxymbox{\hyperlink{class_piece}{Piece}}*\ piece);}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_board_adc5d17132e727377eecf61d773c70c46}{isEmpty}}(\doxymbox{\hyperlink{struct_position}{Position}}\ pos);}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_board_a527ff16994eea039592bd328aa7bc5ec}{movePiece}}(\doxymbox{\hyperlink{struct_position}{Position}}\ oldpos,\ \doxymbox{\hyperlink{struct_position}{Position}}\ newpos,\ \doxymbox{\hyperlink{class_piece}{Piece}}*\ piece);}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_board_a3b52e5de4f7c709cf4de1cc439e77d9c}{DisplayBoard}}();}
+\DoxyCodeLine{00113\ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ \doxymbox{\hyperlink{class_board_a23f7eb70ef7d46d63b5c4c77f1f6cd2b}{getPieceAt}}(\doxymbox{\hyperlink{struct_position}{Position}}\ pos);}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_board_abebe82a3961f44ec33063b09b6256b0f}{validateMove}}(\doxymbox{\hyperlink{struct_position}{Position}}\ from,\ \doxymbox{\hyperlink{struct_position}{Position}}\ to,\ \doxymbox{\hyperlink{class_piece}{Piece}}*\ piece);}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_board_a14698ff863c063da0d11066fd1a34063}{promotePawn}}(\doxymbox{\hyperlink{class_board_a9ee491d4fea680cf69b033374a9fdfcb}{Board}}\ \&board,\ \doxymbox{\hyperlink{struct_position}{Position}}\ pos,\ \textcolor{keywordtype}{char}\ newSymbol,\ \textcolor{keywordtype}{int}\ color);}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ zobristKey\ =\ 0;}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_board_af6ba10bb3d742838c02e2a385aa9ba01}{computeZobristHash}}();}
+\DoxyCodeLine{00144\ \ \ \ \ std::vector<unsigned\ long\ long>\ \doxymbox{\hyperlink{class_board_a526135b855df86c47ed8f145dacd5b68}{positionHistory}};}
+\DoxyCodeLine{00145\ \};}
 
 \end{DoxyCode}

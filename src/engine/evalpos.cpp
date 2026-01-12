@@ -31,7 +31,15 @@ long get_nodes_visited() { return nodesVisited; }
 inline int to01(int sign) { return sign > 0 ? 0 : 1; }
 inline int toSign(int color01) { return color01 == 0 ? +1 : -1; }
 inline bool isValidPos(int r, int c) { return r >= 0 && r < 8 && c >= 0 && c < 8; }
-
+/**
+ * @brief Get the Pst Value object
+ * 
+ * @param table 
+ * @param row 
+ * @param col 
+ * @param color 
+ * @return int 
+ */
 int getPstValue(const int table[8][8], int row, int col, int color)
 {
     if (color == 0) // WHITE
@@ -39,7 +47,10 @@ int getPstValue(const int table[8][8], int row, int col, int color)
     else // BLACK
         return table[row][col];
 }
-
+/**
+ * @brief Structure to hold undo information.
+ * 
+ */
 struct Undo
 {
     Position from;
@@ -456,7 +467,12 @@ static std::vector<Move> generateCaptures(Board& board, int color)
 {
     return generateAllCaptures(board, color);
 }
-
+/**
+ * @brief Score a move for move ordering.
+ * 
+ * @param move Move to score.
+ * @return int Score value.
+ */
 static int scoreMove(const Move& move) {
     // CAPTURES (MVV-LVA)
     if (move.pieceCaptured != nullptr) {

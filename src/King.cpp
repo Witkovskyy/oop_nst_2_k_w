@@ -6,7 +6,8 @@
 using namespace std;
 
 // Constructor
-King::King(int c, char s, Position p) : Piece(c, 'K', p) {}/**
+King::King(int c, char s, Position p) : Piece(c, 'K', p) {}
+/**
  * @brief Check whether this piece can move to the given square (piece rules only).
  *
  * @details Validates movement pattern for the specific piece type. Additional game rules (e.g., leaving king in check) are handled elsewhere.
@@ -21,13 +22,6 @@ bool King::canMove(Position new_pos, Board &board) {
 
     Position cur_pos = getPosition();
     int row_diff = abs(new_pos.row - cur_pos.row);
-    /**
-     * @brief Perform `abs`.
-     *
-     * @details Documentation for `abs`.
-     * @param col Board column (file).
-     * @return Result of the operation.
-     */
     int col_diff = abs(new_pos.col - cur_pos.col);
 
 	// Move geometry: max 1 square in any direction
@@ -39,13 +33,6 @@ bool King::canMove(Position new_pos, Board &board) {
         return false;
 
 	// Collision with friendly piece
-    /**
-     * @brief Get piece at.
-     *
-     * @details Documentation for `getPieceAt`.
-     * @param new_pos Parameter.
-     * @return Requested value.
-     */
     Piece* target = board.getPieceAt(new_pos);
     if (target != nullptr && target->getColor() == getColor())
         return false;
