@@ -3,15 +3,65 @@
 \doxymbox{\hyperlink{engine_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
 \DoxyCodeLine{00001\ }
-\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#pragma\ once}}
-\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_board_8h}{../Board.h}}"{}}}
-\DoxyCodeLine{00012\ }
-\DoxyCodeLine{00013\ \textcolor{comment}{//\ Engine\ API}}
-\DoxyCodeLine{00023\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{engine_8h_a22caa7587b96aae6d34b6d38b5842d65}{see}}(\doxymbox{\hyperlink{class_board}{Board}}\ \&start,\ \doxymbox{\hyperlink{struct_position}{Position}}\ target,\ \textcolor{keywordtype}{int}\ sideToMove);}
-\DoxyCodeLine{00034\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{engine_8h_ada23a560b390521ef097aed78f8d9c07}{negamax}}(\doxymbox{\hyperlink{class_board}{Board}}\ \&board,\ \textcolor{keywordtype}{int}\ depth,\ \textcolor{keywordtype}{int}\ alpha,\ \textcolor{keywordtype}{int}\ beta,\ \textcolor{keywordtype}{int}\ color);}
-\DoxyCodeLine{00042\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{engine_8h_a84c565d83e6349abf15245a36084e6be}{eval}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_board}{Board}}\ \&board,\ \textcolor{keywordtype}{int}\ color);}
-\DoxyCodeLine{00048\ \textcolor{keywordtype}{long}\ \doxymbox{\hyperlink{engine_8h_a2d3eaaf6d4887ec01c547e98669003ed}{get\_nodes\_visited}}();}
-\DoxyCodeLine{00058\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{engine_8h_a91c63961112b3633045b79af292f87e0}{quiescence}}(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ alpha,\ \textcolor{keywordtype}{int}\ beta,\ \textcolor{keywordtype}{int}\ color);}
-\DoxyCodeLine{00067\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{engine_8h_acee68596d1e221265e5eb2bbc8466654}{isInCheck}}(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ color);}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_board_8h}{../Board.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{moves_8h}{moves.h}}"{}}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_engine}{Engine}}\ \{}
+\DoxyCodeLine{00016\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_engine_1_1_undo}{Undo}}}
+\DoxyCodeLine{00022\ \ \ \ \ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_position}{Position}}\ from;}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_position}{Position}}\ to;}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ pieceMoved;}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_piece}{Piece}}*\ pieceCaptured;}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ promotion;}
+\DoxyCodeLine{00028\ \ \ \ \ \};}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{comment}{//\ ================================}}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{comment}{//\ Small\ helpers\ used\ across\ engine}}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{comment}{//\ ================================}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_engine_abccad103350d53bad5d8870a448b1555}{to01}}(\textcolor{keywordtype}{int}\ sign);}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_engine_ac7a982eeb34560c8ee8633633ba28d4b}{toSign}}(\textcolor{keywordtype}{int}\ color01);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_engine_aba5e221dcf8d2c771041888ed9b497c7}{isValidPos}}(\textcolor{keywordtype}{int}\ r,\ \textcolor{keywordtype}{int}\ c);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_engine_aad106a51ccad9b7300ec16ad4a3fe35f}{getPstValue}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ table[8][8],\ \textcolor{keywordtype}{int}\ row,\ \textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ color);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{//\ ================================}}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{comment}{//\ Search\ stats}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{//\ ================================}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{long}\ \doxymbox{\hyperlink{class_engine_af7b8702670b5d1e495d550c4c0bc7017}{get\_nodes\_visited}}();}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{//\ ================================}}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{comment}{//\ Core\ engine\ API}}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{//\ ================================}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_engine_a60f193088442e6a87a11915db9e5ec5c}{eval}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ color);}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_engine_ad118ec155ae5ab652c88b0027cf5de6c}{quiescence}}(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ alpha,\ \textcolor{keywordtype}{int}\ beta,\ \textcolor{keywordtype}{int}\ color);}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_engine_ae792fae34a670be75761f4c7e22b00e8}{negamax}}(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ depth,\ \textcolor{keywordtype}{int}\ alpha,\ \textcolor{keywordtype}{int}\ beta,\ \textcolor{keywordtype}{int}\ color);}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_engine_ae292d9238d33f4cbb1250c856626b970}{isInCheck}}(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ color01);}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_engine_a2fda9eaab03ada630b1cb1eb2d8f4f79}{isSquareAttacked}}(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \doxymbox{\hyperlink{struct_position}{Position}}\ pos,\ \textcolor{keywordtype}{int}\ attackerColor);}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_engine_a44f9796fab47bda7369e5b0bdc1f8053}{isRepetition}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_board}{Board}}\&\ board);}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{comment}{//\ ================================}}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{comment}{//\ Move\ helpers\ used\ by\ UI/engine}}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{comment}{//\ ================================}}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00143\ \ \ \ \ std::vector<Move>\ \doxymbox{\hyperlink{class_engine_a6d270a1c51dfb6f8221f466a9f3e3724}{legalMoves}}(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keywordtype}{int}\ color01);}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_engine_a63559472210fea7c391e1f72707f80c5}{orderMoves}}(std::vector<Move>\&\ moves);}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_engine_a29a1652012383dae61aa530c4282fa08}{undoMove}}(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_move}{Move}}\&\ move,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_engine_1_1_undo}{Undo}}\&\ undo);}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_engine_a3a77ca157345c0812eeed6053ded68b6}{applyMove}}(\doxymbox{\hyperlink{class_board}{Board}}\&\ board,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_move}{Move}}\&\ move,\ \doxymbox{\hyperlink{struct_engine_1_1_undo}{Undo}}\&\ undo);}
+\DoxyCodeLine{00186\ \};}
 
 \end{DoxyCode}

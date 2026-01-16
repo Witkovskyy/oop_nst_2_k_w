@@ -9,7 +9,7 @@ endif()
 
 # Engine library
 add_library(engine STATIC
-  src/engine/evalpos.cpp
+  src/engine/engine.cpp
   src/engine/see.cpp
   src/engine/moves.cpp
   src/engine/tables/zobrist.cpp
@@ -75,7 +75,7 @@ add_executable(tests
   src/Pawn.cpp
   src/Queen.cpp
   src/kNight.cpp
-  src/engine/evalpos.cpp
+  src/engine/engine.cpp
   src/engine/tables/TT.cpp
 )
 

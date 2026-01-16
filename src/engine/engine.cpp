@@ -23,62 +23,80 @@
 // count nodes visited by negamax
 static long nodesVisited = 0;
 /**
- * @brief Get nodes visited.
+ * @brief Returns the number of nodes visited by the search.
  *
- * @details Returns a value derived from current state.
- * @return Requested value.
+ * This counter is incremented in Engine::negamax() (and optionally in quiescence,
+ * depending on your design). It is useful for profiling and debugging performance.
+ *
+ * @return Total number of visited nodes since last reset (or since program start
+ *         if you do not reset the counter).
  */
-long get_nodes_visited() { return nodesVisited; }
+long Engine::get_nodes_visited() { return nodesVisited; }
+
 
 /**
- * @brief Perform to01.
+ * @brief Converts side sign (+1/-1) to 0/1 color encoding.
  *
- * @details Implements the behavior implied by the function name.
- * @param sign Parameter.
- * @return Integer result.
+ * Many parts of this project encode colors as:
+ * - 0 = White
+ * - 1 = Black
+ *
+ * While the negamax layer uses a sign:
+ * - +1 = White perspective
+ * - -1 = Black perspective
+ *
+ * @param sign +1 for White, -1 for Black (any value > 0 treated as White).
+ * @return 0 for White, 1 for Black.
  */
-inline int to01(int sign) { return sign > 0 ? 0 : 1; }
-inline int toSign(int color01) { return color01 == 0 ? +1 : -1; }
-inline bool isValidPos(int r, int c) { return r >= 0 && r < 8 && c >= 0 && c < 8; }
+inline int Engine::to01(int sign) { return sign > 0 ? 0 : 1; }
 /**
- * @brief Get the Pst Value object
- * 
- * @param table 
- * @param row 
- * @param col 
- * @param color 
- * @return int 
+ * @brief Converts 0/1 color encoding back to a sign (+1/-1).
+ *
+ * @param color01 0 = White, 1 = Black.
+ * @return +1 for White, -1 for Black.
  */
-int getPstValue(const int table[8][8], int row, int col, int color)
+inline int Engine::toSign(int color01) { return color01 == 0 ? +1 : -1; }
+
+/**
+ * @brief Checks whether (row, col) is inside the 8x8 chessboard.
+ *
+ * @param r Row index.
+ * @param c Column index.
+ * @return true if both r and c are in range [0..7], otherwise false.
+ */
+inline bool Engine::isValidPos(int r, int c) { return r >= 0 && r < 8 && c >= 0 && c < 8; }
+/**
+ * @brief Returns piece-square-table (PST) value adjusted for the piece color.
+ *
+ * The PST tables are typically authored from White's perspective. For White pieces,
+ * rows are mirrored so that "advanced" squares get the intended bonus.
+ *
+ * @param table 8x8 PST table (authored from White view).
+ * @param row Board row [0..7] in your internal representation.
+ * @param col Board col [0..7].
+ * @param color 0 = White, 1 = Black.
+ * @return PST bonus (or penalty) for that square.
+ */
+int Engine::getPstValue(const int table[8][8], int row, int col, int color)
 {
-    if (color == 0) // WHITE
-        return table[7 - row][col];
-    else // BLACK
-        return table[row][col];
+    if (color == 0) return table[7 - row][col];
+    return table[row][col];
 }
 /**
- * @brief Structure to hold undo information.
- * 
- */
-struct Undo
-{
-    Position from;
-    Position to;
-    Piece* pieceMoved;
-    Piece* pieceCaptured;
-    char promotion;
-};
-
-/**
- * @brief Perform undo move.
+ * @brief Reverts a previously applied move (make/undo search loop).
  *
- * @details Implements the behavior implied by the function name.
- * @param board Board state to operate on.
- * @param move Move data/descriptor.
- * @param undo Parameter.
+ * Restores:
+ * - board.squares[] pointers (moved piece back to from-square, captured piece back to to-square),
+ * - piece positions (Piece::setPosition),
+ * - promotion (restores pawn symbol if promotion was applied),
+ * - incremental Zobrist hash updates (reverses exactly the operations in applyMove()).
+ *
+ * @param board Board state to mutate.
+ * @param move The move that had been applied.
+ * @param undo Snapshot produced by applyMove() containing all data required to revert.
+ *
  */
-
-static void undoMove(Board& board, const Move& move, const Undo& undo)
+void Engine::undoMove(Board& board, const Move& move, const Undo& undo)
 {
     board.squares[move.from.row][move.from.col] = undo.pieceMoved;
     board.squares[move.to.row][move.to.col] = undo.pieceCaptured;
@@ -121,27 +139,26 @@ static void undoMove(Board& board, const Move& move, const Undo& undo)
     // Insert piece back
     board.zobristKey ^= pieceKeys[pIdx][fromSq];
 }
-
 /**
- * @brief Apply a move to the board and update incremental state.
+ * @brief Applies a move on the board (make/undo search loop).
  *
- * Performs a make-move operation used by the search:
- * - Updates board squares (from -> empty, to -> moved piece).
- * - Records enough information in @p undo to revert the change later.
- * - Updates the incremental Zobrist hash by XOR-ing out/in the relevant piece-square keys and side-to-move key.
- * - Handles captures by removing the captured pointer from the destination square (the caller remains responsible
- *   for ownership/lifetime rules in this project).
- * - Handles promotions in the engine layer by changing the moved piece symbol to the promotion symbol.
+ * Performs a lightweight "make move" used by the engine:
+ * - Updates board.squares[] (from-square becomes empty; to-square becomes moved piece),
+ * - Stores enough information into @p undo to revert later (captured piece, moved piece, promotion),
+ * - Updates incremental Zobrist key:
+ *   - XOR out moved piece from from-square,
+ *   - XOR out captured piece from to-square (if any),
+ *   - XOR in moved/promoted piece on to-square,
+ *   - XOR side-to-move key.
+ * - Handles promotion by changing the moved piece symbol to @p move.promotion.
  *
- * @param board Board state to modify.
+ * @param board Board state to mutate.
  * @param move Move to apply.
- * @param undo Output structure filled with the data required by undoMove().
- * @return void
+ * @param undo Output snapshot used later by undoMove().
  *
- * @warning Promotion handling differs between engine and UI layers: here the underlying piece object may remain a Pawn.
+ * @note This function assumes Piece pointers live outside and are not owned here.
  */
-
-static void applyMove(Board& board, const Move& move, Undo& undo)
+void Engine::applyMove(Board& board, const Move& move, Undo& undo)
 {
     undo.from = move.from;
     undo.to = move.to;
@@ -191,19 +208,27 @@ static void applyMove(Board& board, const Move& move, Undo& undo)
         undo.pieceMoved->setSymbol(move.promotion);
     }
 }
-
 /**
- * @brief Check whether square attacked.
+ * @brief Checks whether a square is attacked by a given side (0/1 color).
  *
- * @details Returns a boolean condition derived from current state/arguments.
- * @param board Board state to operate on.
- * @param pos Board position/index.
- * @param attackerColor Side/color parameter.
- * @return True if the condition holds; otherwise false.
+ * This is used mainly for:
+ * - detecting check (king attacked),
+ * - filtering pseudo-legal moves into legal moves (moves that leave own king in check are illegal).
+ *
+ * Attack detection includes:
+ * - pawn attacks (diagonals),
+ * - knight jumps,
+ * - rook/queen orthogonal rays,
+ * - bishop/queen diagonal rays,
+ * - king adjacency.
+ *
+ * @param board Board state to inspect.
+ * @param pos Target square.
+ * @param attackerColor 0 = White attacks, 1 = Black attacks.
+ * @return true if the target square is attacked by attackerColor, otherwise false.
+ *
  */
-
-// ROBUST implementation of isSquareAttacked (with explicit loops for safety)
-bool isSquareAttacked(Board& board, Position pos, int attackerColor)
+bool Engine::isSquareAttacked(Board& board, Position pos, int attackerColor)
 {
     // 1. Pawn attacks
     // If attacker is White (0), pawn must be 'below' (row-1) attacking up.
@@ -350,17 +375,18 @@ bool isSquareAttacked(Board& board, Position pos, int attackerColor)
 
     return false;
 }
-
 /**
- * @brief Check whether in check.
+ * @brief Determines whether the given side's king is currently in check.
  *
- * @details Returns a boolean condition derived from current state/arguments.
- * @param board Board state to operate on.
- * @param color Side/color parameter.
- * @return True if the condition holds; otherwise false.
+ * Locates the king of @p color on the board, then calls isSquareAttacked() for the
+ * king square using the opposite color.
+ *
+ * @param board Board state to inspect.
+ * @param color 0 = White king, 1 = Black king.
+ * @return true if that king square is attacked, otherwise false.
+ *
  */
-
-bool isInCheck(Board& board, int color)
+bool Engine::isInCheck(Board& board, int color)
 {
     // Find king position - robust search
     Position kingPos = { -1, -1 };
@@ -384,15 +410,23 @@ found_king:;
 }
 
 /**
- * @brief Perform eval.
+ * @brief Static evaluation function (material + piece-square tables).
  *
- * @details Implements the behavior implied by the function name.
- * @param board Board state to operate on.
- * @param color Side/color parameter.
- * @return Integer result.
+ * Computes:
+ * - material score based on piece values,
+ * - positional score using PST tables,
+ * and returns the result from the perspective of @p color (sign +1/-1).
+ *
+ * Convention:
+ * - Positive means good for the side represented by @p color.
+ * - Negative means good for the opponent.
+ *
+ * @param board Board position to evaluate.
+ * @param color Perspective sign (+1 = White perspective, -1 = Black perspective).
+ * @return Evaluation score from the given perspective.
+ *
  */
-
-int eval(const Board& board, int color)
+int Engine::eval(const Board& board, int color)
 {
     int whiteScore = 0;
     int blackScore = 0;
@@ -430,15 +464,21 @@ int eval(const Board& board, int color)
 }
 
 /**
- * @brief Perform legal moves.
+ * @brief Generates all legal moves for the given side (0/1 color).
  *
- * @details Implements the behavior implied by the function name.
- * @param board Board state to operate on.
- * @param color Side/color parameter.
- * @return Collection of results.
+ * Steps:
+ * 1) Generate pseudo-legal moves (quiet moves + captures).
+ * 2) For each move:
+ *    - applyMove(),
+ *    - test whether own king is still safe (not in check),
+ *    - undoMove().
+ *
+ * @param board Board state (temporarily mutated by apply/undo during legality checking).
+ * @param color 0 = White, 1 = Black.
+ * @return Vector of legal moves.
+ *
  */
-
-static std::vector<Move> legalMoves(Board& board, int color) {
+std::vector<Move> Engine::legalMoves(Board& board, int color) {
     // Generate pseudo-legal moves
     auto quiet = generateQuietMoves(board, color);
     auto caps = generateAllCaptures(board, color);
@@ -504,15 +544,17 @@ static int scoreMove(const Move& move) {
 
     return 0;
 }
-
 /**
- * @brief Perform order moves.
+ * @brief Orders moves to improve alpha-beta pruning efficiency.
  *
- * @details Implements the behavior implied by the function name.
- * @param moves Move data/descriptor.
+ * Current heuristic:
+ * - Captures scored using MVV-LVA (Most Valuable Victim - Least Valuable Attacker),
+ * - Promotions receive a bonus.
+ *
+ * @param moves Move list to reorder in-place.
+ *
  */
-
-static void orderMoves(std::vector<Move>& moves)
+void Engine::orderMoves(std::vector<Move>& moves)
 {
     // Sort descending by score
     std::sort(moves.begin(), moves.end(), [](const Move& a, const Move& b) {
@@ -549,26 +591,26 @@ static bool gameOver(const Board& board)
     return !(whiteKing && blackKing);
 }
 
-// Quiescence search to avoid horizon effect
 /**
- * @brief Extend the search on tactical positions using capture-only quiescence search.
+ * @brief Capture-only extension search to reduce the horizon effect.
  *
- * Quiescence search reduces "horizon effect": instead of stopping at depth 0 and returning a raw eval,
- * it continues exploring forcing capture sequences until the position becomes "quiet".
+ * Quiescence search continues exploring forcing capture sequences at depth 0
+ * instead of returning a static evaluation immediately.
  *
  * Algorithm:
- * - Compute a stand-pat score (eval()).
- * - If stand-pat already exceeds beta: fail-high cutoff.
- * - Otherwise, try all captures (generateAllCaptures()), recursively calling quiescence with negamax sign flip.
+ * - Compute a "stand pat" evaluation.
+ * - If stand pat >= beta: fail-high cutoff.
+ * - Else try all capture moves:
+ *     score = -quiescence(child, -beta, -alpha, -color)
+ * - Return best score within [alpha, beta].
  *
- * @param board Current board state (modified via apply/undo).
- * @param alpha Lower bound.
- * @param beta Upper bound.
- * @param color Perspective/sign (+1/-1).
- * @return Best tactical score within [alpha, beta].
+ * @param board Board state (mutated via apply/undo).
+ * @param alpha Alpha bound.
+ * @param beta Beta bound.
+ * @param color Perspective sign (+1 = White perspective, -1 = Black perspective).
+ * @return Best tactical score in the quiescence search window.
  */
-
-int quiescence(Board& board, int alpha, int beta, int color)
+int Engine::quiescence(Board& board, int alpha, int beta, int color)
 {
     int stand = eval(board, color);
     if (stand >= beta)
@@ -595,13 +637,17 @@ int quiescence(Board& board, int alpha, int beta, int color)
 }
 
 /**
- * @brief Check whether repetition.
+ * @brief Checks whether the current position repeats (threefold-style loop prevention).
  *
- * @details Returns a boolean condition derived from current state/arguments.
- * @param board Board state to operate on.
- * @return True if the condition holds; otherwise false.
+ * Uses Zobrist keys stored in board.positionHistory and compares them against
+ * the current board.zobristKey.
+ *
+ * @param board Board state (must contain a valid zobristKey and positionHistory).
+ * @return true if the current zobristKey appeared before in the history, otherwise false.
+ *
+ * @note This is often used to discourage draw loops or to return a draw-ish score.
  */
-bool isRepetition(const Board& board) {
+bool Engine::isRepetition(const Board& board) {
     // Move is a repetition if current zobristKey appeared before in positionHistory
     for (int i = board.positionHistory.size() - 1; i >= 0; --i) {
         if (board.positionHistory[i] == board.zobristKey) {
@@ -612,31 +658,29 @@ bool isRepetition(const Board& board) {
     return false;
 }
 
-// Negamax algorithm with alpha-beta pruning
 /**
- * @brief Search the game tree using negamax with alpha-beta pruning.
+ * @brief Negamax search with alpha-beta pruning and transposition table (TT).
  *
  * High-level flow:
- * 1) Optional repetition detection using a Zobrist-key history (to avoid loops).
- * 2) Probe the transposition table (TT) to reuse cached bounds/scores.
- * 3) If depth is 0 (or terminal), evaluate via quiescence search.
- * 4) Generate legal moves and order them (captures/promotions first).
- * 5) Recurse with negamax:
+ * 1) Optional repetition detection (to avoid loops).
+ * 2) Transposition Table probe to reuse cached scores/bounds.
+ * 3) Terminal / depth cutoff:
+ *    - depth == 0 -> quiescence()
+ *    - game over / no legal moves -> mate/stalemate scoring
+ * 4) Generate legal moves, order them, recurse with sign flip:
  *      score = -negamax(child, depth-1, -beta, -alpha, -color)
- * 6) Update alpha/best score and cut off when alpha >= beta.
- * 7) Store the resulting bound/score in TT for future probes.
+ * 5) Update alpha and prune when alpha >= beta.
+ * 6) Store result as TT_EXACT / TT_ALPHA / TT_BETA along with best move.
  *
- * @param board Board state (modified via apply/undo during recursion).
- * @param depth Remaining search depth in plies.
- * @param alpha Lower bound for the best achievable score.
- * @param beta Upper bound for the best achievable score.
- * @param color Perspective/sign (+1 for white, -1 for black in this engine layer).
- * @return Best score found from the perspective of @p color.
+ * @param board Board state (mutated via apply/undo during recursion).
+ * @param depth Remaining depth in plies.
+ * @param alpha Alpha bound (lower bound).
+ * @param beta Beta bound (upper bound).
+ * @param color Perspective sign (+1 = White perspective, -1 = Black perspective).
+ * @return Best score from the perspective of @p color.
  *
- * @note This engine uses a simple material+PST evaluation and simplified rules (no castling/en-passant).
  */
-
-int negamax(Board& board, int depth, int alpha, int beta, int color)
+int Engine::negamax(Board& board, int depth, int alpha, int beta, int color)
 {
     if (isRepetition(board)) {
         // 0 is equal position, slight minus for engine to avoid repetition

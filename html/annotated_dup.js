@@ -3,6 +3,7 @@ var annotated_dup =
     [ "AsyncLogger", "class_async_logger.html", "class_async_logger" ],
     [ "Bishop", "class_bishop.html", "class_bishop" ],
     [ "Board", "class_board.html", "class_board" ],
+    [ "Engine", "class_engine.html", "class_engine" ],
     [ "King", "class_king.html", "class_king" ],
     [ "Knight", "class_knight.html", "class_knight" ],
     [ "Move", "struct_move.html", null ],
@@ -12,6 +13,5 @@ var annotated_dup =
     [ "Queen", "class_queen.html", "class_queen" ],
     [ "Rook", "class_rook.html", "class_rook" ],
     [ "TranspositionTable", "class_transposition_table.html", "class_transposition_table" ],
-    [ "TTEntry", "struct_t_t_entry.html", null ],
-    [ "Undo", "struct_undo.html", null ]
+    [ "TTEntry", "struct_t_t_entry.html", null ]
 ];
