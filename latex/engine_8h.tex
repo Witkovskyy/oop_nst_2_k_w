@@ -2,29 +2,23 @@
 \hypertarget{engine_8h}{}\label{engine_8h}\index{src/engine/engine.h@{src/engine/engine.h}}
 
 
-File declaration for engine.  
+Public declarations for the chess engine (negamax /\+ eval /\+ move generation helpers).  
 
 
+{\ttfamily \+\#include $<$vector$>$}\newline
 {\ttfamily \+\#include "{}../\+\+Board.\+h"{}}\newline
-\doxysubsubsection*{Functions}
+{\ttfamily \+\#include "{}moves.\+h"{}}\newline
+\doxysubsubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
-int \doxymbox{\hyperlink{engine_8h_a22caa7587b96aae6d34b6d38b5842d65}{see}} (\doxymbox{\hyperlink{class_board}{Board}} \&start, \doxymbox{\hyperlink{struct_position}{Position}} target, int side\+To\+Move)
-\begin{DoxyCompactList}\small\item\em Perform see. \end{DoxyCompactList}\item 
-int \doxymbox{\hyperlink{engine_8h_ada23a560b390521ef097aed78f8d9c07}{negamax}} (\doxymbox{\hyperlink{class_board}{Board}} \&board, int depth, int alpha, int beta, int color)
-\begin{DoxyCompactList}\small\item\em Perform negamax. \end{DoxyCompactList}\item 
-int \doxymbox{\hyperlink{engine_8h_a84c565d83e6349abf15245a36084e6be}{eval}} (const \doxymbox{\hyperlink{class_board}{Board}} \&board, int color)
-\begin{DoxyCompactList}\small\item\em Perform eval. \end{DoxyCompactList}\item 
-long \doxymbox{\hyperlink{engine_8h_a2d3eaaf6d4887ec01c547e98669003ed}{get\+\_\+nodes\+\_\+visited}} ()
-\begin{DoxyCompactList}\small\item\em Get the nodes visited object. \end{DoxyCompactList}\item 
-int \doxymbox{\hyperlink{engine_8h_a91c63961112b3633045b79af292f87e0}{quiescence}} (\doxymbox{\hyperlink{class_board}{Board}} \&board, int alpha, int beta, int color)
-\begin{DoxyCompactList}\small\item\em Perform quiescence search. \end{DoxyCompactList}\item 
-bool \doxymbox{\hyperlink{engine_8h_acee68596d1e221265e5eb2bbc8466654}{is\+In\+Check}} (\doxymbox{\hyperlink{class_board}{Board}} \&board, int color)
-\begin{DoxyCompactList}\small\item\em Perform is\+In\+Check. \end{DoxyCompactList}\end{DoxyCompactItemize}
+class \doxymbox{\hyperlink{class_engine}{Engine}}
+\item 
+struct \doxymbox{\hyperlink{struct_engine_1_1_undo}{Engine::\+\+Undo}}
+\begin{DoxyCompactList}\small\item\em Structure to hold undo information. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
-File declaration for engine. 
+Public declarations for the chess engine (negamax /\+ eval /\+ move generation helpers). 
 
 \begin{DoxyVersion}{Version}
 0.\+1 
@@ -35,222 +29,3 @@ File declaration for engine.
 \begin{DoxyCopyright}{Copyright}
 Copyright (c) 2026 
 \end{DoxyCopyright}
-
-
-\label{doc-func-members}
-\Hypertarget{engine_8h_doc-func-members}
-\doxysubsection{Function Documentation}
-\Hypertarget{engine_8h_a84c565d83e6349abf15245a36084e6be}\index{engine.h@{engine.h}!eval@{eval}}
-\index{eval@{eval}!engine.h@{engine.h}}
-\doxysubsubsection{\texorpdfstring{eval()}{eval()}}
-{\footnotesize\ttfamily \label{engine_8h_a84c565d83e6349abf15245a36084e6be} 
-int eval (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{int}]{color}{}\end{DoxyParamCaption})}
-
-
-
-Perform eval. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em board} & \\
-\hline
-{\em color} & \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-int
-\end{DoxyReturn}
-Implements the behavior implied by the function name. 
-\begin{DoxyParams}{Parameters}
-{\em board} & \doxylink{class_board}{Board} state to operate on. \\
-\hline
-{\em color} & Side/\+color parameter. \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-Integer result. 
-\end{DoxyReturn}
-\Hypertarget{engine_8h_a2d3eaaf6d4887ec01c547e98669003ed}\index{engine.h@{engine.h}!get\_nodes\_visited@{get\_nodes\_visited}}
-\index{get\_nodes\_visited@{get\_nodes\_visited}!engine.h@{engine.h}}
-\doxysubsubsection{\texorpdfstring{get\_nodes\_visited()}{get\_nodes\_visited()}}
-{\footnotesize\ttfamily \label{engine_8h_a2d3eaaf6d4887ec01c547e98669003ed} 
-long get\+\_\+nodes\+\_\+visited (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
-
-
-
-Get the nodes visited object. 
-
-\begin{DoxyReturn}{Returns}
-long
-\end{DoxyReturn}
-Get the nodes visited object.
-
-Returns a value derived from current state. \begin{DoxyReturn}{Returns}
-Requested value. 
-\end{DoxyReturn}
-\Hypertarget{engine_8h_acee68596d1e221265e5eb2bbc8466654}\index{engine.h@{engine.h}!isInCheck@{isInCheck}}
-\index{isInCheck@{isInCheck}!engine.h@{engine.h}}
-\doxysubsubsection{\texorpdfstring{isInCheck()}{isInCheck()}}
-{\footnotesize\ttfamily \label{engine_8h_acee68596d1e221265e5eb2bbc8466654} 
-bool is\+In\+Check (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{int}]{color}{}\end{DoxyParamCaption})}
-
-
-
-Perform is\+In\+Check. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em board} & \\
-\hline
-{\em color} & \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-true 
-
-false
-\end{DoxyReturn}
-Perform is\+In\+Check.
-
-Returns a boolean condition derived from current state/\+arguments. 
-\begin{DoxyParams}{Parameters}
-{\em board} & \doxylink{class_board}{Board} state to operate on. \\
-\hline
-{\em color} & Side/\+color parameter. \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-True if the condition holds; otherwise false. 
-\end{DoxyReturn}
-\Hypertarget{engine_8h_ada23a560b390521ef097aed78f8d9c07}\index{engine.h@{engine.h}!negamax@{negamax}}
-\index{negamax@{negamax}!engine.h@{engine.h}}
-\doxysubsubsection{\texorpdfstring{negamax()}{negamax()}}
-{\footnotesize\ttfamily \label{engine_8h_ada23a560b390521ef097aed78f8d9c07} 
-int negamax (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{int}]{depth}{, }\item[{int}]{alpha}{, }\item[{int}]{beta}{, }\item[{int}]{color}{}\end{DoxyParamCaption})}
-
-
-
-Perform negamax. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em board} & \\
-\hline
-{\em depth} & \\
-\hline
-{\em alpha} & \\
-\hline
-{\em beta} & \\
-\hline
-{\em color} & \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-int
-\end{DoxyReturn}
-Perform negamax.
-
-High-\/level flow:\+ 1) Optional repetition detection using a Zobrist-\/key history (to avoid loops). 2) Probe the transposition table (TT) to reuse cached bounds/\+scores. 3) If depth is 0 (or terminal), evaluate via quiescence search. 4) Generate legal moves and order them (captures/\+promotions first). 5) Recurse with negamax:\+ score = -\/negamax(child, depth-\/1, -\/beta, -\/alpha, -\/color) 6) Update alpha/\+best score and cut off when alpha \texorpdfstring{$>$}{>}= beta. 7) Store the resulting bound/\+score in TT for future probes.
-
-
-\begin{DoxyParams}{Parameters}
-{\em board} & \doxylink{class_board}{Board} state (modified via apply/\+undo during recursion). \\
-\hline
-{\em depth} & Remaining search depth in plies. \\
-\hline
-{\em alpha} & Lower bound for the best achievable score. \\
-\hline
-{\em beta} & Upper bound for the best achievable score. \\
-\hline
-{\em color} & Perspective/\+sign (+1 for white, -\/1 for black in this engine layer). \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-Best score found from the perspective of {\ttfamily color}.
-\end{DoxyReturn}
-\begin{DoxyNote}{Note}
-This engine uses a simple material+\+PST evaluation and simplified rules (no castling/\+en-\/passant). 
-\end{DoxyNote}
-\Hypertarget{engine_8h_a91c63961112b3633045b79af292f87e0}\index{engine.h@{engine.h}!quiescence@{quiescence}}
-\index{quiescence@{quiescence}!engine.h@{engine.h}}
-\doxysubsubsection{\texorpdfstring{quiescence()}{quiescence()}}
-{\footnotesize\ttfamily \label{engine_8h_a91c63961112b3633045b79af292f87e0} 
-int quiescence (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{int}]{alpha}{, }\item[{int}]{beta}{, }\item[{int}]{color}{}\end{DoxyParamCaption})}
-
-
-
-Perform quiescence search. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em board} & \\
-\hline
-{\em alpha} & \\
-\hline
-{\em beta} & \\
-\hline
-{\em color} & \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-int
-\end{DoxyReturn}
-Perform quiescence search.
-
-Quiescence search reduces "{}horizon effect"{}:\+ instead of stopping at depth 0 and returning a raw eval, it continues exploring forcing capture sequences until the position becomes "{}quiet"{}.
-
-Algorithm:\+
-\begin{DoxyItemize}
-\item Compute a stand-\/pat score (\doxylink{engine_8h_a84c565d83e6349abf15245a36084e6be}{eval()}).
-\item If stand-\/pat already exceeds beta:\+ fail-\/high cutoff.
-\item Otherwise, try all captures (\doxylink{moves_8cpp_a89c28d1f0b1c5466438f80f803cd8dba}{generate\+All\+Captures()}), recursively calling quiescence with negamax sign flip.
-\end{DoxyItemize}
-
-
-\begin{DoxyParams}{Parameters}
-{\em board} & Current board state (modified via apply/\+undo). \\
-\hline
-{\em alpha} & Lower bound. \\
-\hline
-{\em beta} & Upper bound. \\
-\hline
-{\em color} & Perspective/\+sign (+1/\+-\/1). \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-Best tactical score within \+[alpha, beta]\+. 
-\end{DoxyReturn}
-\Hypertarget{engine_8h_a22caa7587b96aae6d34b6d38b5842d65}\index{engine.h@{engine.h}!see@{see}}
-\index{see@{see}!engine.h@{engine.h}}
-\doxysubsubsection{\texorpdfstring{see()}{see()}}
-{\footnotesize\ttfamily \label{engine_8h_a22caa7587b96aae6d34b6d38b5842d65} 
-int see (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{\doxymbox{\hyperlink{struct_position}{Position}}}]{target}{, }\item[{int}]{side\+To\+Move}{}\end{DoxyParamCaption})}
-
-
-
-Perform see. 
-
-Implements the behavior implied by the function name. 
-\begin{DoxyParams}{Parameters}
-{\em start} & Parameter. \\
-\hline
-{\em target} & Parameter. \\
-\hline
-{\em side\+To\+Move} & \doxylink{struct_move}{Move} data/\+descriptor. \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-Integer result.
-\end{DoxyReturn}
-Implements the behavior implied by the function name. 
-\begin{DoxyParams}{Parameters}
-{\em board} & \doxylink{class_board}{Board} state to operate on. \\
-\hline
-{\em target} & Parameter. \\
-\hline
-{\em side\+To\+Move} & \doxylink{struct_move}{Move} data/\+descriptor. \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-Integer result. 
-\end{DoxyReturn}

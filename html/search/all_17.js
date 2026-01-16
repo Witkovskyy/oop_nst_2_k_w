@@ -8,11 +8,12 @@ var searchData=
   ['test_5fpieces_2ecpp_5',['test_pieces.cpp',['../test__pieces_8cpp.html',1,'']]],
   ['to_20a_20target_20square_6',['* &lt;b&gt;Mouse Drag &amp;amp; Drop:&lt;/b&gt; Move a piece to a target square.',['../md__r_e_a_d_m_e.html#autotoc_md13',1,'']]],
   ['to_20compile_7',['If cmake fails to compile',['../md_troubleshooting.html',1,'']]],
-  ['to01_8',['to01',['../evalpos_8cpp.html#a2b6878db0622c13b834d01fd28a7e2bd',1,'evalpos.cpp']]],
-  ['transpositiontable_9',['TranspositionTable',['../class_transposition_table.html',1,'TranspositionTable'],['../class_transposition_table.html#a724d9f922515719e2b44ffbb8a6b7ffc',1,'TranspositionTable::TranspositionTable()']]],
-  ['tryby_20gry_20game_20modes_10',['3. Tryby Gry (Game Modes)',['../md_requirements.html#autotoc_md18',1,'']]],
-  ['tt_11',['TT',['../_t_t_8h.html#a4db18751e106df15a0412134c6dd4a82',1,'TT:&#160;TT.h'],['../main_8cpp.html#ace8d35f277689839431f487d6552af94',1,'TT:&#160;main.cpp']]],
-  ['tt_2eh_12',['TT.h',['../_t_t_8h.html',1,'']]],
-  ['ttentry_13',['TTEntry',['../struct_t_t_entry.html',1,'']]],
-  ['ttflag_14',['TTFlag',['../_t_t_8h.html#a2add7e9edf4c9305f372b0e50897ce99',1,'TT.h']]]
+  ['to01_8',['to01',['../class_engine.html#abccad103350d53bad5d8870a448b1555',1,'Engine']]],
+  ['tosign_9',['toSign',['../class_engine.html#ac7a982eeb34560c8ee8633633ba28d4b',1,'Engine']]],
+  ['transpositiontable_10',['TranspositionTable',['../class_transposition_table.html',1,'TranspositionTable'],['../class_transposition_table.html#a724d9f922515719e2b44ffbb8a6b7ffc',1,'TranspositionTable::TranspositionTable()']]],
+  ['tryby_20gry_20game_20modes_11',['3. Tryby Gry (Game Modes)',['../md_requirements.html#autotoc_md18',1,'']]],
+  ['tt_12',['TT',['../_t_t_8h.html#a4db18751e106df15a0412134c6dd4a82',1,'TT:&#160;TT.h'],['../main_8cpp.html#ace8d35f277689839431f487d6552af94',1,'TT:&#160;main.cpp']]],
+  ['tt_2eh_13',['TT.h',['../_t_t_8h.html',1,'']]],
+  ['ttentry_14',['TTEntry',['../struct_t_t_entry.html',1,'']]],
+  ['ttflag_15',['TTFlag',['../_t_t_8h.html#a2add7e9edf4c9305f372b0e50897ce99',1,'TT.h']]]
 ];

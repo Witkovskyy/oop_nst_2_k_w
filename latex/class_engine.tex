@@ -1,0 +1,608 @@
+\doxysection{Engine Class Reference}
+\hypertarget{class_engine}{}\label{class_engine}\index{Engine@{Engine}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_engine_1_1_undo}{Undo}}
+\begin{DoxyCompactList}\small\item\em Structure to hold undo information. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{class_engine_aad106a51ccad9b7300ec16ad4a3fe35f}{get\+Pst\+Value}} (const int table\+[8]\+\+[8]\+, int row, int col, int color)
+\begin{DoxyCompactList}\small\item\em Get the PST value for a piece depending on color orientation. \end{DoxyCompactList}\item 
+long \doxymbox{\hyperlink{class_engine_af7b8702670b5d1e495d550c4c0bc7017}{get\+\_\+nodes\+\_\+visited}} ()
+\begin{DoxyCompactList}\small\item\em Return number of nodes visited by negamax. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{class_engine_a60f193088442e6a87a11915db9e5ec5c}{eval}} (const \doxymbox{\hyperlink{class_board}{Board}} \&board, int color)
+\begin{DoxyCompactList}\small\item\em Static evaluation (material + PST) from the given perspective. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{class_engine_ad118ec155ae5ab652c88b0027cf5de6c}{quiescence}} (\doxymbox{\hyperlink{class_board}{Board}} \&board, int alpha, int beta, int color)
+\begin{DoxyCompactList}\small\item\em Quiescence search (captures only). \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{class_engine_ae792fae34a670be75761f4c7e22b00e8}{negamax}} (\doxymbox{\hyperlink{class_board}{Board}} \&board, int depth, int alpha, int beta, int color)
+\begin{DoxyCompactList}\small\item\em Negamax search with alpha-\/beta pruning and transposition table. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_engine_ae292d9238d33f4cbb1250c856626b970}{is\+In\+Check}} (\doxymbox{\hyperlink{class_board}{Board}} \&board, int color01)
+\begin{DoxyCompactList}\small\item\em Check if the given side is in check. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_engine_a2fda9eaab03ada630b1cb1eb2d8f4f79}{is\+Square\+Attacked}} (\doxymbox{\hyperlink{class_board}{Board}} \&board, \doxymbox{\hyperlink{struct_position}{Position}} pos, int attacker\+Color)
+\begin{DoxyCompactList}\small\item\em Check if a square is attacked by the attacker\+Color side. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_engine_a44f9796fab47bda7369e5b0bdc1f8053}{is\+Repetition}} (const \doxymbox{\hyperlink{class_board}{Board}} \&board)
+\begin{DoxyCompactList}\small\item\em Check repetition based on board.\+position\+History and zobrist\+Key. \end{DoxyCompactList}\item 
+std::\+vector$<$ \doxymbox{\hyperlink{struct_move}{Move}} $>$ \doxymbox{\hyperlink{class_engine_a6d270a1c51dfb6f8221f466a9f3e3724}{legal\+Moves}} (\doxymbox{\hyperlink{class_board}{Board}} \&board, int color01)
+\begin{DoxyCompactList}\small\item\em Generate legal moves for a color (0=white, 1=black). \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_engine_a63559472210fea7c391e1f72707f80c5}{order\+Moves}} (std::\+vector$<$ \doxymbox{\hyperlink{struct_move}{Move}} $>$ \&moves)
+\begin{DoxyCompactList}\small\item\em Order moves in-\/place for better alpha-\/beta performance. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_engine_a29a1652012383dae61aa530c4282fa08}{undo\+Move}} (\doxymbox{\hyperlink{class_board}{Board}} \&board, const \doxymbox{\hyperlink{struct_move}{Move}} \&move, const \doxymbox{\hyperlink{struct_engine_1_1_undo}{Undo}} \&undo)
+\begin{DoxyCompactList}\small\item\em Reverts a previously applied move (make/\+undo search loop). \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_engine_a3a77ca157345c0812eeed6053ded68b6}{apply\+Move}} (\doxymbox{\hyperlink{class_board}{Board}} \&board, const \doxymbox{\hyperlink{struct_move}{Move}} \&move, \doxymbox{\hyperlink{struct_engine_1_1_undo}{Undo}} \&undo)
+\begin{DoxyCompactList}\small\item\em Applies a move on the board (make/\+undo search loop). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static int \doxymbox{\hyperlink{class_engine_abccad103350d53bad5d8870a448b1555}{to01}} (int sign)
+\begin{DoxyCompactList}\small\item\em Convert sign (+1 /\+ -\/1) to 0/\+1 color encoding used by board/\+pieces. \end{DoxyCompactList}\item 
+static int \doxymbox{\hyperlink{class_engine_ac7a982eeb34560c8ee8633633ba28d4b}{to\+Sign}} (int color01)
+\begin{DoxyCompactList}\small\item\em Convert 0/\+1 color encoding back to sign (+1 /\+ -\/1). \end{DoxyCompactList}\item 
+static bool \doxymbox{\hyperlink{class_engine_aba5e221dcf8d2c771041888ed9b497c7}{is\+Valid\+Pos}} (int r, int c)
+\begin{DoxyCompactList}\small\item\em Validate board coordinates. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_engine_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_engine_a3a77ca157345c0812eeed6053ded68b6}\index{Engine@{Engine}!applyMove@{applyMove}}
+\index{applyMove@{applyMove}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{applyMove()}{applyMove()}}
+{\footnotesize\ttfamily \label{class_engine_a3a77ca157345c0812eeed6053ded68b6} 
+void Engine::\+apply\+Move (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{const \doxymbox{\hyperlink{struct_move}{Move}} \&}]{move}{, }\item[{\doxymbox{\hyperlink{struct_engine_1_1_undo}{Undo}} \&}]{undo}{}\end{DoxyParamCaption})}
+
+
+
+Applies a move on the board (make/\+undo search loop). 
+
+Performs a lightweight "{}make move"{} used by the engine:\+
+\begin{DoxyItemize}
+\item Updates board.\+squares\+[]\+ (from-\/square becomes empty; to-\/square becomes moved piece),
+\item Stores enough information into {\ttfamily undo} to revert later (captured piece, moved piece, promotion),
+\item Updates incremental Zobrist key:\+
+\begin{DoxyItemize}
+\item XOR out moved piece from from-\/square,
+\item XOR out captured piece from to-\/square (if any),
+\item XOR in moved/\+promoted piece on to-\/square,
+\item XOR side-\/to-\/move key.
+\end{DoxyItemize}
+\item Handles promotion by changing the moved piece symbol to {\ttfamily move.\+promotion}.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state to mutate. \\
+\hline
+{\em move} & \doxylink{struct_move}{Move} to apply. \\
+\hline
+{\em undo} & Output snapshot used later by \doxylink{class_engine_a29a1652012383dae61aa530c4282fa08}{undo\+Move()}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+This function assumes \doxylink{class_piece}{Piece} pointers live outside and are not owned here. 
+\end{DoxyNote}
+\Hypertarget{class_engine_a60f193088442e6a87a11915db9e5ec5c}\index{Engine@{Engine}!eval@{eval}}
+\index{eval@{eval}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{eval()}{eval()}}
+{\footnotesize\ttfamily \label{class_engine_a60f193088442e6a87a11915db9e5ec5c} 
+int Engine::\+eval (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{int}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Static evaluation (material + PST) from the given perspective. 
+
+Static evaluation function (material + piece-\/square tables).
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state \\
+\hline
+{\em color} & Perspective sign (+1 white, -\/1 black) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+evaluation score
+\end{DoxyReturn}
+Computes:\+
+\begin{DoxyItemize}
+\item material score based on piece values,
+\item positional score using PST tables, and returns the result from the perspective of {\ttfamily color} (sign +1/\+-\/1).
+\end{DoxyItemize}
+
+Convention:\+
+\begin{DoxyItemize}
+\item Positive means good for the side represented by {\ttfamily color}.
+\item Negative means good for the opponent.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} position to evaluate. \\
+\hline
+{\em color} & Perspective sign (+1 = White perspective, -\/1 = Black perspective). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Evaluation score from the given perspective. 
+\end{DoxyReturn}
+\Hypertarget{class_engine_af7b8702670b5d1e495d550c4c0bc7017}\index{Engine@{Engine}!get\_nodes\_visited@{get\_nodes\_visited}}
+\index{get\_nodes\_visited@{get\_nodes\_visited}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{get\_nodes\_visited()}{get\_nodes\_visited()}}
+{\footnotesize\ttfamily \label{class_engine_af7b8702670b5d1e495d550c4c0bc7017} 
+long Engine::\+get\+\_\+nodes\+\_\+visited (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Return number of nodes visited by negamax. 
+
+Returns the number of nodes visited by the search.
+
+\begin{DoxyReturn}{Returns}
+nodes visited
+\end{DoxyReturn}
+This counter is incremented in \doxylink{class_engine_ae792fae34a670be75761f4c7e22b00e8}{Engine::\+negamax()} (and optionally in quiescence, depending on your design). It is useful for profiling and debugging performance.
+
+\begin{DoxyReturn}{Returns}
+Total number of visited nodes since last reset (or since program start if you do not reset the counter). 
+\end{DoxyReturn}
+\Hypertarget{class_engine_aad106a51ccad9b7300ec16ad4a3fe35f}\index{Engine@{Engine}!getPstValue@{getPstValue}}
+\index{getPstValue@{getPstValue}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{getPstValue()}{getPstValue()}}
+{\footnotesize\ttfamily \label{class_engine_aad106a51ccad9b7300ec16ad4a3fe35f} 
+int Engine::\+get\+Pst\+Value (\begin{DoxyParamCaption}\item[{const int}]{table}{\+[8]\+\+[8]\+, }\item[{int}]{row}{, }\item[{int}]{col}{, }\item[{int}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Get the PST value for a piece depending on color orientation. 
+
+Returns piece-\/square-\/table (PST) value adjusted for the piece color.
+
+
+\begin{DoxyParams}{Parameters}
+{\em table} & 8x8 PST table \\
+\hline
+{\em row} & board row \\
+\hline
+{\em col} & board col \\
+\hline
+{\em color} & 0=white, 1=black \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pst score
+\end{DoxyReturn}
+The PST tables are typically authored from White\textquotesingle{}s perspective. For White pieces, rows are mirrored so that "{}advanced"{} squares get the intended bonus.
+
+
+\begin{DoxyParams}{Parameters}
+{\em table} & 8x8 PST table (authored from White view). \\
+\hline
+{\em row} & \doxylink{class_board}{Board} row \+[0..7]\+ in your internal representation. \\
+\hline
+{\em col} & \doxylink{class_board}{Board} col \+[0..7]\+. \\
+\hline
+{\em color} & 0 = White, 1 = Black. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+PST bonus (or penalty) for that square. 
+\end{DoxyReturn}
+\Hypertarget{class_engine_ae292d9238d33f4cbb1250c856626b970}\index{Engine@{Engine}!isInCheck@{isInCheck}}
+\index{isInCheck@{isInCheck}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{isInCheck()}{isInCheck()}}
+{\footnotesize\ttfamily \label{class_engine_ae292d9238d33f4cbb1250c856626b970} 
+bool Engine::\+is\+In\+Check (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{int}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Check if the given side is in check. 
+
+Determines whether the given side\textquotesingle{}s king is currently in check.
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state \\
+\hline
+{\em color01} & 0=white, 1=black \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if king of color01 is attacked
+\end{DoxyReturn}
+Locates the king of {\ttfamily color} on the board, then calls \doxylink{class_engine_a2fda9eaab03ada630b1cb1eb2d8f4f79}{is\+Square\+Attacked()} for the king square using the opposite color.
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state to inspect. \\
+\hline
+{\em color} & 0 = White king, 1 = Black king. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if that king square is attacked, otherwise false. 
+\end{DoxyReturn}
+\Hypertarget{class_engine_a44f9796fab47bda7369e5b0bdc1f8053}\index{Engine@{Engine}!isRepetition@{isRepetition}}
+\index{isRepetition@{isRepetition}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{isRepetition()}{isRepetition()}}
+{\footnotesize\ttfamily \label{class_engine_a44f9796fab47bda7369e5b0bdc1f8053} 
+bool Engine::\+is\+Repetition (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{}\end{DoxyParamCaption})}
+
+
+
+Check repetition based on board.\+position\+History and zobrist\+Key. 
+
+Checks whether the current position repeats (threefold-\/style loop prevention).
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if current position repeated
+\end{DoxyReturn}
+Uses Zobrist keys stored in board.\+position\+History and compares them against the current board.\+zobrist\+Key.
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state (must contain a valid zobrist\+Key and position\+History). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the current zobrist\+Key appeared before in the history, otherwise false.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+This is often used to discourage draw loops or to return a draw-\/ish score. 
+\end{DoxyNote}
+\Hypertarget{class_engine_a2fda9eaab03ada630b1cb1eb2d8f4f79}\index{Engine@{Engine}!isSquareAttacked@{isSquareAttacked}}
+\index{isSquareAttacked@{isSquareAttacked}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{isSquareAttacked()}{isSquareAttacked()}}
+{\footnotesize\ttfamily \label{class_engine_a2fda9eaab03ada630b1cb1eb2d8f4f79} 
+bool Engine::\+is\+Square\+Attacked (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{\doxymbox{\hyperlink{struct_position}{Position}}}]{pos}{, }\item[{int}]{attacker\+Color}{}\end{DoxyParamCaption})}
+
+
+
+Check if a square is attacked by the attacker\+Color side. 
+
+Checks whether a square is attacked by a given side (0/\+1 color).
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state \\
+\hline
+{\em pos} & Target square \\
+\hline
+{\em attacker\+Color} & 0=white, 1=black \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if attacked
+\end{DoxyReturn}
+This is used mainly for:\+
+\begin{DoxyItemize}
+\item detecting check (king attacked),
+\item filtering pseudo-\/legal moves into legal moves (moves that leave own king in check are illegal).
+\end{DoxyItemize}
+
+Attack detection includes:\+
+\begin{DoxyItemize}
+\item pawn attacks (diagonals),
+\item knight jumps,
+\item rook/\+queen orthogonal rays,
+\item bishop/\+queen diagonal rays,
+\item king adjacency.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state to inspect. \\
+\hline
+{\em pos} & Target square. \\
+\hline
+{\em attacker\+Color} & 0 = White attacks, 1 = Black attacks. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the target square is attacked by attacker\+Color, otherwise false. 
+\end{DoxyReturn}
+\Hypertarget{class_engine_aba5e221dcf8d2c771041888ed9b497c7}\index{Engine@{Engine}!isValidPos@{isValidPos}}
+\index{isValidPos@{isValidPos}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{isValidPos()}{isValidPos()}}
+{\footnotesize\ttfamily \label{class_engine_aba5e221dcf8d2c771041888ed9b497c7} 
+bool Engine::\+is\+Valid\+Pos (\begin{DoxyParamCaption}\item[{int}]{r}{, }\item[{int}]{c}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Validate board coordinates. 
+
+Checks whether (row, col) is inside the 8x8 chessboard.
+
+
+\begin{DoxyParams}{Parameters}
+{\em r} & Row index \+[0..7]\+ \\
+\hline
+{\em c} & Col index \+[0..7]\+ \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if in bounds
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em r} & Row index. \\
+\hline
+{\em c} & Column index. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if both r and c are in range \+[0..7]\+, otherwise false. 
+\end{DoxyReturn}
+\Hypertarget{class_engine_a6d270a1c51dfb6f8221f466a9f3e3724}\index{Engine@{Engine}!legalMoves@{legalMoves}}
+\index{legalMoves@{legalMoves}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{legalMoves()}{legalMoves()}}
+{\footnotesize\ttfamily \label{class_engine_a6d270a1c51dfb6f8221f466a9f3e3724} 
+std::\+vector$<$ \doxymbox{\hyperlink{struct_move}{Move}} $>$ Engine::\+legal\+Moves (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{int}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Generate legal moves for a color (0=white, 1=black). 
+
+Generates all legal moves for the given side (0/\+1 color).
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state (will be temporarily mutated during legality checks) \\
+\hline
+{\em color01} & 0=white, 1=black \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+vector of legal moves
+\end{DoxyReturn}
+Steps:\+ 1) Generate pseudo-\/legal moves (quiet moves + captures). 2) For each move:\+
+\begin{DoxyItemize}
+\item \doxylink{class_engine_a3a77ca157345c0812eeed6053ded68b6}{apply\+Move()},
+\item test whether own king is still safe (not in check),
+\item \doxylink{class_engine_a29a1652012383dae61aa530c4282fa08}{undo\+Move()}.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state (temporarily mutated by apply/\+undo during legality checking). \\
+\hline
+{\em color} & 0 = White, 1 = Black. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Vector of legal moves. 
+\end{DoxyReturn}
+\Hypertarget{class_engine_ae792fae34a670be75761f4c7e22b00e8}\index{Engine@{Engine}!negamax@{negamax}}
+\index{negamax@{negamax}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{negamax()}{negamax()}}
+{\footnotesize\ttfamily \label{class_engine_ae792fae34a670be75761f4c7e22b00e8} 
+int Engine::\+negamax (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{int}]{depth}{, }\item[{int}]{alpha}{, }\item[{int}]{beta}{, }\item[{int}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Negamax search with alpha-\/beta pruning and transposition table. 
+
+Negamax search with alpha-\/beta pruning and transposition table (TT).
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state (mutated via apply/\+undo internally) \\
+\hline
+{\em depth} & depth in plies \\
+\hline
+{\em alpha} & alpha bound \\
+\hline
+{\em beta} & beta bound \\
+\hline
+{\em color} & Perspective sign (+1 white, -\/1 black) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+best score
+\end{DoxyReturn}
+High-\/level flow:\+ 1) Optional repetition detection (to avoid loops). 2) Transposition Table probe to reuse cached scores/\+bounds. 3) Terminal /\+ depth cutoff:\+
+\begin{DoxyItemize}
+\item depth == 0 -\/\texorpdfstring{$>$}{>} \doxylink{class_engine_ad118ec155ae5ab652c88b0027cf5de6c}{quiescence()}
+\item game over /\+ no legal moves -\/\texorpdfstring{$>$}{>} mate/\+stalemate scoring 4) Generate legal moves, order them, recurse with sign flip:\+ score = -\/negamax(child, depth-\/1, -\/beta, -\/alpha, -\/color) 5) Update alpha and prune when alpha \texorpdfstring{$>$}{>}= beta. 6) Store result as TT\+\_\+\+EXACT /\+ TT\+\_\+\+ALPHA /\+ TT\+\_\+\+BETA along with best move.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state (mutated via apply/\+undo during recursion). \\
+\hline
+{\em depth} & Remaining depth in plies. \\
+\hline
+{\em alpha} & Alpha bound (lower bound). \\
+\hline
+{\em beta} & Beta bound (upper bound). \\
+\hline
+{\em color} & Perspective sign (+1 = White perspective, -\/1 = Black perspective). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Best score from the perspective of {\ttfamily color}. 
+\end{DoxyReturn}
+\Hypertarget{class_engine_a63559472210fea7c391e1f72707f80c5}\index{Engine@{Engine}!orderMoves@{orderMoves}}
+\index{orderMoves@{orderMoves}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{orderMoves()}{orderMoves()}}
+{\footnotesize\ttfamily \label{class_engine_a63559472210fea7c391e1f72707f80c5} 
+void Engine::\+order\+Moves (\begin{DoxyParamCaption}\item[{std::\+vector$<$ \doxymbox{\hyperlink{struct_move}{Move}} $>$ \&}]{moves}{}\end{DoxyParamCaption})}
+
+
+
+Order moves in-\/place for better alpha-\/beta performance. 
+
+Orders moves to improve alpha-\/beta pruning efficiency.
+
+
+\begin{DoxyParams}{Parameters}
+{\em moves} & move list to sort\\
+\hline
+\end{DoxyParams}
+Current heuristic:\+
+\begin{DoxyItemize}
+\item Captures scored using MVV-\/\+LVA (Most Valuable Victim -\/ Least Valuable Attacker),
+\item Promotions receive a bonus.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em moves} & \doxylink{struct_move}{Move} list to reorder in-\/place. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_engine_ad118ec155ae5ab652c88b0027cf5de6c}\index{Engine@{Engine}!quiescence@{quiescence}}
+\index{quiescence@{quiescence}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{quiescence()}{quiescence()}}
+{\footnotesize\ttfamily \label{class_engine_ad118ec155ae5ab652c88b0027cf5de6c} 
+int Engine::\+quiescence (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{int}]{alpha}{, }\item[{int}]{beta}{, }\item[{int}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Quiescence search (captures only). 
+
+Capture-\/only extension search to reduce the horizon effect.
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state (mutated via apply/\+undo internally) \\
+\hline
+{\em alpha} & alpha bound \\
+\hline
+{\em beta} & beta bound \\
+\hline
+{\em color} & Perspective sign (+1 white, -\/1 black) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+quiescence score
+\end{DoxyReturn}
+Quiescence search continues exploring forcing capture sequences at depth 0 instead of returning a static evaluation immediately.
+
+Algorithm:\+
+\begin{DoxyItemize}
+\item Compute a "{}stand pat"{} evaluation.
+\item If stand pat \texorpdfstring{$>$}{>}= beta:\+ fail-\/high cutoff.
+\item Else try all capture moves:\+ score = -\/quiescence(child, -\/beta, -\/alpha, -\/color)
+\item Return best score within \+[alpha, beta]\+.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state (mutated via apply/\+undo). \\
+\hline
+{\em alpha} & Alpha bound. \\
+\hline
+{\em beta} & Beta bound. \\
+\hline
+{\em color} & Perspective sign (+1 = White perspective, -\/1 = Black perspective). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Best tactical score in the quiescence search window. 
+\end{DoxyReturn}
+\Hypertarget{class_engine_abccad103350d53bad5d8870a448b1555}\index{Engine@{Engine}!to01@{to01}}
+\index{to01@{to01}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{to01()}{to01()}}
+{\footnotesize\ttfamily \label{class_engine_abccad103350d53bad5d8870a448b1555} 
+int Engine::\+to01 (\begin{DoxyParamCaption}\item[{int}]{sign}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Convert sign (+1 /\+ -\/1) to 0/\+1 color encoding used by board/\+pieces. 
+
+Converts side sign (+1/\+-\/1) to 0/\+1 color encoding.
+
+
+\begin{DoxyParams}{Parameters}
+{\em sign} & +1 for white, -\/1 for black \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 for white, 1 for black
+\end{DoxyReturn}
+Many parts of this project encode colors as:\+
+\begin{DoxyItemize}
+\item 0 = White
+\item 1 = Black
+\end{DoxyItemize}
+
+While the negamax layer uses a sign:\+
+\begin{DoxyItemize}
+\item +1 = White perspective
+\item -\/1 = Black perspective
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em sign} & +1 for White, -\/1 for Black (any value \texorpdfstring{$>$}{>} 0 treated as White). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 for White, 1 for Black. 
+\end{DoxyReturn}
+\Hypertarget{class_engine_ac7a982eeb34560c8ee8633633ba28d4b}\index{Engine@{Engine}!toSign@{toSign}}
+\index{toSign@{toSign}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{toSign()}{toSign()}}
+{\footnotesize\ttfamily \label{class_engine_ac7a982eeb34560c8ee8633633ba28d4b} 
+int Engine::\+to\+Sign (\begin{DoxyParamCaption}\item[{int}]{color01}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Convert 0/\+1 color encoding back to sign (+1 /\+ -\/1). 
+
+Converts 0/\+1 color encoding back to a sign (+1/\+-\/1).
+
+
+\begin{DoxyParams}{Parameters}
+{\em color01} & 0 for white, 1 for black \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
++1 for white, -\/1 for black
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em color01} & 0 = White, 1 = Black. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
++1 for White, -\/1 for Black. 
+\end{DoxyReturn}
+\Hypertarget{class_engine_a29a1652012383dae61aa530c4282fa08}\index{Engine@{Engine}!undoMove@{undoMove}}
+\index{undoMove@{undoMove}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{undoMove()}{undoMove()}}
+{\footnotesize\ttfamily \label{class_engine_a29a1652012383dae61aa530c4282fa08} 
+void Engine::\+undo\+Move (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_board}{Board}} \&}]{board}{, }\item[{const \doxymbox{\hyperlink{struct_move}{Move}} \&}]{move}{, }\item[{const \doxymbox{\hyperlink{struct_engine_1_1_undo}{Undo}} \&}]{undo}{}\end{DoxyParamCaption})}
+
+
+
+Reverts a previously applied move (make/\+undo search loop). 
+
+Restores:\+
+\begin{DoxyItemize}
+\item board.\+squares\+[]\+ pointers (moved piece back to from-\/square, captured piece back to to-\/square),
+\item piece positions (\doxylink{class_piece_abc3df3d8bf0cc172cab42663ee50dc66}{Piece::\+set\+Position}),
+\item promotion (restores pawn symbol if promotion was applied),
+\item incremental Zobrist hash updates (reverses exactly the operations in \doxylink{class_engine_a3a77ca157345c0812eeed6053ded68b6}{apply\+Move()}).
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em board} & \doxylink{class_board}{Board} state to mutate. \\
+\hline
+{\em move} & The move that had been applied. \\
+\hline
+{\em undo} & Snapshot produced by \doxylink{class_engine_a3a77ca157345c0812eeed6053ded68b6}{apply\+Move()} containing all data required to revert. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+src/\+engine/\+\doxymbox{\hyperlink{engine_8h}{engine.\+h}}\item 
+src/\+engine/\+engine.\+cpp\end{DoxyCompactItemize}

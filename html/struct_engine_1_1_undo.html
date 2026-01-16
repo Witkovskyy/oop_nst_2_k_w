@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>My Project: File Members</title>
+<title>My Project: Engine::Undo Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('globals.html','',''); });
+$(function(){initNavTree('struct_engine_1_1_undo.html','','struct_engine_1_1_undo-members'); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -87,62 +87,48 @@ $(function(){initNavTree('globals.html','',''); });
 </div>
 </div>
 
+<div class="header">
+  <div class="headertitle"><div class="title">Engine::Undo Struct Reference</div></div>
+</div><!--header-->
 <div class="contents">
-<div class="textblock">Here is a list of all documented file members with links to the documentation:</div>
 
-<h3 class="doxsection"><a id="index_c" name="index_c"></a>- c -</h3><ul>
-<li>centerText()&#160;:&#160;<a class="el" href="main_8cpp.html#af15ca5434d2a7d5386e1bf9085732299">main.cpp</a></li>
-<li>clearBoard()&#160;:&#160;<a class="el" href="coverage__tests_8cpp.html#ad28887f6f397eb8528549e03b585210e">coverage_tests.cpp</a></li>
-</ul>
+<p>Structure to hold undo information.  
+ <a href="#details">More...</a></p>
 
-
-<h3 class="doxsection"><a id="index_d" name="index_d"></a>- d -</h3><ul>
-<li>debugBoard()&#160;:&#160;<a class="el" href="catch2_8cpp.html#a0b1609aea9cf7821062357f465bc45fc">catch2.cpp</a></li>
-</ul>
-
-
-<h3 class="doxsection"><a id="index_g" name="index_g"></a>- g -</h3><ul>
-<li>generateAllCaptures()&#160;:&#160;<a class="el" href="moves_8cpp.html#a89c28d1f0b1c5466438f80f803cd8dba">moves.cpp</a>, <a class="el" href="moves_8h.html#a89c28d1f0b1c5466438f80f803cd8dba">moves.h</a></li>
-<li>generateQuietMoves()&#160;:&#160;<a class="el" href="moves_8cpp.html#ac7bd6a3f7dcafd4832a00ce5ed103058">moves.cpp</a>, <a class="el" href="moves_8h.html#ac7bd6a3f7dcafd4832a00ce5ed103058">moves.h</a></li>
-<li>getPieceIndex()&#160;:&#160;<a class="el" href="zobrist_8h.html#aaeb6c6faaa8a9ac32280044ce72ecd06">zobrist.h</a></li>
-</ul>
-
-
-<h3 class="doxsection"><a id="index_i" name="index_i"></a>- i -</h3><ul>
-<li>initZobrist()&#160;:&#160;<a class="el" href="zobrist_8h.html#a0bdf4ec348aa34399a8f7c7f4ae13f5c">zobrist.h</a></li>
-<li>isValid()&#160;:&#160;<a class="el" href="see_8cpp.html#add01c0c69c619de2ddd1aa2875d4ec45">see.cpp</a></li>
-<li>isValidPos()&#160;:&#160;<a class="el" href="moves_8cpp.html#a7966010ce7ca2cb401e511f241bad987">moves.cpp</a></li>
-</ul>
-
-
-<h3 class="doxsection"><a id="index_m" name="index_m"></a>- m -</h3><ul>
-<li>main()&#160;:&#160;<a class="el" href="main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main.cpp</a></li>
-<li>makeEmptyBoard()&#160;:&#160;<a class="el" href="test__pieces_8cpp.html#ab58f8273185452ff19a837ba92cac1f4">test_pieces.cpp</a></li>
-</ul>
-
-
-<h3 class="doxsection"><a id="index_r" name="index_r"></a>- r -</h3><ul>
-<li>runEngineAsync()&#160;:&#160;<a class="el" href="main_8cpp.html#aa3c0f34a38dc3d1796dec92738ab2a91">main.cpp</a></li>
-</ul>
-
-
-<h3 class="doxsection"><a id="index_s" name="index_s"></a>- s -</h3><ul>
-<li>see()&#160;:&#160;<a class="el" href="see_8cpp.html#af2dd0218cfc01452e1edb09078703c9e">see.cpp</a></li>
-</ul>
-
-
-<h3 class="doxsection"><a id="index_t" name="index_t"></a>- t -</h3><ul>
-<li>TEST()&#160;:&#160;<a class="el" href="test__pieces_8cpp.html#ace5c77872807be7c3bdb5635eb4cc5c7">test_pieces.cpp</a></li>
-<li>TEST_CASE()&#160;:&#160;<a class="el" href="catch2_8cpp.html#a562879bc4382e05636a5683ca9ee1fca">catch2.cpp</a>, <a class="el" href="coverage__tests_8cpp.html#a04eb06a3887d87830f257ea7492aa004">coverage_tests.cpp</a></li>
-<li>TT&#160;:&#160;<a class="el" href="_t_t_8h.html#a4db18751e106df15a0412134c6dd4a82">TT.h</a>, <a class="el" href="main_8cpp.html#ace8d35f277689839431f487d6552af94">main.cpp</a></li>
-<li>TTFlag&#160;:&#160;<a class="el" href="_t_t_8h.html#a2add7e9edf4c9305f372b0e50897ce99">TT.h</a></li>
+<p><code>#include &lt;<a class="el" href="engine_8h_source.html">engine.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a2cb59dfd162426a76753ab48320b9755" id="r_a2cb59dfd162426a76753ab48320b9755"><td class="memItemLeft"><a id="a2cb59dfd162426a76753ab48320b9755" name="a2cb59dfd162426a76753ab48320b9755"></a>
+<a class="el" href="struct_position.html">Position</a>&#160;</td><td class="memItemRight"><b>from</b></td></tr>
+<tr class="memitem:a455fc717a664131ce131745f7b893cb3" id="r_a455fc717a664131ce131745f7b893cb3"><td class="memItemLeft"><a id="a455fc717a664131ce131745f7b893cb3" name="a455fc717a664131ce131745f7b893cb3"></a>
+<a class="el" href="struct_position.html">Position</a>&#160;</td><td class="memItemRight"><b>to</b></td></tr>
+<tr class="memitem:af874269471502007e24c2da68224071b" id="r_af874269471502007e24c2da68224071b"><td class="memItemLeft"><a id="af874269471502007e24c2da68224071b" name="af874269471502007e24c2da68224071b"></a>
+<a class="el" href="class_piece.html">Piece</a> *&#160;</td><td class="memItemRight"><b>pieceMoved</b></td></tr>
+<tr class="memitem:a9990c36c876273baf9263e7228822654" id="r_a9990c36c876273baf9263e7228822654"><td class="memItemLeft"><a id="a9990c36c876273baf9263e7228822654" name="a9990c36c876273baf9263e7228822654"></a>
+<a class="el" href="class_piece.html">Piece</a> *&#160;</td><td class="memItemRight"><b>pieceCaptured</b></td></tr>
+<tr class="memitem:abf8198c1c764038c16e1f5972cd753c6" id="r_abf8198c1c764038c16e1f5972cd753c6"><td class="memItemLeft"><a id="abf8198c1c764038c16e1f5972cd753c6" name="abf8198c1c764038c16e1f5972cd753c6"></a>
+char&#160;</td><td class="memItemRight"><b>promotion</b></td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Structure to hold undo information. </p>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/engine/<a class="el" href="engine_8h_source.html">engine.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
 </div><!-- container -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
+    <li class="navelem"><a href="class_engine.html">Engine</a></li><li class="navelem"><a href="struct_engine_1_1_undo.html">Undo</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>

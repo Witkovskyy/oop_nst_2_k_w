@@ -22,7 +22,6 @@
 #include "King.h"
 #include "engine/engine.h"
 #include "engine/val.h"
-#include "engine/evalpos.cpp"
 #include "engine/logger/logger.h"
 #include <string>
 #include <future>
@@ -46,6 +45,7 @@ const int TILE_SIZE = 80;
 const int BOARD_SIZE = 8;
 const int SIDEBAR_WIDTH = 260;
 
+Engine engine;
 // Helper function to reset board pieces
 /**
  * @brief Set up pieces.
@@ -53,7 +53,7 @@ const int SIDEBAR_WIDTH = 260;
  * @details Updates internal state based on provided arguments.
  * @param board Board state to operate on.
  */
-void setupPieces(Board& board) {
+static void setupPieces(Board& board) {
     // White
     board.placePiece(new Rook(0, 'R', { 0, 0 })); board.placePiece(new Knight(0, 'N', { 0, 1 }));
     board.placePiece(new Bishop(0, 'B', { 0, 2 })); board.placePiece(new Queen(0, 'Q', { 0, 3 }));
@@ -120,7 +120,7 @@ Move runEngineAsync(Board boardCopy, int difficultyLevel) {
     }
     int aiSide = -1; // AI is playing black
 
-    auto moves = legalMoves(boardCopy, to01(aiSide));
+    auto moves = engine.legalMoves(boardCopy, engine.to01(aiSide));
     std::string msg = "AI moves generated: " + std::to_string(moves.size());
     LOG(msg);
 
@@ -129,7 +129,7 @@ Move runEngineAsync(Board boardCopy, int difficultyLevel) {
         return Move{ {-1,-1}, {-1,-1}, nullptr, nullptr };
     }
 
-    orderMoves(moves);
+    engine.orderMoves(moves);
     sf::Clock clock;
     Move bestMoveOfAll = moves[0];
     bool timeUp = false;
@@ -156,11 +156,12 @@ Move runEngineAsync(Board boardCopy, int difficultyLevel) {
                 timeUp = true;
                 break;
             }
+            using Undo = Engine::Undo;
             Undo undo;
  
-            applyMove(boardCopy, move, undo);
-            int score = -negamax(boardCopy, currentDepth - 1, -beta, -alpha, -aiSide);
-            undoMove(boardCopy, move, undo);
+            engine.applyMove(boardCopy, move, undo);
+            int score = -engine.negamax(boardCopy, currentDepth - 1, -beta, -alpha, -aiSide);
+            engine.undoMove(boardCopy, move, undo);
 
             if (score > bestScoreThisDepth) {
                 bestScoreThisDepth = score;
@@ -173,9 +174,10 @@ Move runEngineAsync(Board boardCopy, int difficultyLevel) {
 
         // Easy mode blunder simulation
         if (difficultyLevel == 1 && moves.size() > 1) {
-            if (rand() % 3 == 0) {
+            if (rand() % 2 == 0) {
                 int randomIdx = rand() % moves.size();
                 bestMoveOfAll = moves[randomIdx];
+				LOG("AI on Easy Mode made a blunder!");
             }
         }
 
@@ -195,6 +197,7 @@ int main() {
     std::future<Move> engineFuture;
     bool isEngineThinking = false;
     initZobrist();
+    std::srand((unsigned)std::time(nullptr));
 
     // Konfiguracja czasu (startowa)
     float initialTime = timeLimitMinutes * 60.0f;
@@ -607,7 +610,7 @@ int main() {
             if (engineFuture.valid() && engineFuture.wait_for(std::chrono::milliseconds(0)) == std::future_status::ready) {
                 Move bestMoveOfAll = engineFuture.get();
                 if (bestMoveOfAll.pieceMoved == nullptr) {
-                    if (isInCheck(*board, 1)) statusText.setString("SZACH MAT!\nWygrywaja BIALE");
+                    if (engine.isInCheck(*board, 1)) statusText.setString("SZACH MAT!\nWygrywaja BIALE");
                     else statusText.setString("PAT!\nRemis");
                     gameOver = true;
                     isEngineThinking = false;
